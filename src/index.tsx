@@ -5,6 +5,8 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import App from './pages/App';
 import { Loading } from './pages/App/loading';
 import Popup from './pages/App/popup';
+import Color from './pages/Color';
+import ColorManage from './pages/Color/Manage';
 import Login from './pages/Login';
 import Orders from './pages/Order';
 import EditOrder from './pages/Order/EditOrder';
@@ -33,6 +35,11 @@ root.render(
           <Route path="" element={<Service/>}/>
           <Route path="add" element={<ServiceManage/>}/>
           <Route path="edit/:id" element={<ServiceManage/>}/>
+        </Route>
+        <Route path="color">
+          <Route path="" element={<Color/>}/>
+          <Route path="add" element={<ColorManage/>}/>
+          <Route path="edit/:id" element={<ColorManage/>}/>
         </Route>
         <Route path="user">
           <Route path="" element={<UsersList/>}/>

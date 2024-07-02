@@ -413,6 +413,11 @@ table{
     content: url("/public/svg/dashEdit.svg");
 
 }
+.colorBox{
+    width: 100px;
+    height: 40px;
+    display: inline-block;
+}
 .dashTr2{
     height: 90px;
     width: 98%;

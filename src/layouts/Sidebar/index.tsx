@@ -10,7 +10,7 @@ export const Sidebar = () => {
         <i className="basketSvg"></i>
         <i className="productSvg activSvg"></i>
         <i className="usersSvg activSvg"></i>
-        {/* <i className="categorySvg"></i> */}
+        <i className="categorySvg"></i>
         {/* <i className="menuSvg"></i> */}
         {/* <i className="tagSvg"></i> */}
         {/* <i className="brandSvg"></i> */}
@@ -29,6 +29,7 @@ export const Sidebar = () => {
         <SidebarRow title="سفارشات" url="/order/"/>
         <SidebarRow title="خدمات" url="/Service"/>
         <SidebarRow title="کاربران" url="/User"/>
+        <SidebarRow title="رنگ ها" url="/Color"/>
         {/* <SidebarRow title="مشخصات فنی" url="/Dashboard/Attribute" children={[ */}
         {/*   { */}
         {/*     title: "لیست مشخصات فنی", */}

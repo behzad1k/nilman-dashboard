@@ -18,6 +18,11 @@ const endpoints = {
   user:{
     index: format('user'),
     single: format('order/single'),
+  },
+  color:{
+    index: format('color'),
+    single: format('color/single'),
+    basic: format('color/basic'),
   }
 }
 

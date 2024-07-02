@@ -120,7 +120,7 @@ const ServiceManage = () => {
               <label>سانس</label>
               <input className="persianName" defaultValue={form?.section} onChange={(input) => setForm((prev) => ({...prev, section: input.target.value}))}/>
               <label>رنگ</label>
-              <select className="persianName" defaultValue={form?.hasColor} onChange={(input) => setForm((prev) => ({...prev, title: input.target.value}))}>
+              <select className="persianName" value={form?.hasColor} onChange={(input) => setForm((prev) => ({...prev, hasColor: input.target.value}))}>
                 <option value="false">ندارد</option>
                 <option value="true">دارد</option>
               </select>
