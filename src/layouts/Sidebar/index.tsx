@@ -30,6 +30,7 @@ export const Sidebar = () => {
         <SidebarRow title="خدمات" url="/Service"/>
         <SidebarRow title="کاربران" url="/User"/>
         <SidebarRow title="رنگ ها" url="/Color"/>
+        <SidebarRow title="موارد بازخوردها" url="/FeedbackFactor"/>
         {/* <SidebarRow title="مشخصات فنی" url="/Dashboard/Attribute" children={[ */}
         {/*   { */}
         {/*     title: "لیست مشخصات فنی", */}

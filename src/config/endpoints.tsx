@@ -10,6 +10,12 @@ const endpoints = {
     medias: format('service/medias'),
     client: format('service', false)
   },
+  feedbackFactors: {
+    index: format('feedbackFactor'),
+    single: format('feedbackFactor/single'),
+    basic: format('feedbackFactor/basic'),
+    medias: format('feedbackFactor/medias'),
+  },
   order:{
     index: format('order'),
     single: format('order/single'),

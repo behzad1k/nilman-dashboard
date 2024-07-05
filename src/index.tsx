@@ -7,6 +7,8 @@ import { Loading } from './pages/App/loading';
 import Popup from './pages/App/popup';
 import Color from './pages/Color';
 import ColorManage from './pages/Color/Manage';
+import FeedbackFactor from './pages/FeedbackFactor';
+import FeedbackFactorManage from './pages/FeedbackFactor/Manage';
 import Login from './pages/Login';
 import Orders from './pages/Order';
 import EditOrder from './pages/Order/EditOrder';
@@ -35,6 +37,11 @@ root.render(
           <Route path="" element={<Service/>}/>
           <Route path="add" element={<ServiceManage/>}/>
           <Route path="edit/:id" element={<ServiceManage/>}/>
+        </Route>
+        <Route path="feedbackFactor">
+          <Route path="" element={<FeedbackFactor/>}/>
+          <Route path="add" element={<FeedbackFactorManage/>}/>
+          <Route path="edit/:id" element={<FeedbackFactorManage/>}/>
         </Route>
         <Route path="color">
           <Route path="" element={<Color/>}/>
