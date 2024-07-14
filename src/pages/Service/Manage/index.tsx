@@ -51,7 +51,7 @@ const ServiceManage = () => {
   const submit = async () => {
     dispatch(setLoading(true));
 
-    const data: any = tools.extractor(form, ['title', 'parentId', 'description', 'price', 'hasColor', 'section', 'sort', 'hasMedia', 'isMulti']);
+    const data: any = tools.extractor(form, ['title', 'parentId', 'description', 'price', 'hasColor', 'section', 'sort', 'hasMedia', 'isMulti', 'pricePlus']);
     data.specifics = selectedSpecifics;
 
     const res = await restApi(endpoints.service.basic + (paramId || '')).post(data);
@@ -112,6 +112,7 @@ const ServiceManage = () => {
         hasMedia: res[1].data?.hasMedia,
         price: res[1].data?.price,
         sort: res[1].data?.sort,
+        pricePlus: res[1].data?.pricePlus
       });
       if (res[1].data?.media?.url) {
         setImage({
@@ -165,6 +166,12 @@ const ServiceManage = () => {
               <input className="persianName" defaultValue={form?.sort} onChange={(input) => setForm((prev) => ({
                 ...prev,
                 sort: input.target.value
+              }))}/>
+
+              <label>به علاوه</label>
+              <input className="persianName" defaultValue={form?.pricePlus} onChange={(input) => setForm((prev) => ({
+                ...prev,
+                pricePlus: input.target.value
               }))}/>
               <div className="inputRow">
                 <input className="checkBox" type="checkbox" checked={form?.hasColor} onChange={(input) => setForm((prev) => ({
