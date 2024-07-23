@@ -11,7 +11,7 @@ export const Sidebar = () => {
         <i className="productSvg activSvg"></i>
         <i className="usersSvg activSvg"></i>
         <i className="categorySvg"></i>
-        {/* <i className="menuSvg"></i> */}
+        <i className="menuSvg"></i>
         {/* <i className="tagSvg"></i> */}
         {/* <i className="brandSvg"></i> */}
         {/* <i className="articleSvg"></i> */}
@@ -22,7 +22,7 @@ export const Sidebar = () => {
       <span className="admininfo">
         <i className="adminSvg"></i>
         <div className="adminNameSection">
-          <h6 className="adminName">{userReducer.profile.name}</h6>
+          <h6 className="adminName">{userReducer?.profile?.name}</h6>
           <p className="adminTitle">ادمین</p>
         </div>
       </span>
@@ -31,6 +31,7 @@ export const Sidebar = () => {
         <SidebarRow title="کاربران" url="/User"/>
         <SidebarRow title="رنگ ها" url="/Color"/>
         <SidebarRow title="موارد بازخوردها" url="/FeedbackFactor"/>
+        {/* <SidebarRow title="بازخوردها" url="/FeedbackFactor"/> */}
         {/* <SidebarRow title="مشخصات فنی" url="/Dashboard/Attribute" children={[ */}
         {/*   { */}
         {/*     title: "لیست مشخصات فنی", */}

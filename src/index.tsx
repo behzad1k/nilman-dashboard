@@ -14,9 +14,8 @@ import Orders from './pages/Order';
 import EditOrder from './pages/Order/EditOrder';
 import Service from './pages/Service';
 import ServiceManage from './pages/Service/Manage';
-import AddUser from './pages/User/AddUser';
-import EditUser from './pages/User/EditUser';
-import UsersList from './pages/User/UsersList';
+import UsersList from './pages/User';
+import UserManage from './pages/User/UserManage';
 import reportWebVitals from './reportWebVitals';
 import store from './services/store';
 
@@ -50,8 +49,8 @@ root.render(
         </Route>
         <Route path="user">
           <Route path="" element={<UsersList/>}/>
-          <Route path="add" element={<AddUser/>}/>
-          <Route path="edit/:id" element={<EditUser/>}/>
+          <Route path="add" element={<UserManage/>}/>
+          <Route path="edit/:id" element={<UserManage/>}/>
         </Route>
       </Routes>
       <Popup/>

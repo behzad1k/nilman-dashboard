@@ -79,30 +79,15 @@ const MapModal = ({ setShowModal, setAddress, address }: any) => {
           </div>
           <div>
             <label htmlFor="phoneNumber">شماره تماس</label>
-            <input type="text" id="phoneNumber" name="addressPhone" defaultValue={address?.phoneNumber} onChange={(input: any) => setAddress((prev: any) => {
-              return {
-                ...prev,
-                phoneNumber: input.target.value
-              }
-            })}/>
+            <input type="text" id="phoneNumber" name="addressPhone" defaultValue={address?.phoneNumber} onChange={(input: any) => setAddress((prev: any) => {return { ...prev, phoneNumber: input.target.value }})}/>
           </div>
           <div>
             <label htmlFor="postalCode">کد پستی</label>
-            <input type="text" id="postalCode" name="addressPostal" defaultValue={address?.postalCode} onChange={(input: any) => setAddress((prev: any) => {
-              return {
-                ...prev,
-                postalCode: input.target.value
-              }
-            })}/>
+            <input type="text" id="postalCode" name="addressPostal" defaultValue={address?.postalCode} onChange={(input: any) => setAddress((prev: any) => {return { ...prev, postalCode: input.target.value }})}/>
           </div>
           <div className="addressSection">
             <label htmlFor="address">جزئیات آدرس</label>
-            <textarea id="address" name="addressText" defaultValue={address?.text} onChange={(input: any) => setAddress((prev: any) => {
-              return {
-                ...prev,
-                text: input.target.value
-              }
-            })}/>
+            <textarea id="address" name="addressText" defaultValue={address?.text} onChange={(input: any) => setAddress((prev: any) => {return { ...prev, text: input.target.value }})}/>
           </div>
         </div>
       </div>

@@ -23,7 +23,8 @@ const endpoints = {
   },
   user:{
     index: format('user'),
-    single: format('order/single'),
+    single: format('user/single'),
+    basic: format('user/basic')
   },
   color:{
     index: format('color'),

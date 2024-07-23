@@ -142,7 +142,7 @@ const ServiceManage = () => {
             <span>
           <h1 className="sideBarTitle">بازگشت به صفحه خدمات</h1>
            <h1 className="dashBoardTitle">{paramId ? 'ویرایش' : 'ایجاد'} خدمت</h1>
-        </span>
+            </span>
             <i className="backAdd" onClick={() => navigate('/service')}></i>
           </div>
           <section className="addInfoSec">

@@ -35,7 +35,7 @@ const Login = () => {
 
   useEffect(() => {
     if (Cookies.get('adminToken')){
-      navigate('/')
+      navigate('/service')
     }
   }, []);
 
