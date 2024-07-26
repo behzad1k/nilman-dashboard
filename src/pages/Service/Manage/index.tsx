@@ -51,7 +51,7 @@ const ServiceManage = () => {
   const submit = async () => {
     dispatch(setLoading(true));
 
-    const data: any = tools.extractor(form, ['title', 'parentId', 'description', 'price', 'hasColor', 'section', 'sort', 'hasMedia', 'isMulti', 'pricePlus']);
+    const data: any = tools.extractor(form, ['title', 'parentId', 'description', 'price', 'hasColor', 'section', 'sort', 'hasMedia', 'isMulti', 'pricePlus', 'openDrawer']);
     data.specifics = selectedSpecifics;
 
     const res = await restApi(endpoints.service.basic + (paramId || '')).post(data);
@@ -112,7 +112,8 @@ const ServiceManage = () => {
         hasMedia: res[1].data?.hasMedia,
         price: res[1].data?.price,
         sort: res[1].data?.sort,
-        pricePlus: res[1].data?.pricePlus
+        pricePlus: res[1].data?.pricePlus,
+        openDrawer: res[1].data?.openDrawer,
       });
       if (res[1].data?.media?.url) {
         setImage({
@@ -181,13 +182,22 @@ const ServiceManage = () => {
                 <label>رنگ</label>
               </div>
               {data?.attributes?.length > 0 &&
-              <div className="inputRow">
-                <input className="checkBox" type="checkbox" checked={form?.isMulti} onChange={(input) => setForm((prev) => ({
-                  ...prev,
-                  isMulti: input.target.checked
-                }))}/>
-                <label>انتخاب چندگانه</label>
-              </div>
+                  <>
+                    <div className="inputRow">
+                      <input className="checkBox" type="checkbox" checked={form?.isMulti} onChange={(input) => setForm((prev) => ({
+                        ...prev,
+                        isMulti: input.target.checked
+                      }))}/>
+                      <label>انتخاب چندگانه</label>
+                    </div>
+                    <div className="inputRow">
+                      <input className="checkBox" type="checkbox" checked={form?.openDrawer} onChange={(input) => setForm((prev) => ({
+                        ...prev,
+                        openDrawer: input.target.checked
+                      }))}/>
+                      <label>مودال</label>
+                    </div>
+                  </>
               }
               <div className="inputRow">
                 <input className="checkBox" type="checkbox" checked={form?.hasMedia} onChange={(input) => setForm((prev) => ({
