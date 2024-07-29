@@ -1,8 +1,13 @@
+import Cookies from 'js-cookie';
 import { useAppSelector } from "../../services/store";
 import SidebarRow from "./SidebarRow";
 
 export const Sidebar = () => {
   const userReducer = useAppSelector(state => state.userReducer);
+  const logout = () => {
+    Cookies.remove('adminToken');
+    window.location.reload();
+  };
   return (
     <aside className="sideBarContainer">
       <div className="sideBar">
@@ -16,7 +21,7 @@ export const Sidebar = () => {
         {/* <i className="brandSvg"></i> */}
         {/* <i className="articleSvg"></i> */}
         {/* <i className="infoSvg"></i> */}
-        {/* <i className="sidBarExit"></i> */}
+        <i className="sidBarExit" onClick={logout}></i>
       </div>
       <div className="adminInfoContainer">
       <span className="admininfo">

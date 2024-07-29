@@ -1,12 +1,13 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Swal from 'sweetalert2';
 import endpoints from '../../config/endpoints';
 import { popupSlice } from "../../services/reducers";
 import { useDispatch } from "react-redux";
 import restApi from '../../services/restApi';
 
-const Bill = ({ order, workers }: any) =>{
+const Bill = ({ order }: any) =>{
   const dispatch: any = useDispatch();
+  const [workers, setWorkers] = useState([]);
   const [selectedWorker, setSelectedWorker] = useState({})
   const submit = async () => {
     if (!selectedWorker){
@@ -39,6 +40,17 @@ const Bill = ({ order, workers }: any) =>{
       })
     }
   };
+
+  const fetchData = async () => {
+    const res = await restApi(endpoints.order.relatedWorkers + order.id).get();
+
+    setWorkers(res.data)
+
+  };
+
+  useEffect(() => {
+    fetchData()
+  }, []);
 
   return(
     <main className="billMain flex">

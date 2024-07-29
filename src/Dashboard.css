@@ -131,6 +131,7 @@ content: url("/public/svg/article.svg");
     content: url("/public/svg/sideBarExit.svg");
     /*margin-top: 670px;*/
     margin-top: auto;
+    cursor: pointer;
 }
 .dashboardHeader{
     display: flex;
@@ -1286,7 +1287,8 @@ table{
 
 .modalContainer {
     padding: 16px;
-    width: 800px;
+    max-width: 800px;
+    overflow: auto;
     position: fixed;
     inset: 0;
     margin: auto;
@@ -1318,6 +1320,10 @@ table{
     display: flex;
     flex-wrap: wrap;
     gap: 16px;
+}
+
+.modalForm.workerOff{
+    width: 100%;
 }
 .modalForm div {
     width: calc(50% - 8px);
@@ -1355,9 +1361,8 @@ table{
     display: flex;
     gap: 16px;
 }
-.modalBtns button {
-    width: 178px;
-    height: 40px;
+.modalBtns span {
+    padding: 5px 10px;
     border-radius: 4px;
     display: grid;
     place-items: center;

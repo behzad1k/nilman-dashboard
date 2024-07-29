@@ -19,12 +19,20 @@ const endpoints = {
   order:{
     index: format('order'),
     single: format('order/single'),
+    relatedWorkers: format('order/relatedWorkers'),
     assign: format('order/assign'),
   },
   user:{
     index: format('user'),
     single: format('user/single'),
-    basic: format('user/basic')
+    basic: format('user/basic'),
+    active: format('user/status'),
+    workerOff: format('user/workerOff'),
+  },
+  address:{
+    index: format('address'),
+    single: format('address/single'),
+    basic: format('address/basic'),
   },
   color:{
     index: format('color'),

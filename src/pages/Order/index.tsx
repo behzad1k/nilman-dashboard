@@ -2,7 +2,7 @@ import moment from 'jalali-moment';
 import { LegacyRef, ReactElement, useEffect, useRef, useState } from 'react';
 import ReactPaginate from 'react-paginate';
 import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import endpoints from '../../config/endpoints';
 import useTicker from '../../hooks/useTicker';
@@ -26,9 +26,10 @@ const Orders = () => {
   const [tab, setTab] = useState('all');
   const [itemOffset, setItemOffset] = useState(0);
   const [selectedForExcel, setSelectedForExcel] = useState([]);
+  const [searchParams, setSearchParams] = useSearchParams();
   const downloadExcelLink = useRef<HTMLAnchorElement>(null);
   const itemsPerPage = 25;
-  const endOffset = itemOffset + itemsPerPage;
+  const endOffset = (itemOffset || 0) + itemsPerPage;
   let currentItems = data?.filter(e => e.code.toLowerCase().includes(query.toLowerCase())).slice(itemOffset, endOffset);
   const pageCount = Math.ceil(data?.length / itemsPerPage)
   const dispatch = useDispatch();
@@ -67,7 +68,7 @@ const Orders = () => {
       dispatch(setLoading(false));
     }
   };
-
+  console.log(workers);
   const sendForExcel = async () => {
     // if(confirm('آیا مطمئن هستید؟')){
       dispatch(setLoading(true));
@@ -105,9 +106,11 @@ const Orders = () => {
           <td className="svgContainer">
             {/* <i className="trash clickable" onClick={() => deleteOrder(order.id)}></i> */}
             <i className="edit clickable" onClick={() => navigate('/order/edit/' + order.id)}></i>
-            <i className="usersSvg clickable" onClick={() => dispatch(popupSlice.middle(<Bill order={order} workers={workers.filter(e => e.serviceId == order.serviceId)}/> ))}></i>
+            <i className="usersSvg clickable" onClick={() => dispatch(popupSlice.middle(<Bill order={order} /> ))}></i>
           </td>
           <td className="">{tools.formatPrice(order.price)}</td>
+          <td>{order.worker ? `${order.worker?.name} ${order.worker?.lastName}` : '-'}</td>
+          <td>{order.service?.title}</td>
           <td>
             {/* <select className="" onChange={(input) => dispatch(popupSlice.middle(<Status order={order} status={input.target.value}/>))}> */}
             {/*   {statuses?.map((status) => <option value={status.id} selected={status.id == order.status}>{status.title}</option>)} */}
@@ -131,7 +134,7 @@ const Orders = () => {
 
     await Promise.all([
       await restApi(endpoints.order.index, true).get(),
-      await restApi(endpoints.user.index, true).get({ type: 'worker'}),
+      await restApi(endpoints.user.index, true).get({ role: 'WORKER'}),
       await restApi(process.env.REACT_APP_BASE_URL + '/order/status', true).get(),
     ]).then((res) => {
       setData(res[0].data);
@@ -141,10 +144,16 @@ const Orders = () => {
 
     dispatch(setLoading(false));
   };
-  console.log(workers);
+
   useEffect(() => {
     fetchData();
   }, []);
+
+  useEffect(() => {
+    if (searchParams.get('page')){
+      setItemOffset(((Number(searchParams.get('page')) - 1) * itemsPerPage) % data.length)
+    }
+  }, [data]);
 
   return (
     <>
@@ -198,6 +207,8 @@ const Orders = () => {
           <tr className="dashTr1 blueText">
             <th>عملیات</th>
             <th className="">مبلغ کل</th>
+            <th className="">استایلیست</th>
+            <th className="">خدمت</th>
             <th className="">وضعیت سفارش</th>
             <th>کاربر</th>
             <th className="">تاریخ</th>
@@ -209,7 +220,11 @@ const Orders = () => {
         <ReactPaginate
           breakLabel="..."
           nextLabel="بعدی >"
-          onPageChange={(event) => setItemOffset((event.selected * itemsPerPage) % data.length)}
+          onPageChange={(event) => {
+            setSearchParams({['page']: (Number(event.selected) + 1).toString()})
+            setItemOffset((event.selected * itemsPerPage) % data.length);
+          }}
+          initialPage={Number(searchParams.get('page')) - 1}
           pageRangeDisplayed={5}
           pageCount={pageCount}
           previousLabel="< قبلی"

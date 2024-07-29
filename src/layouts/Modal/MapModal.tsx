@@ -1,44 +1,48 @@
 // import mapImg from '../../../../public/img/map.jpg'
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
+import Swal from 'sweetalert2';
+import endpoints from '../../config/endpoints';
 import { setLoading } from '../../services/reducers/homeSlice';
 import restApi from '../../services/restApi';
 
 const MapModal = ({ setShowModal, setAddress, address }: any) => {
   const dispatch = useDispatch();
-  const [states, setStates] = useState([]);
-  const [state, setState] = useState<any>();
-  const [cities, setCities] = useState([]);
-  const [city, setCity] = useState<any>();
 
-  const fetchData = async () => {
+  const send = async () => {
     dispatch(setLoading(true));
 
-    const res = await restApi(process.env.REACT_APP_BASE_URL + '/address/states').get();
+    const res = await restApi(endpoints.address.basic + (address.id || '')).post({
+      title: address.title,
+      phoneNumber: address.phoneNumber,
+      pelak: address.pelak,
+      vahed: address.vahed,
+      description: address.description,
+      postalCode: address.postalCode,
+    });
 
     if (res.code == 200) {
-      setStates(res.data);
-      if (address.cityId > 0 && address.provinceId > 0){
-        setState(address.provinceId)
-        setCity(address.cityId)
-        setCities(res.data.find((e) => e.id == address.provinceId)?.cities);
-      }else{
-        setState(res.data[0]);
-        setCity(res.data[0]?.cities[0]);
-        setCities(res.data[0]?.cities);
-      }
+      Swal.fire({
+        title: 'موفق',
+        text: `آدرس با موفقیت ${address ? 'ویرایش' : 'ساخته'} شد`,
+        icon: 'success',
+        confirmButtonText: 'متوجه شدم',
+        didClose() {
+          setShowModal(false)
+        }
+      });
+    } else {
+      Swal.fire({
+        title: 'ناموفق',
+        text: res?.data,
+        icon: 'error',
+        confirmButtonText: 'متوجه شدم'
+      });
     }
 
     dispatch(setLoading(false));
   };
 
-  useEffect(() => {
-    fetchData();
-  }, []);
-
-  useEffect(() => {
-    setCities(state?.cities)
-  }, [state]);
 
   return (
     <div className="modalContainer">
@@ -50,50 +54,76 @@ const MapModal = ({ setShowModal, setAddress, address }: any) => {
         <img src="/img/map.jpg"/>
         <div className="modalForm" >
           <div>
-            <label htmlFor="city">شهرستان</label>
-            <select id="city" className="addressInput dirRtl width100" name="addressCity">
-              {cities?.map((e) => <option value={e.id} selected={e.id == address?.cityId} onClick={() => {
-                setCity(e);
-                setAddress((prev: any) => {
-                  return {
-                    ...prev,
-                    cityId: e.id
-                  }
-                })
-              }}>{e.title}</option>)}
-            </select>
+            <label htmlFor="title">عنوان</label>
+            <input type="text" id="title" name="title" value={address?.title} onChange={(input: any) => setAddress((prev: any) => {
+              const cp = [...prev];
+              const index = prev.findIndex(e => e.id == address.id);
+
+              cp[index] = {...cp[index], title: input.target.value }
+
+              return cp;
+            })}/>
           </div>
           <div>
-            <label htmlFor="province">استان</label>
-            <select id="province" className="addressInput dirRtl width100" name="addressProvince">
-              {states.map((e) => <option value={e.id} selected={e.id == address?.provinceId} onClick={() => {
-                setState(e);
-                setAddress((prev: any) => {
-                  return {
-                    ...prev,
-                    provinceId: e.id
-                  }
-                })
-              }}>{e.title}</option>)}
-            </select>
+            <label htmlFor="title">شماره تلفن</label>
+            <input type="text" id="title" name="title" value={address?.phoneNumber} onChange={(input: any) => setAddress((prev: any) => {
+              const cp = [...prev];
+              const index = prev.findIndex(e => e.id == address.id);
+
+              cp[index] = {...cp[index], phoneNumber: input.target.value }
+
+              return cp;
+            })}/>
           </div>
           <div>
-            <label htmlFor="phoneNumber">شماره تماس</label>
-            <input type="text" id="phoneNumber" name="addressPhone" defaultValue={address?.phoneNumber} onChange={(input: any) => setAddress((prev: any) => {return { ...prev, phoneNumber: input.target.value }})}/>
+            <label htmlFor="title">کد پستی</label>
+            <input type="text" id="title" name="title" value={address?.postalCode} onChange={(input: any) => setAddress((prev: any) => {
+              const cp = [...prev];
+              const index = prev.findIndex(e => e.id == address.id);
+
+              cp[index] = {...cp[index], postalCode: input.target.value }
+
+              return cp;
+            })}/>
           </div>
           <div>
-            <label htmlFor="postalCode">کد پستی</label>
-            <input type="text" id="postalCode" name="addressPostal" defaultValue={address?.postalCode} onChange={(input: any) => setAddress((prev: any) => {return { ...prev, postalCode: input.target.value }})}/>
+            <label htmlFor="title">پلاک</label>
+            <input type="text" id="title" name="title" value={address?.pelak} onChange={(input: any) => setAddress((prev: any) => {
+              const cp = [...prev];
+              const index = prev.findIndex(e => e.id == address.id);
+
+              cp[index] = {...cp[index], pelak: input.target.value }
+
+              return cp;
+            })}/>
+          </div>
+          <div>
+            <label htmlFor="title">واحد</label>
+            <input type="text" id="title" name="title" value={address?.vahed} onChange={(input: any) => setAddress((prev: any) => {
+              const cp = [...prev];
+              const index = prev.findIndex(e => e.id == address.id);
+
+              cp[index] = {...cp[index], vahed: input.target.value }
+
+              return cp;
+            })}/>
           </div>
           <div className="addressSection">
             <label htmlFor="address">جزئیات آدرس</label>
-            <textarea id="address" name="addressText" defaultValue={address?.text} onChange={(input: any) => setAddress((prev: any) => {return { ...prev, text: input.target.value }})}/>
+            <textarea id="address" name="addressText" value={address?.description} onChange={(input: any) => setAddress((prev: any) => {
+              const cp = [...prev];
+              const index = prev.findIndex(e => e.id == address.id);
+
+              cp[index] = {...cp[index], description: input.target.value }
+
+              return cp;
+            })}/>
           </div>
         </div>
       </div>
       <div className="modalBtns">
         <span className="cancel clickable" onClick={() => setShowModal(false)}>بازگشت</span>
-        <span className="submit clickable" onClick={() => setShowModal(false)}>ثبت</span>
+        <span className="submit clickable" onClick={send}>ثبت</span>
       </div>
     </div>
   );

@@ -19,7 +19,6 @@ const ServiceManage = () => {
   const [data, setData] = useState<any>({});
   const [selectedSpecifics, setSelectedSpecifics] = useState([]);
   const { id: paramId } = useParams();
-
   const deleteImage = async () => {
     if (confirm('آیا مطمئن هستید؟')) {
       dispatch(setLoading(true));
@@ -71,7 +70,7 @@ const ServiceManage = () => {
         icon: 'success',
         confirmButtonText: 'متوجه شدم',
         didClose() {
-          // navigate('/service/')
+          navigate(-1)
         }
       });
     } else {

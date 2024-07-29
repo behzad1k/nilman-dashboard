@@ -1,23 +1,26 @@
 import ReactPaginate from 'react-paginate';
+import endpoints from '../../config/endpoints';
 import globalEnum from '../../enums/globalEnum';
+import useUrlParam from '../../hooks/useUrlParam';
 import { Sidebar } from "../../layouts/Sidebar";
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { setLoading } from '../../services/reducers/homeSlice';
 import restApi from '../../services/restApi';
 
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import Swal from "sweetalert2";
 
 const UsersList = () => {
-  const [data, setData] = useState([]);
   const dispatch = useDispatch();
   const navigate = useNavigate()
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [data, setData] = useState([]);
   const [query, setQuery] = useState('');
   const [tab, setTab] = useState('all');
   const [itemOffset, setItemOffset] = useState(0);
   const itemsPerPage = 25;
-  const endOffset = itemOffset + itemsPerPage;
+  const endOffset = (itemOffset || 0) + itemsPerPage;
   let currentItems = data.filter(e => e.name?.toLowerCase()?.includes(query.toLowerCase()) || e.phoneNumber?.toLowerCase()?.includes(query.toLowerCase()))?.slice(itemOffset, endOffset);
   const pageCount = Math.ceil(data.length / itemsPerPage);
 
@@ -36,6 +39,33 @@ const UsersList = () => {
       const res = await restApi(process.env.REACT_APP_BASE_URL + '/admin/user/' + id, true).delete({});
       
       if(res.code == 204) {
+        Swal.fire({
+          title: 'موفق',
+          text: 'کاربر با موفقیت حذف شد',
+          icon: 'success',
+          confirmButtonText: 'متوجه شدم'
+        })
+        fetchData()
+      } else {
+        Swal.fire({
+          title: 'ناموفق',
+          text: res?.data,
+          icon: 'error',
+          confirmButtonText: 'متوجه شدم'
+        })
+      }
+      dispatch(setLoading(false));
+    }
+  }
+  const changeStatus = async (id, status) => {
+    if(confirm('آیا مطمئن هستید؟')) {
+      dispatch(setLoading(true));
+
+      const res = await restApi(endpoints.user.active + id, true).post({
+        status: status == 1 ? 0 : 1
+      });
+
+      if(res.code == 200) {
         Swal.fire({
           title: 'موفق',
           text: 'کاربر با موفقیت حذف شد',
@@ -73,15 +103,13 @@ const UsersList = () => {
       rows.push(
         <tr className="dashTr2">
           <td className="svgContainer">
-            <i className="activeUser"></i>
+            <i className={`${user.status == 1 ? 'activeUser' : 'deactiveUser'}`} onClick={() => changeStatus(user.id, user.status)}></i>
             <i className="trash clickable" onClick={() => deleteItem(user.id)}></i>
             <i className="edit clickable" onClick={() => navigate('/user/edit/' + user.id)}></i>
           </td>
           <td className="">{user.lastEntrance}</td>
-          <td className="">{user.email}</td>
           <td className="">{user.name}</td>
           <td className="">{user.phoneNumber}</td>
-          <td className="">فعال</td>
           <td>{++index}</td>
         </tr>
       )
@@ -105,6 +133,12 @@ const UsersList = () => {
   useEffect(() => {
     fetchData();
   }, []);
+
+  useEffect(() => {
+    if (searchParams.get('page')){
+      setItemOffset(((Number(searchParams.get('page')) - 1) * itemsPerPage) % data.length)
+    }
+  }, [data]);
 
   return(
     
@@ -148,10 +182,8 @@ const UsersList = () => {
           <tr className="dashTr1">
             <th>عملیات</th>
             <th>آخرین ورود</th>
-            <th> ایمیل</th>
             <th>نام و نام خانوادگی</th>
             <th>شماره موبایل</th>
-            <th>وضعیت</th>
             <th>ردیف</th>
           </tr>
           </thead>
@@ -160,7 +192,11 @@ const UsersList = () => {
         <ReactPaginate
           breakLabel="..."
           nextLabel="بعدی >"
-          onPageChange={(event) => setItemOffset((event.selected * itemsPerPage) % data.length)}
+          onPageChange={(event) => {
+            setSearchParams({['page']: (Number(event.selected) + 1).toString()})
+            setItemOffset((event.selected * itemsPerPage) % data.length);
+          }}
+          initialPage={Number(searchParams.get('page')) - 1}
           pageRangeDisplayed={5}
           pageCount={pageCount}
           previousLabel="< قبلی"

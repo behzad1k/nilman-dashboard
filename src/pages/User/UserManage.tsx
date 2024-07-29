@@ -1,14 +1,19 @@
 import React, { ReactElement, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
+import Select from 'react-select';
 import Swal from 'sweetalert2';
 import endpoints from '../../config/endpoints';
 import globalEnum from '../../enums/globalEnum';
 import MapModal from '../../layouts/Modal/MapModal';
+import WorkerOffModal from '../../layouts/Modal/WorkerOffModal';
+import { popupSlice } from '../../services/reducers';
 import { setLoading } from '../../services/reducers/homeSlice';
 import restApi from '../../services/restApi';
 import { Sidebar } from '../../layouts/Sidebar';
 import { useAppSelector } from '../../services/store';
+import { IService } from '../../types/types';
+import tools from '../../utils/tools';
 
 const UserManage = () => {
   const { id: paramId } = useParams();
@@ -17,22 +22,15 @@ const UserManage = () => {
   const serviceReducer = useAppSelector(state => state.serviceReducer)
   const [showModal, setShowModal] = useState(false);
   const [item, setItem] = useState<any>();
-  const [accesses, setAccesses] = useState([]);
-  const [selectedAccesses, setSelectedAccesses] = useState([]);
-  const [roles, setRoles] = useState([]);
-  const [address, setAddress] = useState<any>({phoneNumber: '',
-    text: '',
-    postal: '',
-    cityId: 0,
-    provinceId: 0});
-
+  const [services, setServices] = useState<IService[]>([]);
+  const [selectedWorkerServices, setSelectedWorkerServices] = useState([]);
+  const [addresses, setAddresses] = useState([]);
   const send = async (e) => {
     e.preventDefault();
 
     dispatch(setLoading(true));
 
     const formData = new FormData(e.target);
-
     const res = await restApi(endpoints.user.basic + (paramId || '')).post({
       name: formData.get('name'),
       lastName: formData.get('lastName'),
@@ -40,18 +38,11 @@ const UserManage = () => {
       phoneNumber: formData.get('phoneNumber'),
       password: formData.get('password'),
       email: formData.get('email'),
-      serviceId: formData.get('serviceId'),
       percent: formData.get('percent'),
       role: formData.get('role'),
       status: formData.get('status'),
       username: formData.get('username'),
-      address: {
-        cityId: formData.get('addressCity'),
-        provinceId: formData.get('addressProvince'),
-        text: formData.get('addressText'),
-        postalCode: formData.get('addressPostal'),
-        phone: formData.get('addressPhone'),
-      }
+      services: selectedWorkerServices,
     });
 
     if (res.code == 200) {
@@ -61,7 +52,7 @@ const UserManage = () => {
         icon: 'success',
         confirmButtonText: 'متوجه شدم',
         didClose() {
-          navigate('/user')
+          navigate(-1)
         }
       });
     } else {
@@ -76,18 +67,64 @@ const UserManage = () => {
     dispatch(setLoading(false));
   };
 
+  const workerOffList = () => {
+    return item?.workerOffs?.map(worekrOff =>
+    <tr key={worekrOff.id}>
+      <td>{worekrOff.date}</td>
+      <td>{worekrOff.fromTime}</td>
+      <td>{worekrOff.toTime}</td>
+      <td>{worekrOff.order?.id ? <a href={`/order/edit/${worekrOff.order?.id}`}>{worekrOff.order?.code}</a> : '-'}</td>
+    </tr>
+    )
+  };
 
+  const addressList = () => {
+    return addresses?.map(address =>
+      <div key={address.id} className="bottomDiv">
+            <span className="adressCard">
+          <div className="addressCardRight">
+            <span className="adressPin">
+              <i className="mapPin"></i>
+              <h6>{address?.title}</h6>
+            </span>
+             <p className="adressText marginZero">{address?.text}
+               <br/>{address?.phoneNumber}</p>
+          </div>
+          <div className="addressImage">
+          <img src="/img/map.jpg" className="mapPhoto"/>
+        <span className="svgContainer">
+            {/* <i className="trash"></i> */}
+          <i className="edit clickable" onClick={() => setShowModal(true)}></i>
+        </span>
+            </div>
+        </span>
+        <div className={`formModal ${showModal ? 'flex' : ''}`}>
+          <div className="modalOverLay" onClick={() => setShowModal(false)}>
+          </div>
+          <MapModal setShowModal={setShowModal} address={address} setAddress={setAddresses}/>
+        </div>
+      </div>
+    )
+  };
   const fetchData = async () => {
     dispatch(setLoading(true));
 
     const res = await Promise.all([
+      restApi(endpoints.service.client).get(),
+
       paramId && restApi(endpoints.user.single + paramId).get(),
     ]);
 
+    const sortedData = [];
+
+    res[0].data.map(e => tools.extractChildren(e, sortedData));
+
+    setServices(sortedData);
 
     if (paramId) {
-      setItem(res[0].data);
-      setAddress(res[0].data?.addresses);
+      setItem(res[1].data);
+      setAddresses(res[1].data?.addresses);
+      setSelectedWorkerServices(res[1].data?.services?.map(e => e.id))
     }
   };
 
@@ -118,9 +155,26 @@ const UserManage = () => {
               {item?.role == globalEnum.roles.WORKER &&
               <>
                   <label className="sideBarTitle">خدمت مربوطه</label>
-                  <select className="selector30" name="serviceId" value={item.serviceId} onChange={(input) => setItem(prev => ({ ...prev, serviceId: input.target.value}))}>
-                    {serviceReducer.services.filter(e => !e.parent).map(e => <option value={e.id} key={e.id}>{e.title}</option>)}
-                  </select>
+                  <Select
+                      styles={{
+                        valueContainer: (base) => ({
+                          ...base,
+                          overflowX: 'scroll',
+                          flexWrap: 'unset',
+                        }),
+                        multiValue: (base) => ({
+                          ...base,
+                          flex: '1 0 auto',
+                        })
+                      }}
+
+                      options={tools.selectFormatter(services, 'id', 'title', 'انتخاب کنید')}
+                          defaultValue={selectedWorkerServices?.map(e => ({
+                            value: e,
+                              label: services.find(j => j.id == e)?.title
+                          }))}
+                          className="width100" id="infoTitle" isMulti={true} name='workerServices'
+                          onChange={(selected: any) => setSelectedWorkerServices(selected.map(e => e.value))}/>
                   <label className="sideBarTitle">درصد همکاری</label>
                   <input className="editProductInput" defaultValue={item?.percent} name="percent"/>
               </>
@@ -174,32 +228,29 @@ const UserManage = () => {
         </section>
         <section className="bottom">
           <h6 className="dashBoardTitle">آدرس ها</h6>
-          <div className="bottomDiv">
-            <span className="adressCard">
-          <div className="addressCardRight">
-            <span className="adressPin">
-              <i className="mapPin"></i>
-              <h6>{address?.title}</h6>
-            </span>
-             <p className="adressText marginZero">{address?.text}
-               <br/>{address?.phoneNumber}</p>
-          </div>
-          <div className="addressImage">
-          <img src="/img/map.jpg" className="mapPhoto"/>
-        <span className="svgContainer">
-            {/* <i className="trash"></i> */}
-              <i className="edit clickable" onClick={() => setShowModal(true)}></i>
-        </span>
-            </div>
-        </span>
-            <div className={`formModal ${showModal ? 'flex' : ''}`}>
-              <div className="modalOverLay" onClick={() => setShowModal(false)}>
-              </div>
-              <MapModal setShowModal={setShowModal} address={address} setAddress={setAddress}/>
-            </div>
+          <div>
+            {addressList()}
           </div>
         </section>
-
+          <section className="bottom">
+            <h6 className="dashBoardTitle">تایم های مشغولی</h6>
+            <span className="dashboardHeader keepRight clickable" onClick={() => dispatch(popupSlice.middle(<WorkerOffModal userId={item.id}/>))} >
+              افزودن
+            </span>
+            <table>
+              <thead>
+              <tr>
+                <th>تاریخ</th>
+                <th>از ساعت</th>
+                <th>تا ساعت</th>
+                <th>سفارش</th>
+              </tr>
+              </thead>
+              <tbody>
+              {workerOffList()}
+              </tbody>
+            </table>
+          </section>
         </form>
       </main>
     </>

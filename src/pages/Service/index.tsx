@@ -2,7 +2,7 @@ import moment from 'jalali-moment';
 import { useEffect, useState } from 'react';
 import ReactPaginate from 'react-paginate';
 import { useDispatch } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import endpoints from '../../config/endpoints';
 import { setLoading } from '../../services/reducers/homeSlice';
@@ -15,13 +15,13 @@ const Service = () => {
   const [data, setData] = useState<IService[]>([]);
   const [query, setQuery] = useState('');
   const [itemOffset, setItemOffset] = useState(0);
+  const [searchParams, setSearchParams] = useSearchParams();
   const itemsPerPage = 25;
-  const endOffset = itemOffset + itemsPerPage;
+  const endOffset = (itemOffset || 0) + itemsPerPage;
   let currentItems = data.filter(e => e.title?.toLowerCase()?.includes(query.toLowerCase()))?.slice(itemOffset, endOffset);
   const pageCount = Math.ceil(data.length / itemsPerPage)
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  console.log(data);
   const deleteItem = async (id: number) => {
     if(confirm('آیا مطمئن هستید؟')){
       dispatch(setLoading(true));
@@ -84,7 +84,6 @@ const Service = () => {
     if(res.code == 200){
       const formatedData = [];
       res.data.map(e => tools.extractChildren(e, formatedData))
-      console.log(formatedData);
       setData(formatedData);
     }
 
@@ -94,6 +93,12 @@ const Service = () => {
   useEffect(() => {
     fetchData();
   }, []);
+
+  useEffect(() => {
+    if (searchParams.get('page')){
+      setItemOffset(((Number(searchParams.get('page')) - 1) * itemsPerPage) % data.length)
+    }
+  }, [data]);
 
   return(
     <>
@@ -136,7 +141,11 @@ const Service = () => {
         <ReactPaginate
           breakLabel="..."
           nextLabel="بعدی >"
-          onPageChange={(event) => setItemOffset((event.selected * itemsPerPage) % data.length)}
+          onPageChange={(event) => {
+            setSearchParams({['page']: (Number(event.selected) + 1).toString()})
+            setItemOffset((event.selected * itemsPerPage) % data.length);
+          }}
+          initialPage={searchParams.get('page') ? Number(searchParams.get('page')) - 1 : 0}
           pageRangeDisplayed={5}
           pageCount={pageCount}
           previousLabel="< قبلی"
