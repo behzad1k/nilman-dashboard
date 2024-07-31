@@ -68,7 +68,7 @@ const UsersList = () => {
       if(res.code == 200) {
         Swal.fire({
           title: 'موفق',
-          text: 'کاربر با موفقیت حذف شد',
+          text: `کاربر با موفقیت ${status == 1 ? 'فعال' : 'غیرفعال'} شد`,
           icon: 'success',
           confirmButtonText: 'متوجه شدم'
         })

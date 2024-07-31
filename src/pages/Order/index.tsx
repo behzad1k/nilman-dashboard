@@ -108,7 +108,7 @@ const Orders = () => {
             <i className="edit clickable" onClick={() => navigate('/order/edit/' + order.id)}></i>
             <i className="usersSvg clickable" onClick={() => dispatch(popupSlice.middle(<Bill order={order} /> ))}></i>
           </td>
-          <td className="">{tools.formatPrice(order.price)}</td>
+          <td className="">{tools.formatPrice(order.finalPrice)}</td>
           <td>{order.worker ? `${order.worker?.name} ${order.worker?.lastName}` : '-'}</td>
           <td>{order.service?.title}</td>
           <td>
@@ -117,7 +117,7 @@ const Orders = () => {
             {/* </select> */}
             {order.status}
           </td>
-          <td className="">{order?.user?.name}</td>
+          <td className="">{order?.user?.name + ' ' + order?.user?.lastName}</td>
           <td className="">
             <p>{moment(order?.createdAt).format('jYYYY/jMM/jDD HH:MM')}</p>
           </td>
