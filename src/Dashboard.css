@@ -478,6 +478,7 @@ table{
     padding-right: 24px;
     padding-left: 24px;
     margin-bottom: 16px;
+    max-width: 85%;
 }
 .backAdd{
     content: url("/public/svg/backAdd.svg");
@@ -857,6 +858,7 @@ table{
     height: 262px;
     padding: 16px;
     /*gap: 16px;*/
+    max-width: 85%;
 }
 .editProductInput{
     border-radius: 4px;

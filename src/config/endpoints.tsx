@@ -26,6 +26,7 @@ const endpoints = {
     index: format('user'),
     single: format('user/single'),
     basic: format('user/basic'),
+    medias: format('user/medias'),
     active: format('user/status'),
     workerOff: format('user/workerOff'),
   },
@@ -38,6 +39,16 @@ const endpoints = {
     index: format('color'),
     single: format('color/single'),
     basic: format('color/basic'),
+  },
+  discount:{
+    index: format('discount'),
+    single: format('discount/single'),
+    basic: format('discount/basic'),
+  },
+  district:{
+    index: format('district'),
+    single: format('district/single'),
+    basic: format('district/basic'),
   }
 }
 

@@ -23,8 +23,14 @@ const UserManage = () => {
   const [showModal, setShowModal] = useState(false);
   const [item, setItem] = useState<any>();
   const [services, setServices] = useState<IService[]>([]);
+  const [districts, setDistricts] = useState<any[]>([]);
   const [selectedWorkerServices, setSelectedWorkerServices] = useState([]);
+  const [selectedDistricts, setSelectedDistricts] = useState([]);
   const [addresses, setAddresses] = useState([]);
+  const [image, setImage] = useState({
+    data: undefined,
+    preview: undefined
+  });
   const send = async (e) => {
     e.preventDefault();
 
@@ -42,8 +48,20 @@ const UserManage = () => {
       role: formData.get('role'),
       status: formData.get('status'),
       username: formData.get('username'),
+      bankName: formData.get('bankName'),
+      shebaNumber: formData.get('shebaNumber'),
+      cardNumber: formData.get('cardNumber'),
+      hesabNumber: formData.get('hesabNumber'),
       services: selectedWorkerServices,
+      districts: selectedDistricts
     });
+
+    if (res.data?.id && image.data){
+      const formData = new FormData();
+      formData.append('file', image.data);
+
+      await restApi(endpoints.user.medias + res.data?.id).upload(formData);
+    }
 
     if (res.code == 200) {
       Swal.fire({
@@ -111,21 +129,28 @@ const UserManage = () => {
 
     const res = await Promise.all([
       restApi(endpoints.service.client).get(),
-
+      restApi(endpoints.district.index).get(),
       paramId && restApi(endpoints.user.single + paramId).get(),
     ]);
 
+    setDistricts(res[1].data);
+
     const sortedData = [];
 
-    res[0].data.map(e => tools.extractChildren(e, sortedData));
+    res[0]?.data?.map(e => tools.extractChildren(e, sortedData));
 
     setServices(sortedData);
 
     if (paramId) {
-      setItem(res[1].data);
-      setAddresses(res[1].data?.addresses);
-      setSelectedWorkerServices(res[1].data?.services?.map(e => e.id))
+      setItem(res[2].data);
+      setAddresses(res[2].data?.addresses);
+      setSelectedWorkerServices(res[2].data?.services?.map(e => e.id));
+      setSelectedDistricts(res[2].data?.districts?.map(e => e.id));
+      if (res[2].data?.profilePic?.url){
+        setImage({ data: undefined, preview: res[2].data?.profilePic?.url })
+      }
     }
+    dispatch(setLoading(false));
   };
 
   useEffect(() => {
@@ -177,6 +202,27 @@ const UserManage = () => {
                           onChange={(selected: any) => setSelectedWorkerServices(selected.map(e => e.value))}/>
                   <label className="sideBarTitle">درصد همکاری</label>
                   <input className="editProductInput" defaultValue={item?.percent} name="percent"/>
+                  <label className="sideBarTitle">مناطق تحت پوشش</label>
+                  <Select
+                      styles={{
+                        valueContainer: (base) => ({
+                          ...base,
+                          overflowX: 'scroll',
+                          flexWrap: 'unset',
+                        }),
+                        multiValue: (base) => ({
+                          ...base,
+                          flex: '1 0 auto',
+                        })
+                      }}
+
+                      options={tools.selectFormatter(districts, 'id', 'title', 'انتخاب کنید')}
+                      defaultValue={selectedDistricts?.map(e => ({
+                        value: e,
+                        label: districts.find(j => j.id == e)?.title
+                      }))}
+                      className="width100" id="infoTitle" isMulti={true} name='workerServices'
+                      onChange={(selected: any) => setSelectedDistricts(selected.map(e => e.value))}/>
               </>
               }
               {(item?.role == globalEnum.roles.SUPER_ADMIN || item?.role == globalEnum.roles.OPERATOR) &&
@@ -250,6 +296,30 @@ const UserManage = () => {
               {workerOffList()}
               </tbody>
             </table>
+          </section>
+          {item?.role == 'WORKER' &&
+              <section className="bottom">
+                <h6 className="dashBoardTitle">اطلاعات بانکی</h6>
+                  <label className="sideBarTitle">شماره کارت</label>
+                  <input className="editProductInput" defaultValue={item?.cardNumber} name="cardNumber"/>
+                  <label className="sideBarTitle">شماره حساب</label>
+                  <input className="editProductInput" defaultValue={item?.hesabNumber} name="hesabNumber"/>
+                  <label className="sideBarTitle">شماره شبا</label>
+                  <input className="editProductInput" defaultValue={item?.shebaNumber} name="shebaNumber"/>
+                  <label className="sideBarTitle">نام بانک</label>
+                  <input className="editProductInput" defaultValue={item?.bankName} name="bankName"/>
+              </section>
+          }
+          <section className="bottom">
+
+          <div className="AddInfoContainer">
+            <input type="file" onChange={(input) => setImage({
+              data: input.target.files[0],
+              preview: URL.createObjectURL(input.target.files[0]),
+            })}/>
+            {/* {paramId && image.preview && !image.data && <i className="deleteSvg" onClick={deleteImage}></i>} */}
+            <img src={image.preview} className='maxWidth100' alt="عکس کاربر"/>
+          </div>
           </section>
         </form>
       </main>
