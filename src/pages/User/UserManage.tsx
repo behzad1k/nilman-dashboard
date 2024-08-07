@@ -181,18 +181,12 @@ const UserManage = () => {
               <>
                   <label className="sideBarTitle">خدمت مربوطه</label>
                   <Select
-                      styles={{
-                        valueContainer: (base) => ({
-                          ...base,
-                          overflowX: 'scroll',
-                          flexWrap: 'unset',
-                        }),
-                        multiValue: (base) => ({
-                          ...base,
-                          flex: '1 0 auto',
-                        })
+                      styles={{valueContainer: (base) => ({
+                        ...base,
+                            maxHeight: '120px',
+                          overflow: 'auto'
+                      })
                       }}
-
                       options={tools.selectFormatter(services, 'id', 'title', 'انتخاب کنید')}
                           defaultValue={selectedWorkerServices?.map(e => ({
                             value: e,
@@ -204,18 +198,6 @@ const UserManage = () => {
                   <input className="editProductInput" defaultValue={item?.percent} name="percent"/>
                   <label className="sideBarTitle">مناطق تحت پوشش</label>
                   <Select
-                      styles={{
-                        valueContainer: (base) => ({
-                          ...base,
-                          overflowX: 'scroll',
-                          flexWrap: 'unset',
-                        }),
-                        multiValue: (base) => ({
-                          ...base,
-                          flex: '1 0 auto',
-                        })
-                      }}
-
                       options={tools.selectFormatter(districts, 'id', 'title', 'انتخاب کنید')}
                       defaultValue={selectedDistricts?.map(e => ({
                         value: e,

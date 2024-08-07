@@ -10,7 +10,8 @@ namespace globalEnum {
     Paid = 'Paid',
     Assigned = 'Assigned',
     Canceled = 'Canceled',
-    Done = 'Done'
+    Done = 'Done',
+    InProgress = 'InProgress'
   };
 }
 export default globalEnum;

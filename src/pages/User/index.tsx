@@ -108,7 +108,7 @@ const UsersList = () => {
             <i className="edit clickable" onClick={() => navigate('/user/edit/' + user.id)}></i>
           </td>
           <td className="">{user.lastEntrance}</td>
-          <td className="">{user.name}</td>
+          <td className="">{(user.name || '') + ' ' + (user.lastName || '')}</td>
           <td className="">{user.phoneNumber}</td>
           <td>{++index}</td>
         </tr>
@@ -149,7 +149,7 @@ const UsersList = () => {
         <h1 className="dashBoardTitle">لیست کاربران</h1>
         <div className="dashTabs">
           {Object.entries(tabTitles).map(([key, value]) =>
-              <span className={`ordersTag ${key == tab ? 'activeTab' : ''}`} onClick={() => setTab(key)}>
+              <span className={`ordersTag clickable ${key == tab ? 'activeTab' : ''}`} onClick={() => setTab(key)}>
             {value}
                 <span className={`numberTag ${key == tab ? 'activeTab' : ''}`}>{data?.filter((e: any) => {
                   switch (key){

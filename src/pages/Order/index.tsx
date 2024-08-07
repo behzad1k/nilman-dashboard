@@ -5,6 +5,7 @@ import { useDispatch } from 'react-redux';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import endpoints from '../../config/endpoints';
+import globalEnum from '../../enums/globalEnum';
 import useTicker from '../../hooks/useTicker';
 import { popupSlice } from '../../services/reducers';
 import { setLoading } from '../../services/reducers/homeSlice';
@@ -17,6 +18,7 @@ import Excel from '../Dashboard/Modal/Excel';
 import Bill from './Bill';
 import Status from './Status';
 import BillDetail from './\u200CBillDetail';
+import orderStatus = globalEnum.orderStatus;
 
 const Orders = () => {
   const [data, setData] = useState<any>([]);
@@ -37,10 +39,11 @@ const Orders = () => {
   const navigate = useNavigate();
   const tabTitles = {
     all: 'همه',
-    process: 'در حال پردازش',
-    canceled: 'لغو شده',
-    sent: 'ارسال شده',
-    wait: 'در انتظار',
+    Paid: 'پرداخت شده',
+    Assigned: 'محول شده',
+    InProgress: 'در حال انجام',
+    Canceled: 'لغو شده',
+    Done: 'تمام شده',
   }
 
   const deleteOrder = async (id: number) => {
@@ -68,36 +71,22 @@ const Orders = () => {
       dispatch(setLoading(false));
     }
   };
-  console.log(workers);
-  const sendForExcel = async () => {
-    // if(confirm('آیا مطمئن هستید؟')){
-      dispatch(setLoading(true));
-
-      const res = await restApi(process.env.REACT_APP_BASE_URL + '/admin/order/excel' , true).post({ orders: selectedForExcel});
-      if(res?.code == 200){
-        if (downloadExcelLink.current) {
-          downloadExcelLink.current.href = res.data.link;
-          downloadExcelLink.current.click();
-        }
-      }
-
-      dispatch(setLoading(false));
-    // }
-  };
 
   const list = () => {
     const rows: ReactElement[] = [];
 
     currentItems?.filter((e) => e.code.includes(query)).filter((e: any) => {
       switch (tab){
-        case('process'):
-          return e.status == 8;
-        case('canceled'):
-          return e.status == 10;
-        case('sent'):
-          return e.status == 9;
-        case('wait'):
-          return [2,4,7].includes(e.status)
+        case('Paid'):
+          return e.status == orderStatus.Paid;
+        case('Canceled'):
+          return e.status == orderStatus.Canceled;
+        case('Done'):
+          return e.status == orderStatus.Done;
+        case('Assigned'):
+          return e.status == orderStatus.Assigned;
+        case('InProgress'):
+          return e.status == orderStatus.InProgress;
         default: return true;
       }
     }).sort((a, b) => moment(b.createdAt).unix() - moment(a.createdAt).unix()).map((order: any, index) => {
@@ -137,7 +126,7 @@ const Orders = () => {
       await restApi(endpoints.user.index, true).get({ role: 'WORKER'}),
       await restApi(process.env.REACT_APP_BASE_URL + '/order/status', true).get(),
     ]).then((res) => {
-      setData(res[0].data);
+      setData(res[0].data?.filter(e => e.status != orderStatus.Created));
       setWorkers(res[1].data);
       setStatuses(res[1].data);
     })
@@ -163,18 +152,20 @@ const Orders = () => {
         <h1 className="dashBoardTitle">سفارش ها</h1>
         <div className="dashTabs">
           {Object.entries(tabTitles).map(([key, value]) =>
-            <span className={`ordersTag ${key == tab ? 'activeTab' : ''}`} onClick={() => setTab(key)}>
+            <span className={`ordersTag clickable ${key == tab ? 'activeTab' : ''}`} onClick={() => setTab(key)}>
             {value}
             <span className={`numberTag ${key == tab ? 'activeTab' : ''}`}>{data?.filter((e: any) => {
               switch (key){
-                case('process'):
-                  return e.status == 8;
-                case('canceled'):
-                  return e.status == 10;
-                case('sent'):
-                  return e.status == 9;
-                case('wait'):
-                  return [2,4,7].includes(e.status)
+                case('Paid'):
+                  return e.status == orderStatus.Paid;
+                case('Canceled'):
+                  return e.status == orderStatus.Canceled;
+                case('Done'):
+                  return e.status == orderStatus.Done;
+                case('Assigned'):
+                  return e.status == orderStatus.Assigned;
+                case('InProgress'):
+                  return e.status == orderStatus.InProgress;
                 default: return true;
               }
             }).length}</span>

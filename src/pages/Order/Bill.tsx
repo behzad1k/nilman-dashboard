@@ -61,7 +61,7 @@ const Bill = ({ order }: any) =>{
         <span className="billDetSpan">
           <select className='selectBox width96 backGrey' defaultValue={order?.workerId} onChange={(e) => setSelectedWorker(e.target.value)}>
             <option value={null}>انتخاب کنید</option>
-            {workers.map(e => <option value={e.id}>{e.name}</option>)}
+            {workers.map(e => <option value={e.id}>{e.name + ' ' + e.lastName}</option>)}
           </select>
             <label>زیباکار </label>
     </span>
