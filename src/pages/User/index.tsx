@@ -1,3 +1,4 @@
+import moment from 'jalali-moment';
 import ReactPaginate from 'react-paginate';
 import endpoints from '../../config/endpoints';
 import globalEnum from '../../enums/globalEnum';
@@ -19,7 +20,7 @@ const UsersList = () => {
   const [query, setQuery] = useState('');
   const [tab, setTab] = useState('all');
   const [itemOffset, setItemOffset] = useState(0);
-  const itemsPerPage = 25;
+  const itemsPerPage = 10;
   const endOffset = (itemOffset || 0) + itemsPerPage;
   let currentItems = data.filter(e => e.name?.toLowerCase()?.includes(query.toLowerCase()) || e.phoneNumber?.toLowerCase()?.includes(query.toLowerCase()))?.slice(itemOffset, endOffset);
   const pageCount = Math.ceil(data.length / itemsPerPage);
@@ -68,7 +69,7 @@ const UsersList = () => {
       if(res.code == 200) {
         Swal.fire({
           title: 'موفق',
-          text: `کاربر با موفقیت ${status == 1 ? 'فعال' : 'غیرفعال'} شد`,
+          text: `کاربر با موفقیت ${status == 0 ? 'فعال' : 'غیرفعال'} شد`,
           icon: 'success',
           confirmButtonText: 'متوجه شدم'
         })
@@ -107,10 +108,10 @@ const UsersList = () => {
             <i className="trash clickable" onClick={() => deleteItem(user.id)}></i>
             <i className="edit clickable" onClick={() => navigate('/user/edit/' + user.id)}></i>
           </td>
-          <td className="">{user.lastEntrance}</td>
+          <td className="">{user.lastEntrance && moment(user.lastEntrance).format('jYYYY/jMM/jDD')}</td>
           <td className="">{(user.name || '') + ' ' + (user.lastName || '')}</td>
           <td className="">{user.phoneNumber}</td>
-          <td>{++index}</td>
+          <td>{((searchParams.get('page') ? Number(searchParams.get('page')) - 1 : 0) * itemsPerPage) + ++index}</td>
         </tr>
       )
     })
@@ -196,7 +197,7 @@ const UsersList = () => {
             setSearchParams({['page']: (Number(event.selected) + 1).toString()})
             setItemOffset((event.selected * itemsPerPage) % data.length);
           }}
-          initialPage={Number(searchParams.get('page')) - 1}
+          initialPage={searchParams.get('page') ? Number(searchParams.get('page')) - 1 : 0}
           pageRangeDisplayed={5}
           pageCount={pageCount}
           previousLabel="< قبلی"

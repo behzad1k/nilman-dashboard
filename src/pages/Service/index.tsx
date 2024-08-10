@@ -68,7 +68,7 @@ const Service = () => {
           <td>
             <img src={service?.media?.url} className="width100p"/>
           </td>
-          <td>{++index}</td>
+          <td>{((searchParams.get('page') ? Number(searchParams.get('page')) - 1 : 0) * itemsPerPage) + ++index}</td>
         </tr>
       )
     })

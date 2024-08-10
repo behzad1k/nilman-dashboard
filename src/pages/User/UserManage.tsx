@@ -207,7 +207,7 @@ const UserManage = () => {
                       onChange={(selected: any) => setSelectedDistricts(selected.map(e => e.value))}/>
               </>
               }
-              {(item?.role == globalEnum.roles.SUPER_ADMIN || item?.role == globalEnum.roles.OPERATOR) &&
+              {(item?.role == globalEnum.roles.SUPER_ADMIN || item?.role == globalEnum.roles.OPERATOR || item?.role == globalEnum.roles.WORKER) &&
                   <>
                       <label className="sideBarTitle">نام کاربری</label>
                       <input className="editProductInput" defaultValue={item?.username} name="username"/>

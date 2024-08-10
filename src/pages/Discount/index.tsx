@@ -67,7 +67,7 @@ const Discount = () => {
             {discount?.forUser?.name ? <a href={`/user/edit/${discount?.forUser?.id}`} target='_blank'>{discount?.forUser?.name + ' - ' + discount?.forUser?.lastName}</a> : '-'}
           </td>
           <td className="">{discount?.title}</td>
-          <td>{++index}</td>
+          <td>{((searchParams.get('page') ? Number(searchParams.get('page')) - 1 : 0) * itemsPerPage) + ++index}</td>
         </tr>
       )
     })
