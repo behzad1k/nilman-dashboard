@@ -49,6 +49,16 @@ const endpoints = {
     index: format('district'),
     single: format('district/single'),
     basic: format('district/basic'),
+  },
+  log:{
+    index: format('log'),
+    single: format('district/single'),
+    basic: format('district/basic'),
+  },
+  dashboard:{
+    index: format('dashboard'),
+    single: format('dashboard/single'),
+    basic: format('district/basic'),
   }
 }
 

@@ -7,6 +7,7 @@ import { Loading } from './pages/App/loading';
 import Popup from './pages/App/popup';
 import Color from './pages/Color';
 import ColorManage from './pages/Color/Manage';
+import Dashboard from './pages/Dashboard';
 import Discount from './pages/Discount';
 import DiscountManage from './pages/Discount/Manage';
 import FeedbackFactor from './pages/FeedbackFactor';
@@ -29,6 +30,7 @@ root.render(
     <App/>
     <BrowserRouter basename="/">
       <Routes>
+        <Route path="/" element={<Dashboard />}/>
         <Route path="login" element={<Login />} />
         <Route path="order">
           <Route path="" element={<Orders/>}/>
