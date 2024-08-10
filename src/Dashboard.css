@@ -1503,11 +1503,15 @@ table{
     border: 1px solid grey;
     border-radius: 12px;
     padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
 }
 .dashCardLog{
 
 }
 .dashCard{
+    direction: rtl;
     border: 0.5px dashed grey;
     border-radius: 12px;
     display: flex;

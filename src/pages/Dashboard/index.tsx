@@ -14,7 +14,7 @@ import tools from '../../utils/tools';
 
 const Dashboard = () => {
   const [data, setData] = useState<IService[]>([]);
-  const [logs, setLogs] = useState<IService[]>([]);
+  const [logs, setLogs] = useState<any[]>([]);
   const [query, setQuery] = useState('');
   const [itemOffset, setItemOffset] = useState(0);
   const [searchParams, setSearchParams] = useSearchParams();
@@ -123,25 +123,45 @@ const Dashboard = () => {
       <main className="dashBoardMain">
         <div>
           <div className="dashCardContainer">
+            <Select options={[
+              {
+                value: '/service',
+                label: 'صفحه اصلی'
+              },
+              {
+                value: '/newOrder',
+                label: 'ثبت سفارش'
+              },{
+                value: '/user',
+                label: 'پروفایل'
+              },
+            ]} className="dashCardLog" id="infoTitle" onChange={ async (selected: any) => fetchLogs({ path: selected.value.replaceAll('/', '%2') })}/>
             <div className="dashCard">
-                <Select options={[
-                  {
-                    value: '/service',
-                    label: 'صفحه اصلی'
-                  },
-                  {
-                    value: '/newOrder',
-                    label: 'ثبت سفارش'
-                  },{
-                    value: '/user',
-                    label: 'پروفایل'
-                  },
-                ]} className="dashCardLog" id="infoTitle" onChange={ async (selected: any) => fetchLogs({ path: selected.value.replaceAll('/', '%2') })}/>
               <span>
+                همه بازدید ها
+              </span>
+                <span>
                 {logs.length}
               </span>
             </div>
-          </div>
+            <div className="dashCard">
+              <span>
+                لاگین شده
+              </span>
+                <span>
+                {logs.length}
+              </span>
+            </div>
+            <div className="dashCard">
+              <span>
+                بدون لاگین
+              </span>
+                <span>
+                {logs.filter(e => !e.userId).length}
+              </span>
+            </div>
+
+            </div>
         </div>
       </main>
       </body>
