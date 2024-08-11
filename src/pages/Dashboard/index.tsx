@@ -149,7 +149,7 @@ const Dashboard = () => {
                 لاگین شده
               </span>
                 <span>
-                {logs.length}
+                {logs.filter(e => e.userId != null).length}
               </span>
             </div>
             <div className="dashCard">
@@ -160,7 +160,6 @@ const Dashboard = () => {
                 {logs.filter(e => !e.userId).length}
               </span>
             </div>
-
             </div>
         </div>
       </main>

@@ -874,7 +874,7 @@ table{
     flex-direction: row-reverse;
     width: 97%;
     padding: 16px;
-    gap: 70px;
+    gap: 10px;
     justify-content: center;
 }
 .infoSection{
@@ -983,7 +983,7 @@ table{
 
 .editOrderTable {
     width: 94%;
-    padding: 10px 50px 10px;
+    /*padding: 10px 50px 10px;*/
 }
 .height70{
     height: 70px;

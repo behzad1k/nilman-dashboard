@@ -2,31 +2,32 @@ import moment from 'jalali-moment';
 import { ReactElement, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
+import Select from 'react-select';
 import Swal from 'sweetalert2';
 import endpoints from '../../config/endpoints';
+import globalEnum from '../../enums/globalEnum';
 import { setLoading } from '../../services/reducers/homeSlice';
 import restApi from '../../services/restApi';
 import { useAppSelector } from '../../services/store';
 import tools from '../../utils/tools';
 import { Sidebar } from '../../layouts/Sidebar';
+import orderStatus = globalEnum.orderStatus;
 
 const EditOrder = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
   const serviceReducer = useAppSelector(state => state.serviceReducer.services);
   const [order, setOrder] = useState<any>();
+  const [form, setForm] = useState<any>({});
   const navigate = useNavigate();
 
-  const send = async (form) => {
-    form.preventDefault();
+  const send = async () => {
     dispatch(setLoading(true));
 
-    const formData = new FormData(form.target);
-
-    const res = await restApi(process.env.REACT_APP_BASE_URL + '/admin/order/update/' + order.id, true).put({
-      counts: formData.getAll('counts[]'),
-      prices: formData.getAll('prices[]'),
-      products: formData.getAll('products[]')
+    const res = await restApi(process.env.REACT_APP_BASE_URL + '/admin/order/update/' + id, true).put({
+      date: form.date,
+      time: form.time,
+      status: form.status,
     })
 
     if(res.code == 200){
@@ -47,29 +48,11 @@ const EditOrder = () => {
     dispatch(setLoading(false));
   };
 
-  const statusList = () => {
-    const rows: ReactElement[] = []
-
-    order?.orderStatuses?.map((orderProduct: any, index) => {
-      rows.push(
-        <tr className="" key={'product' + index}>
-          <td className="backGround1">
-            <p>{orderProduct.description}</p>
-          </td>
-          <td>{moment(orderProduct.createdAt).format('jYYYY/jMM/jDD HH:mm')}</td>
-          <td>{orderProduct?.orderStatus?.title}</td>
-        </tr>
-      )
-    })
-
-    return rows;
-  };
-
   const list = () => {
     const rows: ReactElement[] = []
     order?.orderServices?.map((orderProduct: any, index) => {
       rows.push(
-        <tr className="height70 gap40" key={'product' + index}>
+        <tr className="" key={'product' + index}>
           <td className="priceHolder backGround1">
             <p>{orderProduct.price}</p>
           </td>
@@ -90,7 +73,7 @@ const EditOrder = () => {
         {/*   </div> */}
         {/* </td> */}
         {/*   <td className="skuContainer textAlignCenter">{orderProduct.service.title}</td> */}
-          <td className="nameContainer">
+          <td className="">
             <p className="font12 textAlignRight">{serviceReducer?.find(e => e.id == orderProduct?.service?.id)?.parent?.title + ' - ' + orderProduct.service?.title }</p>
             {/* <p>{orderProduct.product.category.title}</p> */}
           </td>
@@ -105,14 +88,18 @@ const EditOrder = () => {
 
     return rows;
   };
-
+  console.log(form);
   const fetchData = async () => {
     dispatch(setLoading(true));
 
     const res = await restApi(endpoints.order.single + id, true).get();
 
+    setForm({
+      date: res.data?.date,
+      time: res.data?.fromTime,
+      status: res.data?.status,
+    })
     setOrder(res.data)
-
     dispatch(setLoading(false));
   };
 
@@ -124,11 +111,10 @@ const EditOrder = () => {
     <>
       <body className="dashboardBody">
       <Sidebar/>
-      <form onSubmit={send} className="form">
 
       <main className="dashBoardMain main">
         <div className="addInfoHeader">
-          <button className="dashboardHeader keepRight" type="submit">
+          <button className="dashboardHeader keepRight" onClick={send}>
             <p>ویرایش سفارش</p>
           </button>
           <span>
@@ -147,6 +133,20 @@ const EditOrder = () => {
             <input className="editProductInput" value={order?.user?.phoneNumber}/>
             <label className="sideBarTitle" >ایمیل</label>
             <input className="editProductInput" value={order?.user?.email}/>
+          </div>
+        </div>
+          <div className="infoSection">
+          <h1 className="dashBoardTitle">اطلاعات کاربر</h1>
+          <div className="userInfoContainer">
+          <label className="sideBarTitle">وضغیت سفارش</label>
+            <Select name='status' value={{
+              value: Object.keys(orderStatus).find(e => e == form?.status),
+              label: orderStatus[Object.keys(orderStatus).find(e => e == form?.status)]
+            }} options={Object.entries(orderStatus).map(([key, value]) => ({value: key, label: value}))} className="dashCardLog" id="infoTitle" onChange={(selected) => setForm(prev => ({ ...prev, status: selected.value }))}/>
+            <label className="sideBarTitle">تاریخ</label>
+            <input className="editProductInput" value={form?.date} onChange={(input) => setForm(prev => ({ ...prev, date: input.target.value}))}/>
+            <label className="sideBarTitle" >ساعت</label>
+            <input className="editProductInput" value={form?.time} onChange={(input) => setForm(prev => ({ ...prev, time: input.target.value}))}/>
           </div>
         </div>
           <div className="infoSection">
@@ -238,7 +238,6 @@ const EditOrder = () => {
           </table>
         </section>
       </main>
-        </form>
       </body>
     </>
   )

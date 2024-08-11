@@ -128,7 +128,7 @@ const Orders = () => {
     ]).then((res) => {
       setData(res[0].data?.filter(e => e.status != orderStatus.Created));
       setWorkers(res[1].data);
-      setStatuses(res[1].data);
+      // setStatuses(res[1].data);
     })
 
     dispatch(setLoading(false));
