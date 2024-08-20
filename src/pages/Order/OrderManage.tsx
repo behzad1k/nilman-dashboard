@@ -18,7 +18,7 @@ const OrderManage = () => {
   const dispatch = useDispatch();
   const serviceReducer = useAppSelector(state => state.serviceReducer);
   const [order, setOrder] = useState<any>();
-  const [form, setForm] = useState<any>({});
+  const [form, setForm] = useState<any>({ orderServices: []});
   const navigate = useNavigate();
   const send = async () => {
     dispatch(setLoading(true));
@@ -28,11 +28,13 @@ const OrderManage = () => {
       time: form.time,
       status: form.status,
       finalPrice: form.finalPrice,
+      price: form.price,
+      discountAmount: form.discountAmount,
       transportation: form.transportation
     })
 
     await restApi(process.env.REACT_APP_BASE_URL + '/admin/order/products/' + res.data.id).put({
-      services: order.orderServices.map(e => ({
+      services: form.orderServices.map(e => ({
         serviceId: e.serviceId,
       }))
     })
@@ -55,60 +57,42 @@ const OrderManage = () => {
     dispatch(setLoading(false));
   };
 
-  // useEffect(() => {
-    // for (const orderService of order.orderServices) {
-    //   const serviceObj = order.orderServices.find(e => e.id == )
-    // }
-  // }, [order.orderServices]);
   const list = () => {
     const rows: ReactElement[] = []
-    order?.orderServices?.map((orderProduct: any, index) => {
+    form?.orderServices?.map((orderProduct: any, index) => {
+      const key = form.orderServices?.findIndex(e => e.serviceId == orderProduct.serviceId)
+
       rows.push(
         <tr className="" key={'product' + index}>
           <td className="backGround1">
             <p>{tools.formatPrice(orderProduct.price || serviceReducer.services?.find(e => e.id == orderProduct.serviceId)?.price)}</p>
           </td>
-          {/* <td className="priceHolder"> */}
-          {/*   <input type="text" name={`prices[]`} className="noBorder textAlignCenter" defaultValue={orderProduct.price}/> */}
-          {/* </td> */}
-        {/*   <td className="quantity"> */}
-        {/*   <div className="quantityButtom"> */}
-        {/*     <i className="tablePlusIcon" onClick={(e: any) => { */}
-        {/*       e.target.nextElementSibling.value = Number(e.target.nextElementSibling.value) + 1; */}
-        {/*       e.target.parentElement.parentElement.previousElementSibling.previousElementSibling.children[0].innerHTML = Number(e.target.nextElementSibling.value) * Number(e.target.parentElement.parentElement.previousElementSibling.children[0].value) */}
-        {/*     }}></i> */}
-        {/*     <input className="quantityNumber" defaultValue={orderProduct.count} name={`counts[]`} onChange={(e: any) => e.target.parentElement.parentElement.previousElementSibling.previousElementSibling.children[0].innerHTML = Number(e.target.value) * Number(e.target.parentElement.parentElement.nextElementSibling.children[0].value)}/> */}
-        {/*     <i className="tableCollapsIcon" onClick={(e: any) => { */}
-        {/*       e.target.previousElementSibling.value = Number(e.target.previousElementSibling.value) - 1; */}
-        {/*       e.target.parentElement.parentElement.previousElementSibling.previousElementSibling.children[0].innerHTML = Number(e.target.previousElementSibling.value) * Number(e.target.parentElement.parentElement.previousElementSibling.children[0].value) */}
-        {/*     }}></i> */}
-        {/*   </div> */}
-        {/* </td> */}
-        {/*   <td className="skuContainer textAlignCenter">{orderProduct.service.title}</td> */}
+          <td className="quantity">
+          <div className="quantityButtom">
+            <i className="tablePlusIcon" onClick={(e: any) => {
+              e.target.nextElementSibling.value = Number(e.target.nextElementSibling.value) + 1;
+              // e.target.parentElement.parentElement.previousElementSibling.previousElementSibling.children[0].innerHTML = Number(e.target.nextElementSibling.value) * Number(e.target.parentElement.parentElement.previousElementSibling.children[0].value)
+            }}></i>
+            <input className="quantityNumber" defaultValue={1}
+                   // onChange={(e: any) => e.target.parentElement.parentElement.previousElementSibling.previousElementSibling.children[0].innerHTML = Number(e.target.value) * Number(e.target.parentElement.parentElement.nextElementSibling.children[0].value)}
+            />
+            <i className="tableCollapsIcon" onClick={(e: any) => {
+              e.target.previousElementSibling.value = Number(e.target.previousElementSibling.value) - 1;
+              // e.target.parentElement.parentElement.previousElementSibling.previousElementSibling.children[0].innerHTML = Number(e.target.previousElementSibling.value) * Number(e.target.parentElement.parentElement.previousElementSibling.children[0].value)
+            }}></i>
+          </div>
+        </td>
           <td className="">
-            <Select options={tools.selectFormatter(serviceReducer.services, 'id', 'title')} value={tools.selectFormatter([serviceReducer.services.find(e => e.id == orderProduct.serviceId)], 'id', 'title')} onChange={(selected) => {setOrder(prev => {
-              const cp = {...prev}
-
-              const key = cp.orderServices.findIndex(e => e.serviceId == orderProduct.serviceId)
-
-              if (key == undefined || key < 0){
-                cp.orderServices.push({
-                  serviceId: selected.value
-                })
-              }else{
-                cp.orderServices[key].serviceId = selected.value
-              }
-
-              return cp;
-            })}}/>
-            {tools.findAncestors(serviceReducer.allServices, orderProduct.serviceId)?.reverse()?.map((attr, index) => <span key={'bread' + index} className="breadCrumbItem">{(index == 0 ? '' : '> ') + attr?.title}</span>)}
-            {/* {serviceReducer?.find(e => e.id == orderProduct?.service?.id)?.parent?.title + ' - ' + orderProduct.service?.title} */}
-            {/* <p>{orderProduct.product.category.title}</p> */}
+            <Select
+              options={serviceReducer.allServices.map(e => ({ value: e.id, label: tools.findAncestors(serviceReducer.allServices, e.id)?.reverse()?.map((attr, index) => <span key={'bread' + index} className="breadCrumbItem">{(index == 0 ? '' : '> ') + attr?.title}</span>)}))}
+              value={{value: orderProduct.serviceId, label: tools.findAncestors(serviceReducer.allServices, orderProduct.serviceId)?.reverse()?.map((attr, index) => <span key={'bread' + index} className="breadCrumbItem">{(index == 0 ? '' : '> ') + attr?.title}</span>)}}
+              onChange={(selected) => {setForm(prev => ({ ...prev, orderServices: (key == undefined || key < 0) ? [...prev, { serviceId: selected.value }] : prev.orderServices.map(e => e.serviceId == orderProduct.serviceId ? {...e, serviceId: selected.value } : e)}))}}
+            />
           </td>
           {/* <td><img className="width100p" src={orderProduct.product.medias.find(e => e.code == 'main')?.url}/></td> */}
           <td>{++index}</td>
           <td>
-            <i className="cancelSvg" onClick={() => setOrder(prev => ({ ...prev, orderServices: prev.orderServices.filter(e => e.serviceId != orderProduct.serviceId)}))}></i>
+            <i className="cancelSvg" onClick={() => setForm(prev => ({ ...prev, orderServices: prev.orderServices.filter(e => e.serviceId != orderProduct.serviceId)}))}></i>
           </td>
         </tr>
       )
@@ -127,7 +111,12 @@ const OrderManage = () => {
       time: res.data?.fromTime,
       status: res.data?.status,
       finalPrice: res.data?.finalPrice,
-      transportation: res.data?.transportation
+      price: res.data?.price,
+      transportation: res.data?.transportation,
+      discountAmount: res.data?.discountAmount,
+      orderServices: res.data?.orderServices,
+      address: res.data?.address,
+      user: res.data?.user
     })
     setOrder(res.data)
     dispatch(setLoading(false));
@@ -136,6 +125,11 @@ const OrderManage = () => {
   useEffect(() => {
     fetchData();
   }, []);
+
+  useEffect(() => {
+    const newPrice = form.orderServices?.reduce((acc, curr) => acc + Number(serviceReducer.allServices?.find(e => e.id == curr.serviceId)?.price), 0)
+    setForm(prev => ({ ...prev, price: newPrice, finalPrice: newPrice + form?.transportation}))
+  }, [...form.orderServices]);
 
   return(
     <>
@@ -201,22 +195,38 @@ const OrderManage = () => {
           <div className="infoSection">
             <h1 className="dashBoardTitle">آدرس</h1>
             <div className="userInfoContainer">
-              <label className="sideBarTitle">ارسال به</label>
-              <select className="selector width">
-                <option>آدرس ۱</option>
-              </select>
-              <h6 className="sideBarTitle">جزئیات آدرس ۱</h6>
-              <p className="catAdresses">
-                {`${order?.address?.description}`}
-                <br/>
-                {`${order?.address?.pelak} پلاک `}
-                <br/>
-                {`${order?.address?.vahed} واحد `}
-                <br/>
-                {`${order?.address?.postalCode} کدپستی `}
-                <br/>
-                {`${order?.address?.phoneNumber} تلفن `}
-              </p>
+              <label className="sideBarTitle">آدرس های پیشین</label>
+              <Select className="addressInput dirRtl width100" options={tools.selectFormatter(form.user?.addresses, 'id', 'description', 'انتخاب کنید')} defaultValue={{
+                value: form.delivery?.addressId || '',
+                label: form.user?.addresses.find(e => e.id == form.delivery?.addressId)?.description
+              }} id="infoTitle" onChange={(selected) => setForm(prev => ({
+                ...prev,
+                address: form.user?.addresses?.find(e => e.id == selected.value)
+              }))}/>
+              <label className="sideBarTitle" htmlFor="phoneNumber">شماره تماس</label>
+              <input className="editProductInput" type="text" id="phoneNumber" name="addressPhone" value={form.address?.phoneNumber} onChange={(input: any) => setForm(prev => ({
+                ...prev,
+                address: {
+                  ...prev.address,
+                  phoneNumber: input.target.value
+                }
+              }))}/>
+              <label className="sideBarTitle" htmlFor="postalCode">کد پستی</label>
+              <input className="editProductInput" type="text" id="postalCode" name="addressPostal" value={form.address?.postalCode} onChange={(input: any) => setForm(prev => ({
+                ...prev,
+                address: {
+                  ...prev.address,
+                  postalCode: input.target.value
+                }
+              }))}/>
+              <label className="sideBarTitle" htmlFor="address">جزئیات آدرس</label>
+              <textarea className="editProductInput" id="address" name="addressText" value={form.address?.description} onChange={(input: any) => setForm(prev => ({
+                ...prev,
+                address: {
+                  ...prev.address,
+                  description: input.target.value
+                }
+              }))}/>
             </div>
           </div>
           <div className="infoSection">
@@ -228,19 +238,19 @@ const OrderManage = () => {
               <span className="billItems dashboardBill">
               <h3 className="billItem">هزینه ارسال</h3>
               <div className="pricePart">
-                <input className="billPrice" value={form?.transportation} onChange={(input) => setForm(prev => ({ ...prev, transportation: input.target.value}))}/>
+                <input className="billPrice" value={form?.transportation} onChange={(input) => setForm(prev => ({ ...prev, transportation: Number(input.target.value)}))}/>
               </div>
             </span>
               <span className="billItems dashboardBill">
               <h3 className="billItem">مبلغ سفارش</h3>
               <div className="pricePart">
-                <input className="billPrice" value={form?.price} onChange={(input) => setForm(prev => ({ ...prev, price: input.target.value}))}/>
+                <input className="billPrice" value={form?.price} onChange={(input) => setForm(prev => ({ ...prev, price: Number(input.target.value)}))}/>
               </div>
             </span>
               <span className="billItems dashboardBill">
               <h3 className="billItem">تخفیف</h3>
               <div className="pricePart">
-                <h1 className="billPrice">{tools.formatPrice(order?.discountPrice || 0)}</h1>
+                <input className="billPrice" value={form?.discountAmount || 0} onChange={(input) => setForm(prev => ({ ...prev, discountAmount: Number(input.target.value) > 0 ? Number(input.target.value) : 0 }))}/>
               </div>
             </span>
               {/*   <span className="billItems dashboardBill"> */}
@@ -253,7 +263,7 @@ const OrderManage = () => {
               <span className="billItems dashboardBill">
               <h3 className="billItem">مبلغ قابل پرداخت</h3>
               <div className="pricePart">
-                <input className="tablePrice1" value={form?.finalPrice} onChange={(input) => setForm(prev => ({ ...prev, finalPrice: input.target.value}))}/>
+                <input className="tablePrice1" value={form?.finalPrice - form.discountAmount} onChange={(input) => setForm(prev => ({ ...prev, finalPrice: Number(input.target.value)}))}/>
               </div>
             </span>
             </div>
@@ -264,6 +274,7 @@ const OrderManage = () => {
           <table className="productTable">
           <thead className="editOrderTable">
             <th className="sideBarTitle center" >قیمت کل</th>
+            <th className="sideBarTitle center" >تعداد</th>
             <th className="sideBarTitle center" >خدمت</th>
             <th className="sideBarTitle center" >ردیف</th>
             <th className="sideBarTitle center" ></th>
@@ -271,7 +282,7 @@ const OrderManage = () => {
             <tbody>
             {list()}
             <tr className="addProductTr">
-              <td className="addProductButton" onClick={() => setOrder(prev => ({ ...prev, orderServices: [...prev.orderServices, {serviceId: 1 }] }))}>اضافه کردن محصول</td>
+              <td className="addProductButton clickable" onClick={() => setForm(prev => ({ ...prev, orderServices: [...prev.orderServices, {serviceId: 1 }] }))}>اضافه کردن محصول</td>
             </tr>
             </tbody>
           </table>
