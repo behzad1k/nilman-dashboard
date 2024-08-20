@@ -27,6 +27,7 @@ const OrderManage = () => {
       date: form.date,
       time: form.time,
       status: form.status,
+      finalPrice: form.finalPrice
     })
 
     await restApi(process.env.REACT_APP_BASE_URL + '/admin/order/products/' + res.data.id).put({
@@ -53,6 +54,11 @@ const OrderManage = () => {
     dispatch(setLoading(false));
   };
 
+  useEffect(() => {
+    // for (const orderService of order.orderServices) {
+    //   const serviceObj = order.orderServices.find(e => e.id == )
+    // }
+  }, [order.orderServices]);
   const list = () => {
     const rows: ReactElement[] = []
     order?.orderServices?.map((orderProduct: any, index) => {
@@ -119,6 +125,8 @@ const OrderManage = () => {
       date: res.data?.date,
       time: res.data?.fromTime,
       status: res.data?.status,
+      finalPrice: res.data?.finalPrice,
+      transportation: res.data?.transportation
     })
     setOrder(res.data)
     dispatch(setLoading(false));
@@ -219,7 +227,13 @@ const OrderManage = () => {
               <span className="billItems dashboardBill">
               <h3 className="billItem">هزینه ارسال</h3>
               <div className="pricePart">
-                <h1 className="billPrice">{tools.formatPrice(order?.transportation)}</h1>
+                <input className="billPrice" value={form?.transportation} onChange={(input) => setForm(prev => ({ ...prev, transportation: input.target.value}))}/>
+              </div>
+            </span>
+              <span className="billItems dashboardBill">
+              <h3 className="billItem">مبلغ سفارش</h3>
+              <div className="pricePart">
+                <input className="billPrice" value={form?.price} onChange={(input) => setForm(prev => ({ ...prev, price: input.target.value}))}/>
               </div>
             </span>
               <span className="billItems dashboardBill">
@@ -238,7 +252,7 @@ const OrderManage = () => {
               <span className="billItems dashboardBill">
               <h3 className="billItem">مبلغ قابل پرداخت</h3>
               <div className="pricePart">
-                <h1 className="tablePrice1">{tools.formatPrice(order?.finalPrice)}</h1>
+                <input className="tablePrice1" value={form?.finalPrice} onChange={(input) => setForm(prev => ({ ...prev, finalPrice: input.target.value}))}/>
               </div>
             </span>
             </div>
