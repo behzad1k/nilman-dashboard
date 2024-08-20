@@ -13,21 +13,26 @@ import tools from '../../utils/tools';
 import { Sidebar } from '../../layouts/Sidebar';
 import orderStatus = globalEnum.orderStatus;
 
-const EditOrder = () => {
+const OrderManage = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
-  const serviceReducer = useAppSelector(state => state.serviceReducer.services);
+  const serviceReducer = useAppSelector(state => state.serviceReducer);
   const [order, setOrder] = useState<any>();
   const [form, setForm] = useState<any>({});
   const navigate = useNavigate();
-
   const send = async () => {
     dispatch(setLoading(true));
 
-    const res = await restApi(process.env.REACT_APP_BASE_URL + '/admin/order/update/' + id, true).put({
+    const res = await restApi(process.env.REACT_APP_BASE_URL + '/admin/order/basic/' + (id || ''), true).post({
       date: form.date,
       time: form.time,
       status: form.status,
+    })
+
+    await restApi(process.env.REACT_APP_BASE_URL + '/admin/order/products/' + res.data.id).put({
+      services: order.orderServices.map(e => ({
+        serviceId: e.serviceId,
+      }))
     })
 
     if(res.code == 200){
@@ -53,8 +58,8 @@ const EditOrder = () => {
     order?.orderServices?.map((orderProduct: any, index) => {
       rows.push(
         <tr className="" key={'product' + index}>
-          <td className="priceHolder backGround1">
-            <p>{orderProduct.price}</p>
+          <td className="backGround1">
+            <p>{tools.formatPrice(orderProduct.price || serviceReducer.services?.find(e => e.id == orderProduct.serviceId)?.price)}</p>
           </td>
           {/* <td className="priceHolder"> */}
           {/*   <input type="text" name={`prices[]`} className="noBorder textAlignCenter" defaultValue={orderProduct.price}/> */}
@@ -74,21 +79,37 @@ const EditOrder = () => {
         {/* </td> */}
         {/*   <td className="skuContainer textAlignCenter">{orderProduct.service.title}</td> */}
           <td className="">
-            <p className="font12 textAlignRight">{serviceReducer?.find(e => e.id == orderProduct?.service?.id)?.parent?.title + ' - ' + orderProduct.service?.title }</p>
+            <Select options={tools.selectFormatter(serviceReducer.services, 'id', 'title')} value={tools.selectFormatter([serviceReducer.services.find(e => e.id == orderProduct.serviceId)], 'id', 'title')} onChange={(selected) => {setOrder(prev => {
+              const cp = {...prev}
+
+              const key = cp.orderServices.findIndex(e => e.serviceId == orderProduct.serviceId)
+
+              if (key == undefined || key < 0){
+                cp.orderServices.push({
+                  serviceId: selected.value
+                })
+              }else{
+                cp.orderServices[key].serviceId = selected.value
+              }
+
+              return cp;
+            })}}/>
+            {tools.findAncestors(serviceReducer.allServices, orderProduct.serviceId)?.reverse()?.map((attr, index) => <span key={'bread' + index} className="breadCrumbItem">{(index == 0 ? '' : '> ') + attr?.title}</span>)}
+            {/* {serviceReducer?.find(e => e.id == orderProduct?.service?.id)?.parent?.title + ' - ' + orderProduct.service?.title} */}
             {/* <p>{orderProduct.product.category.title}</p> */}
           </td>
           {/* <td><img className="width100p" src={orderProduct.product.medias.find(e => e.code == 'main')?.url}/></td> */}
           <td>{++index}</td>
           <td>
-            <i className="cancelSvg"></i>
-            <input type="hidden" name="products[]" value={orderProduct.productId}/></td>
+            <i className="cancelSvg" onClick={() => setOrder(prev => ({ ...prev, orderServices: prev.orderServices.filter(e => e.serviceId != orderProduct.serviceId)}))}></i>
+          </td>
         </tr>
       )
     })
 
     return rows;
   };
-  console.log(form);
+
   const fetchData = async () => {
     dispatch(setLoading(true));
 
@@ -131,12 +152,12 @@ const EditOrder = () => {
             <input className="editProductInput" value={order?.user?.name}/>
             <label className="sideBarTitle">شماره تلفن</label>
             <input className="editProductInput" value={order?.user?.phoneNumber}/>
-            <label className="sideBarTitle" >ایمیل</label>
-            <input className="editProductInput" value={order?.user?.email}/>
+            <label className="sideBarTitle" >کد ملی</label>
+            <input className="editProductInput" value={order?.user?.nationalCode}/>
           </div>
         </div>
           <div className="infoSection">
-          <h1 className="dashBoardTitle">اطلاعات کاربر</h1>
+          <h1 className="dashBoardTitle">اطلاعات سفارش</h1>
           <div className="userInfoContainer">
           <label className="sideBarTitle">وضغیت سفارش</label>
             <Select name='status' value={{
@@ -149,6 +170,25 @@ const EditOrder = () => {
             <input className="editProductInput" value={form?.time} onChange={(input) => setForm(prev => ({ ...prev, time: input.target.value}))}/>
           </div>
         </div>
+
+        {/* <section className="bottom"> */}
+        {/*   <h6 className="dashBoardTitle">وضعیت ها</h6> */}
+        {/*   <table className="productTable"> */}
+        {/*     <thead className="editOrderTable"> */}
+        {/*     <th className="sideBarTitle center" >توضیحات</th> */}
+        {/*     <th className="sideBarTitle center" >تاریخ</th> */}
+        {/*     <th className="sideBarTitle center" >وضعیت</th> */}
+        {/*     </thead> */}
+        {/*     <tbody> */}
+        {/*     {statusList()} */}
+        {/*     </tbody> */}
+        {/*     /!* <tr className="addProductTr"> *!/ */}
+        {/*     /!*   <td className="addProductButton">اضافه کردن محصول</td> *!/ */}
+        {/*     /!* </tr> *!/ */}
+        {/*   </table> */}
+        {/* </section> */}
+        </section>
+        <section className="topRow">
           <div className="infoSection">
             <h1 className="dashBoardTitle">آدرس</h1>
             <div className="userInfoContainer">
@@ -156,16 +196,16 @@ const EditOrder = () => {
               <select className="selector width">
                 <option>آدرس ۱</option>
               </select>
-             <h6 className="sideBarTitle">جزئیات آدرس ۱</h6>
+              <h6 className="sideBarTitle">جزئیات آدرس ۱</h6>
               <p className="catAdresses">
                 {`${order?.address?.description}`}
                 <br/>
                 {`${order?.address?.pelak} پلاک `}
                 <br/>
                 {`${order?.address?.vahed} واحد `}
-              <br/>
+                <br/>
                 {`${order?.address?.postalCode} کدپستی `}
-              <br/>
+                <br/>
                 {`${order?.address?.phoneNumber} تلفن `}
               </p>
             </div>
@@ -188,38 +228,22 @@ const EditOrder = () => {
                 <h1 className="billPrice">{tools.formatPrice(order?.discountPrice || 0)}</h1>
               </div>
             </span>
-            {/*   <span className="billItems dashboardBill"> */}
-            {/*   <h3 className="billItem">مالیات</h3> */}
-            {/*   <div className="pricePart"> */}
-            {/*     <h1 className="billPrice">3%</h1> */}
-            {/*   </div> */}
-            {/* </span> */}
+              {/*   <span className="billItems dashboardBill"> */}
+              {/*   <h3 className="billItem">مالیات</h3> */}
+              {/*   <div className="pricePart"> */}
+              {/*     <h1 className="billPrice">3%</h1> */}
+              {/*   </div> */}
+              {/* </span> */}
               <hr className="dashedBill"/>
               <span className="billItems dashboardBill">
               <h3 className="billItem">مبلغ قابل پرداخت</h3>
               <div className="pricePart">
-                <h1 className="tablePrice1">{tools.formatPrice(order?.price)}</h1>
+                <h1 className="tablePrice1">{tools.formatPrice(order?.finalPrice)}</h1>
               </div>
             </span>
             </div>
           </div>
         </section>
-        {/* <section className="bottom"> */}
-        {/*   <h6 className="dashBoardTitle">وضعیت ها</h6> */}
-        {/*   <table className="productTable"> */}
-        {/*     <thead className="editOrderTable"> */}
-        {/*     <th className="sideBarTitle center" >توضیحات</th> */}
-        {/*     <th className="sideBarTitle center" >تاریخ</th> */}
-        {/*     <th className="sideBarTitle center" >وضعیت</th> */}
-        {/*     </thead> */}
-        {/*     <tbody> */}
-        {/*     {statusList()} */}
-        {/*     </tbody> */}
-        {/*     /!* <tr className="addProductTr"> *!/ */}
-        {/*     /!*   <td className="addProductButton">اضافه کردن محصول</td> *!/ */}
-        {/*     /!* </tr> *!/ */}
-        {/*   </table> */}
-        {/* </section> */}
         <section className="bottom width100">
         <h6 className="dashBoardTitle">خدمات</h6>
           <table className="productTable">
@@ -231,10 +255,10 @@ const EditOrder = () => {
           </thead>
             <tbody>
             {list()}
+            <tr className="addProductTr">
+              <td className="addProductButton" onClick={() => setOrder(prev => ({ ...prev, orderServices: [...prev.orderServices, {serviceId: 1 }] }))}>اضافه کردن محصول</td>
+            </tr>
             </tbody>
-            {/* <tr className="addProductTr"> */}
-            {/*   <td className="addProductButton">اضافه کردن محصول</td> */}
-            {/* </tr> */}
           </table>
         </section>
       </main>
@@ -242,4 +266,4 @@ const EditOrder = () => {
     </>
   )
 }
-export default EditOrder
+export default OrderManage;

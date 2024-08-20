@@ -14,7 +14,7 @@ import FeedbackFactor from './pages/FeedbackFactor';
 import FeedbackFactorManage from './pages/FeedbackFactor/Manage';
 import Login from './pages/Login';
 import Orders from './pages/Order';
-import EditOrder from './pages/Order/EditOrder';
+import OrderManage from './pages/Order/OrderManage';
 import Service from './pages/Service';
 import ServiceManage from './pages/Service/Manage';
 import UsersList from './pages/User';
@@ -34,7 +34,7 @@ root.render(
         <Route path="login" element={<Login />} />
         <Route path="order">
           <Route path="" element={<Orders/>}/>
-          <Route path="edit/:id" element={<EditOrder/>}/>
+          <Route path="edit/:id" element={<OrderManage/>}/>
         </Route>
         <Route path="service">
           <Route path="" element={<Service/>}/>

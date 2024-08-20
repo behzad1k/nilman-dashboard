@@ -1,13 +1,16 @@
 import {createAsyncThunk, createSlice, PayloadAction} from '@reduxjs/toolkit';
 import endpoints from '../../config/endpoints';
 import { IService } from '../../types/types';
+import tools from '../../utils/tools';
 import restApi from '../restApi';
 interface serviceState {
   services: IService[];
+  allServices: IService[];
 }
 
 const initialState: serviceState = {
   services: [],
+  allServices: []
 };
 export const services = createAsyncThunk('services/fetchServices', async () => {
   return await restApi(endpoints.service.client).get({ type: 'children'});
@@ -19,7 +22,14 @@ export const serviceSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder.addCase(services.fulfilled, (state, action) => {
-      if (action.payload.code == 200) state.services = action.payload.data;
+      if (action.payload.code == 200) {
+        const sortedData = [];
+
+        action.payload.data.map(e => tools.extractChildren(e, sortedData));
+
+        state.allServices = sortedData;
+        state.services = action.payload.data;
+      }
     });
   },
 });

@@ -10,6 +10,20 @@ const formatPrice = (price: number = 1, min = 0, max = 8) => {
   });
 };
 
+const findAncestors = (arr: any[], value: any, key: string = 'id') => {
+  let obj = arr.find(e => e[key] == value);
+  let ancestors = [obj];
+
+  if (!obj?.parent){
+    return ancestors;
+  }
+
+  while (obj?.parent){
+    obj = arr.find(e => e[key] == obj?.parent?.id);
+    ancestors.push(obj)
+  }
+  return ancestors;
+}
 
 const selectFormatter = (array: any[], value: string, label: string, firstOption: string = '') => {
   const newArray = [];
@@ -66,6 +80,7 @@ const extractor = (object: any ,params: readonly string[]) => {
   return data;
 };
 
+
 export default {
   isEmpty,
   omit,
@@ -73,4 +88,5 @@ export default {
   selectFormatter,
   extractor,
   formatPrice,
+  findAncestors,
 };
