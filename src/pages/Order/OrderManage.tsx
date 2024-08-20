@@ -27,7 +27,8 @@ const OrderManage = () => {
       date: form.date,
       time: form.time,
       status: form.status,
-      finalPrice: form.finalPrice
+      finalPrice: form.finalPrice,
+      transportation: form.transportation
     })
 
     await restApi(process.env.REACT_APP_BASE_URL + '/admin/order/products/' + res.data.id).put({
