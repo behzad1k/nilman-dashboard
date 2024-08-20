@@ -129,7 +129,7 @@ const OrderManage = () => {
   useEffect(() => {
     const newPrice = form.orderServices?.reduce((acc, curr) => acc + Number(serviceReducer.allServices?.find(e => e.id == curr.serviceId)?.price), 0)
     setForm(prev => ({ ...prev, price: newPrice, finalPrice: newPrice + form?.transportation}))
-  }, [...form.orderServices]);
+  }, [...form.orderServices, form.transportation]);
 
   return(
     <>
@@ -238,7 +238,7 @@ const OrderManage = () => {
               <span className="billItems dashboardBill">
               <h3 className="billItem">هزینه ارسال</h3>
               <div className="pricePart">
-                <input className="billPrice" value={form?.transportation} onChange={(input) => setForm(prev => ({ ...prev, transportation: Number(input.target.value)}))}/>
+                <input className="billPrice" value={form?.transportation} onChange={(input) => setForm(prev => ({ ...prev, transportation: Number(input.target.value) > 0 ? Number(input.target.value) : 0}))}/>
               </div>
             </span>
               <span className="billItems dashboardBill">
