@@ -54,11 +54,11 @@ const OrderManage = () => {
     dispatch(setLoading(false));
   };
 
-  useEffect(() => {
+  // useEffect(() => {
     // for (const orderService of order.orderServices) {
     //   const serviceObj = order.orderServices.find(e => e.id == )
     // }
-  }, [order.orderServices]);
+  // }, [order.orderServices]);
   const list = () => {
     const rows: ReactElement[] = []
     order?.orderServices?.map((orderProduct: any, index) => {
