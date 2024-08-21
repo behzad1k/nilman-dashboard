@@ -50,7 +50,7 @@ const OrderManage = () => {
         userId: userRes.data?.id
       })
     }
-    console.log(form.address.id || addressRes.data.id);
+
     const res = await restApi(process.env.REACT_APP_BASE_URL + '/admin/order/basic/' + (id || ''), true).post({
       date: form.date,
       time: form.time,
@@ -171,7 +171,7 @@ const OrderManage = () => {
     const newPrice = form.orderServices?.reduce((acc, curr) => acc + Number(serviceReducer.allServices?.find(e => e.id == curr.serviceId)?.price), 0)
     setForm(prev => ({ ...prev, price: newPrice, finalPrice: newPrice + form?.transportation}))
   }, [...form?.orderServices, form?.transportation]);
-  console.log(form?.address);
+
   return(
     <>
       <body className="dashboardBody">
@@ -179,7 +179,7 @@ const OrderManage = () => {
       <main className="dashBoardMain main">
         <div className="addInfoHeader">
           <button className="dashboardHeader keepRight" onClick={send}>
-            <p>ویرایش سفارش</p>
+            <p>ثبت سفارش</p>
           </button>
           <span>
             <h1 className="sideBarTitle"> بازگشت به صفحه لیست سفارش ها</h1>
