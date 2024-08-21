@@ -924,6 +924,7 @@ table{
 .bottom{
     display: flex;
     flex-direction: column;
+    align-items: center;
     gap: 16px;
     padding-right: 18px;
     padding-left: 18px;

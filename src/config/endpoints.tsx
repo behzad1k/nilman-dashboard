@@ -25,6 +25,7 @@ const endpoints = {
   user:{
     index: format('user'),
     single: format('user/single'),
+    findBy: format('user/findBy'),
     basic: format('user/basic'),
     medias: format('user/medias'),
     active: format('user/status'),

@@ -174,10 +174,10 @@ const Orders = () => {
         </div>
         <div className="searchContainer">
           <span className="backSpan keepRight">
-          {/*  <span className="dashboardHeader clickable" onClick={() => dispatch(popupSlice.middle(<Excel />))}> */}
-          {/*   <p>بارگزاری فایل اکسل</p> */}
-          {/*   <i className="exelSvg"></i> */}
-          {/* </span> */}
+           <span className="dashboardHeader clickable" onClick={() => navigate('/order/add')}>
+            <p>ثبت سفارش جدید</p>
+            <i className="plusIcon"></i>
+          </span>
           {/*   <span className="dashboardHeader clickable" onClick={() => sendForExcel()}> */}
           {/*   <p>خروجی اکسل از خدمات انتخابی</p> */}
           {/*   <i className="exelSvg"></i> */}

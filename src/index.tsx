@@ -35,6 +35,7 @@ root.render(
         <Route path="order">
           <Route path="" element={<Orders/>}/>
           <Route path="edit/:id" element={<OrderManage/>}/>
+          <Route path="add" element={<OrderManage/>}/>
         </Route>
         <Route path="service">
           <Route path="" element={<Service/>}/>
