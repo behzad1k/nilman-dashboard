@@ -20,7 +20,7 @@ const OrderManage = () => {
   const [form, setForm] = useState<any>({ orderServices: [], transportation: 0, finalPrice: 0, discountAmount: 0, serviceId: null});
   const navigate = useNavigate();
   const send = async () => {
-    // dispatch(setLoading(true));
+    dispatch(setLoading(true));
     let addressRes, userRes, verifyNationalCode
     if (!id){
       if (!form.user?.isVerified) {
@@ -76,7 +76,10 @@ const OrderManage = () => {
         title: 'موفق',
         text: 'سفارش با موفقیت ویرایش شد',
         icon: 'success',
-        confirmButtonText: 'متوجه شدم'
+        confirmButtonText: 'متوجه شدم',
+        didClose() {
+          navigate(-1)
+        }
       })
     } else {
       Swal.fire({

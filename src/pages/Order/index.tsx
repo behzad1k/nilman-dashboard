@@ -22,20 +22,31 @@ import orderStatus = globalEnum.orderStatus;
 
 const Orders = () => {
   const [data, setData] = useState<any>([]);
-  const [statuses, setStatuses] = useState([]);
   const [workers, setWorkers] = useState([]);
   const [query, setQuery] = useState('');
   const [tab, setTab] = useState('all');
   const [itemOffset, setItemOffset] = useState(0);
-  const [selectedForExcel, setSelectedForExcel] = useState([]);
   const [searchParams, setSearchParams] = useSearchParams();
-  const downloadExcelLink = useRef<HTMLAnchorElement>(null);
   const itemsPerPage = 25;
   const endOffset = (itemOffset || 0) + itemsPerPage;
-  let currentItems = data?.filter(e => e.code.toLowerCase().includes(query.toLowerCase())).slice(itemOffset, endOffset);
-  const pageCount = Math.ceil(data?.length / itemsPerPage)
+  const filteredData = data?.filter((e) => e.code.includes(query)).filter((e: any) => {
+    switch (tab){
+      case('Paid'):
+        return e.status == orderStatus.Paid;
+      case('Canceled'):
+        return e.status == orderStatus.Canceled;
+      case('Done'):
+        return e.status == orderStatus.Done;
+      case('Assigned'):
+        return e.status == orderStatus.Assigned;
+      case('InProgress'):
+        return e.status == orderStatus.InProgress;
+      default: return true;
+    }
+  })?.filter(e => e.code.toLowerCase().includes(query.toLowerCase()));
+  let currentItems = filteredData.slice(itemOffset, endOffset);
+  const pageCount = Math.ceil(filteredData.length / itemsPerPage)
   const dispatch = useDispatch();
-  const { ticker } = useTicker();
   const navigate = useNavigate();
   const tabTitles = {
     all: 'همه',
@@ -75,25 +86,11 @@ const Orders = () => {
   const list = () => {
     const rows: ReactElement[] = [];
 
-    currentItems?.filter((e) => e.code.includes(query)).filter((e: any) => {
-      switch (tab){
-        case('Paid'):
-          return e.status == orderStatus.Paid;
-        case('Canceled'):
-          return e.status == orderStatus.Canceled;
-        case('Done'):
-          return e.status == orderStatus.Done;
-        case('Assigned'):
-          return e.status == orderStatus.Assigned;
-        case('InProgress'):
-          return e.status == orderStatus.InProgress;
-        default: return true;
-      }
-    }).sort((a, b) => moment(b.createdAt).unix() - moment(a.createdAt).unix()).map((order: any, index) => {
+    currentItems?.sort((a, b) => moment(b.createdAt).unix() - moment(a.createdAt).unix()).map((order: any, index) => {
       rows.push(
         <tr className="dashTr2" key={'order' + index}>
           <td className="svgContainer">
-            {/* <i className="trash clickable" onClick={() => deleteOrder(order.id)}></i> */}
+            <i className="trash clickable" onClick={() => deleteOrder(order.id)}></i>
             <i className="edit clickable" onClick={() => navigate('/order/edit/' + order.id)}></i>
             <i className="usersSvg clickable" onClick={() => dispatch(popupSlice.middle(<Bill order={order} /> ))}></i>
           </td>
@@ -139,7 +136,12 @@ const Orders = () => {
   }, []);
 
   useEffect(() => {
-    if (searchParams.get('page')){
+    const curPage = searchParams.get('page')
+    if (curPage){
+      if (Number(curPage) > pageCount){
+        setSearchParams({['page']: '1'})
+        // searchParams.set('page', '1')
+      }
       setItemOffset(((Number(searchParams.get('page')) - 1) * itemsPerPage) % data.length)
     }
   }, [data]);

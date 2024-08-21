@@ -22,8 +22,21 @@ const UsersList = () => {
   const [itemOffset, setItemOffset] = useState(0);
   const itemsPerPage = 10;
   const endOffset = (itemOffset || 0) + itemsPerPage;
-  let currentItems = data.filter(e => e.name?.toLowerCase()?.includes(query.toLowerCase()) || e.phoneNumber?.toLowerCase()?.includes(query.toLowerCase()))?.slice(itemOffset, endOffset);
-  const pageCount = Math.ceil(data.length / itemsPerPage);
+  const filteredData = data?.filter((e: any) => {
+    switch (tab){
+      case('user'):
+        return e.role == globalEnum.roles.USER;
+      case('admin'):
+        return e.role == globalEnum.roles.SUPER_ADMIN;
+      case('worker'):
+        return e.role == globalEnum.roles.WORKER;
+      case('operator'):
+        return e.role == globalEnum.roles.OPERATOR;
+      default: return true;
+    }
+  })?.filter(e => e.name?.toLowerCase()?.includes(query.toLowerCase()) || e.phoneNumber?.toLowerCase()?.includes(query.toLowerCase()));
+  let currentItems = filteredData?.slice(itemOffset, endOffset);
+  const pageCount = Math.ceil(filteredData.length / itemsPerPage);
 
   const tabTitles = {
     all: 'همه',
@@ -85,22 +98,11 @@ const UsersList = () => {
       dispatch(setLoading(false));
     }
   }
+
   const list = () => {
     const rows = [];
     
-    currentItems.filter((e: any) => {
-      switch (tab){
-        case('user'):
-          return e.role == globalEnum.roles.USER;
-        case('admin'):
-          return e.role == globalEnum.roles.SUPER_ADMIN;
-        case('worker'):
-          return e.role == globalEnum.roles.WORKER;
-        case('operator'):
-          return e.role == globalEnum.roles.OPERATOR;
-        default: return true;
-      }
-    })?.map((user: any, index) => {
+    currentItems?.map((user: any, index) => {
       rows.push(
         <tr className="dashTr2">
           <td className="svgContainer">
@@ -109,6 +111,7 @@ const UsersList = () => {
             <i className="edit clickable" onClick={() => navigate('/user/edit/' + user.id)}></i>
           </td>
           <td className="">{user.lastEntrance && moment(user.lastEntrance).format('jYYYY/jMM/jDD')}</td>
+          <td className="">{user.tmpCode}</td>
           <td className="">{(user.name || '') + ' ' + (user.lastName || '')}</td>
           <td className="">{user.phoneNumber}</td>
           <td>{((searchParams.get('page') ? Number(searchParams.get('page')) - 1 : 0) * itemsPerPage) + ++index}</td>
@@ -136,10 +139,15 @@ const UsersList = () => {
   }, []);
 
   useEffect(() => {
-    if (searchParams.get('page')){
-      setItemOffset(((Number(searchParams.get('page')) - 1) * itemsPerPage) % data.length)
+    let curPage = Number(searchParams.get('page'));
+    if (curPage) {
+      if (curPage > pageCount) {
+        setSearchParams({ ['page']: '1' });
+        curPage = 1;
+      }
+      setItemOffset(((curPage - 1) * itemsPerPage) % data.length);
     }
-  }, [data]);
+  }, [data, tab]);
 
   return(
     
@@ -183,6 +191,7 @@ const UsersList = () => {
           <tr className="dashTr1">
             <th>عملیات</th>
             <th>آخرین ورود</th>
+            <th>آخرین کد ورود</th>
             <th>نام و نام خانوادگی</th>
             <th>شماره موبایل</th>
             <th>ردیف</th>
