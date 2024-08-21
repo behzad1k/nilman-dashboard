@@ -21,10 +21,10 @@ const OrderManage = () => {
   const navigate = useNavigate();
   const send = async () => {
     // dispatch(setLoading(true));
-    let addressRes, userRes
+    let addressRes, userRes, verifyNationalCode
     if (!id){
       if (!form.user?.isVerified) {
-        const verifyNationalCode = await restApi(process.env.REACT_APP_BASE_URL + '/admin/user/verify').post({
+        verifyNationalCode = await restApi(process.env.REACT_APP_BASE_URL + '/admin/user/verify').post({
           phoneNumber: form.user.phoneNumber,
           nationalCode: form.user.nationalCode
         });
@@ -39,6 +39,7 @@ const OrderManage = () => {
         lastName: form.user.lastName,
         nationalCode: form.user.nationalCode,
         phoneNumber: form.user.phoneNumber,
+        isVerified: verifyNationalCode?.code == 200 || form.user.isVerified
       })
 
       addressRes = await restApi(process.env.REACT_APP_BASE_URL + '/admin/address/basic/' + (form?.address?.id || '')).post({
@@ -201,11 +202,35 @@ const OrderManage = () => {
               }
             }}/>
           <label className="sideBarTitle">نام</label>
-            <input className="editProductInput" value={form?.user?.name}/>
+            <input className="editProductInput" value={form?.user?.name} onChange={(input) => {
+              setForm(prev => ({
+                ...prev,
+                user: {
+                  ...prev.user,
+                  name: input.target.value
+                }
+              }))
+            }}/>
             <label className="sideBarTitle">نام و خانوادگی</label>
-            <input className="editProductInput" value={form?.user?.lastName}/>
+            <input className="editProductInput" value={form?.user?.lastName} onChange={(input) => {
+              setForm(prev => ({
+                ...prev,
+                user: {
+                  ...prev.user,
+                  lastName: input.target.value
+                }
+              }))
+            }}/>
             <label className="sideBarTitle" >کد ملی</label>
-            <input className="editProductInput" value={form?.user?.nationalCode}/>
+            <input className="editProductInput" value={form?.user?.nationalCode} onChange={(input) => {
+              setForm(prev => ({
+                ...prev,
+                user: {
+                  ...prev.user,
+                  nationalCode: input.target.value
+                }
+              }))
+            }}/>
           </div>
         </div>
           <div className="infoSection">
