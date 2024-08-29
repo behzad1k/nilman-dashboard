@@ -12,12 +12,13 @@ import { useAppSelector } from '../../services/store';
 import tools from '../../utils/tools';
 import { Sidebar } from '../../layouts/Sidebar';
 import orderStatus = globalEnum.orderStatus;
+import Switch from 'react-ios-switch';
 
 const OrderManage = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
   const serviceReducer = useAppSelector(state => state.serviceReducer);
-  const [form, setForm] = useState<any>({ orderServices: [], transportation: 0, finalPrice: 0, discountAmount: 0, serviceId: null});
+  const [form, setForm] = useState<any>({ isMulti: false, orderServices: [], transportation: 0, finalPrice: 0, discountAmount: 0, serviceId: null});
   const navigate = useNavigate();
   const send = async () => {
     dispatch(setLoading(true));
@@ -56,13 +57,15 @@ const OrderManage = () => {
       date: form.date,
       time: form.time,
       status: form.status,
-      finalPrice: form.finalPrice,
-      price: form.price,
+      finalPrice: form.finalPrice * (form?.isUrgent ? 1.5 : 1),
+      price: form.price * (form?.isUrgent ? 1.5 : 1),
       serviceId: form.serviceId,
       discountAmount: form.discountAmount,
       transportation: form.transportation,
       addressId: form.address.id || addressRes.data.id,
-      userId: form.user.id || userRes.data.id
+      userId: form.user?.id || userRes.data?.id,
+      isMulti: form.isMulti,
+      isUrgent: form.isUrgent
     })
 
     await restApi(process.env.REACT_APP_BASE_URL + '/admin/order/products/' + res.data.id).put({
@@ -146,15 +149,17 @@ const OrderManage = () => {
         date: res.data?.date,
         time: res.data?.fromTime,
         status: res.data?.status,
-        finalPrice: res.data?.finalPrice,
-        price: res.data?.price,
+        finalPrice: Number(res.data?.price) * (res.data?.isUrgent ? 1.5 : 1),
+        price: Number(res.data?.price) * (res.data?.isUrgent ? 1.5 : 1),
         serviceId: res.data?.serviceId,
         transportation: res.data?.transportation,
         discountAmount: res.data?.discountAmount,
         orderServices: res.data?.orderServices,
         address: res.data?.address,
         user: res.data?.user,
-        createdAt: res.data?.createdAt
+        createdAt: res.data?.createdAt,
+        isMulti: res.data?.isMulti,
+        isUrgent: res.data?.isUrgent,
       });
     }
     dispatch(setLoading(false));
@@ -173,8 +178,8 @@ const OrderManage = () => {
 
   useEffect(() => {
     const newPrice = form.orderServices?.reduce((acc, curr) => acc + Number(serviceReducer.allServices?.find(e => e.id == curr.serviceId)?.price), 0)
-    setForm(prev => ({ ...prev, price: newPrice, finalPrice: newPrice + form?.transportation}))
-  }, [...form?.orderServices, form?.transportation]);
+    setForm(prev => ({ ...prev, price: newPrice, finalPrice: ((newPrice * (form?.isUrgent ? 1.5 : 1))) + form?.transportation}))
+  }, [...form?.orderServices, form?.transportation, form?.isUrgent]);
 
   return(
     <>
@@ -248,7 +253,14 @@ const OrderManage = () => {
             <input className="editProductInput" value={(form?.date || moment().add(2, 'd').format('jYYYY/jMM/jDD'))} onChange={(input) => setForm(prev => ({ ...prev, date: input.target.value}))}/>
             <label className="sideBarTitle" >ساعت</label>
             <input className="editProductInput" value={form?.time} onChange={(input) => setForm(prev => ({ ...prev, time: input.target.value}))}/>
-          </div>
+            <div className='inputRow'>
+              <Switch
+                checked={form.isUrgent}
+                onChange={checked => setForm(prev => ({ ...prev, isUrgent: checked}))}
+              />
+              <label className="sideBarTitle" >سفارش فوری</label>
+            </div>
+             </div>
         </div>
 
         {/* <section className="bottom"> */}
@@ -337,7 +349,7 @@ const OrderManage = () => {
               <span className="billItems dashboardBill">
               <h3 className="billItem">مبلغ سفارش</h3>
               <div className="pricePart">
-                <input className="billPrice" value={form?.price} onChange={(input) => setForm(prev => ({ ...prev, price: Number(input.target.value)}))}/>
+                <input className="billPrice" value={form?.price * (form?.isUrgent ? 1.5 : 1)} onChange={(input) => setForm(prev => ({ ...prev, price: Number(input.target.value)}))}/>
               </div>
             </span>
               <span className="billItems dashboardBill">
@@ -356,7 +368,7 @@ const OrderManage = () => {
               <span className="billItems dashboardBill">
               <h3 className="billItem">مبلغ قابل پرداخت</h3>
               <div className="pricePart">
-                <input className="tablePrice1" value={form?.finalPrice - form?.discountAmount} onChange={(input) => setForm(prev => ({ ...prev, finalPrice: Number(input.target.value)}))}/>
+                <input className="tablePrice1" value={(form?.finalPrice - form?.discountAmount)} onChange={(input) => setForm(prev => ({ ...prev, finalPrice: Number(input.target.value)}))}/>
               </div>
             </span>
             </div>
@@ -385,6 +397,8 @@ const OrderManage = () => {
             </tr>
             </tbody>
           </table>
+        </section>
+        <section className="bottom width100">
         </section>
       </main>
       </body>
