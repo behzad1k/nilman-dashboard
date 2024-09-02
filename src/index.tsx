@@ -2,6 +2,8 @@ import React from 'react';
 import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import Accounting from './pages/Accounting';
+import AccountingManage from './pages/Accounting/Manage';
 import App from './pages/App';
 import { Loading } from './pages/App/loading';
 import Popup from './pages/App/popup';
@@ -61,6 +63,11 @@ root.render(
           <Route path="" element={<Discount/>}/>
           <Route path="add" element={<DiscountManage/>}/>
           <Route path="edit/:id" element={<DiscountManage/>}/>
+        </Route>
+        <Route path="accounting">
+          <Route path="" element={<Accounting/>}/>
+          <Route path="add" element={<AccountingManage/>}/>
+          <Route path="edit/:id" element={<AccountingManage/>}/>
         </Route>
       </Routes>
       <Popup/>

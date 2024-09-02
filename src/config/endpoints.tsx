@@ -10,6 +10,12 @@ const endpoints = {
     medias: format('service/medias'),
     client: format('service', false)
   },
+  transaction: {
+    index: format('transaction'),
+    single: format('transaction/single'),
+    basic: format('transaction/basic'),
+    medias: format('transaction/medias'),
+  },
   feedbackFactors: {
     index: format('feedbackFactor'),
     single: format('feedbackFactor/single'),
@@ -58,6 +64,7 @@ const endpoints = {
   },
   dashboard:{
     index: format('dashboard'),
+    sales: format('dashboard/sales'),
     single: format('dashboard/single'),
     basic: format('district/basic'),
   }

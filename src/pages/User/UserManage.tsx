@@ -52,8 +52,9 @@ const UserManage = () => {
       shebaNumber: formData.get('shebaNumber'),
       cardNumber: formData.get('cardNumber'),
       hesabNumber: formData.get('hesabNumber'),
+      walletBalance: formData.get('walletBalance'),
       services: selectedWorkerServices,
-      districts: selectedDistricts
+      districts: selectedDistricts,
     });
 
     if (res.data?.id && image.data){
@@ -238,7 +239,7 @@ const UserManage = () => {
               <input className="editProductInput" defaultValue={item?.lastName} name="lastName"/>
               <label className="sideBarTitle">شماره تلفن</label>
               <input className="editProductInput" defaultValue={item?.phoneNumber} name="phoneNumber"/>
-            </div>
+              </div>
             <div className="section30">
               <label className="sideBarTitle">وضعیت</label>
               <select className="selector30"  value={item?.status} name="status" onChange={(input) => setItem(prev => ({ ...prev, status: input.target.value}))}>
@@ -251,6 +252,8 @@ const UserManage = () => {
               </select>
               <label className="sideBarTitle">کد ملی</label>
               <input className="editProductInput" defaultValue={item?.nationalCode} name="nationalCode"/>
+              <label className="sideBarTitle">کیف پول</label>
+              <input className="editProductInput" defaultValue={item?.walletBalance} name="walletBalance"/>
             </div>
             </div>
         </section>

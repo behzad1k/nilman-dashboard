@@ -99,11 +99,10 @@ const OrderManage = () => {
     const rows: ReactElement[] = []
     form?.orderServices?.map((orderProduct: any, index) => {
       const key = form.orderServices?.findIndex(e => e.serviceId == orderProduct.serviceId)
-
       rows.push(
         <tr className="" key={'product' + index}>
           <td className="backGround1">
-            <p>{tools.formatPrice(orderProduct.price || serviceReducer.services?.find(e => e.id == orderProduct.serviceId)?.price)}</p>
+            <p>{tools.formatPrice(serviceReducer.allServices?.find(e => e.id == orderProduct.serviceId)?.price)}</p>
           </td>
           <td className="quantity">
           <div className="quantityButtom">
@@ -122,7 +121,7 @@ const OrderManage = () => {
         </td>
           <td className="">
             <Select
-              options={serviceReducer.allServices.map(e => ({ value: e.id, label: tools.findAncestors(serviceReducer.allServices, e.id)?.reverse()?.reduce((acc, curr, index) => acc + ((index == 0 ? '' : '> ') + curr?.title), '')}))}
+              options={serviceReducer.allServices.filter(e => e.price > 0).map(e => ({ value: e.id, label: tools.findAncestors(serviceReducer.allServices, e.id)?.reverse()?.reduce((acc, curr, index) => acc + ((index == 0 ? '' : '> ') + curr?.title), '')}))}
               value={{value: orderProduct.serviceId, label: tools.findAncestors(serviceReducer.allServices, orderProduct.serviceId)?.reverse()?.map((attr, index) => <span key={'bread' + index} className="breadCrumbItem">{(index == 0 ? '' : '> ') + attr?.title}</span>)}}
               onChange={(selected) => {setForm(prev => ({ ...prev, orderServices: (key == undefined || key < 0) ? [...prev, { serviceId: selected.value }] : prev.orderServices.map(e => e.serviceId == orderProduct.serviceId ? {...e, serviceId: selected.value } : e)}))}}
             />
@@ -160,6 +159,7 @@ const OrderManage = () => {
         createdAt: res.data?.createdAt,
         isMulti: res.data?.isMulti,
         isUrgent: res.data?.isUrgent,
+        finalImage: res.data?.finalImage
       });
     }
     dispatch(setLoading(false));
@@ -398,8 +398,12 @@ const OrderManage = () => {
             </tbody>
           </table>
         </section>
-        <section className="bottom width100">
-        </section>
+
+        {form.finalImage?.url && <section className="bottom width100">
+          <h6 className="dashBoardTitle">عکس پایان کار</h6>
+          <img className='orderFinalImage' src={form.finalImage?.url}/>
+
+        </section>}
       </main>
       </body>
     </>

@@ -35,6 +35,7 @@ export const Sidebar = () => {
         <SidebarRow title="خدمات" url="/Service"/>
         <SidebarRow title="کاربران" url="/User"/>
         <SidebarRow title="رنگ ها" url="/Color"/>
+        <SidebarRow title="حسابداری" url="/Accounting"/>
         <SidebarRow title="موارد بازخوردها" url="/FeedbackFactor"/>
         <SidebarRow title="تخفیف" url="/discount"/>
         {/* <SidebarRow title="بازخوردها" url="/FeedbackFactor"/> */}

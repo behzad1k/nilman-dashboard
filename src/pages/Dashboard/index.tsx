@@ -6,11 +6,13 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import Select from 'react-select';
 import Swal from 'sweetalert2';
 import endpoints from '../../config/endpoints';
+import globalEnum from '../../enums/globalEnum';
 import { setLoading } from '../../services/reducers/homeSlice';
 import restApi from '../../services/restApi';
 import { Sidebar } from '../../layouts/Sidebar';
 import { IService } from '../../types/types';
 import tools from '../../utils/tools';
+import roles = globalEnum.roles;
 
 const Dashboard = () => {
   const [data, setData] = useState<IService[]>([]);
@@ -18,6 +20,8 @@ const Dashboard = () => {
   const [query, setQuery] = useState('');
   const [itemOffset, setItemOffset] = useState(0);
   const [searchParams, setSearchParams] = useSearchParams();
+  const [workers, setWorkers] = useState([]);
+  const [workerInfo, setWorkerInfo] = useState({ id: 1, last1: 0, last7: 0, last30: 0 });
   const itemsPerPage = 25;
   const endOffset = (itemOffset || 0) + itemsPerPage;
   let currentItems = data.filter(e => e.title?.toLowerCase()?.includes(query.toLowerCase()))?.slice(itemOffset, endOffset);
@@ -81,13 +85,39 @@ const Dashboard = () => {
     dispatch(setLoading(true));
 
     const res = await Promise.all([
-      restApi(endpoints.dashboard.index, true).get(),
+      restApi(endpoints.user.index, true).get({ role: roles.WORKER }),
     ]);
 
     if(res[0].code == 200){
-      setData(res[0].data);
+      setWorkers(res[0].data);
+      if (res[0].data.length > 0) {
+        setWorkerInfo(prev => ({
+          ...prev,
+          id: res[0].data[0].id
+        }));
+      }
     }
 
+    dispatch(setLoading(false));
+  };
+
+  const fetchWorkerInfo = async (id: number) => {
+    dispatch(setLoading(true));
+
+    const res = await Promise.all([
+      restApi(endpoints.dashboard.sales, true).get({ worker: id, from: moment().subtract(1, 'd').format('jYYYY-jMM-jDD-HH-ss'), to: moment().format('jYYYY-jMM-jDD-HH-ss'), }),
+      restApi(endpoints.dashboard.sales, true).get({ worker: id, from: moment().subtract(1, 'd').format('jYYYY-jMM-jDD-HH-ss'), to: moment().format('jYYYY-jMM-jDD-HH-ss'), }),
+      restApi(endpoints.dashboard.sales, true).get({ worker: id, from: moment().subtract(1, 'd').format('jYYYY-jMM-jDD-HH-ss'), to: moment().format('jYYYY-jMM-jDD-HH-ss'), }),
+    ]);
+
+    if(res[0].code == 200){
+      setWorkerInfo({
+        id: workerInfo.id,
+        last1: res[0].data.salary,
+        last7: res[1].data.salary,
+        last30: res[2].data.salary,
+      });
+    }
 
     dispatch(setLoading(false));
   };
@@ -108,6 +138,7 @@ const Dashboard = () => {
   useEffect(() => {
     fetchLogs();
     fetchData();
+    fetchWorkerInfo(workerInfo.id)
   }, []);
 
   useEffect(() => {
@@ -116,6 +147,7 @@ const Dashboard = () => {
     }
   }, [data]);
 
+  console.log(workers);
   return(
     <>
       <body className="dashboardBody">
@@ -161,6 +193,43 @@ const Dashboard = () => {
               </span>
             </div>
             </div>
+        </div>
+        <div>
+          <div className="dashCardContainer">
+            <Select className="dashCardLog" value={{ label: workers?.find(e => e.id == workerInfo?.id)?.name + ' ' + workers?.find(e => e.id == workerInfo?.id)?.lastName, value: workerInfo?.id}} options={workers?.map(e => ({ label: `${e.name} ${e.lastName}`, value: e.id }))} onChange={(selected) => {
+              setWorkerInfo({
+                id: selected.value,
+                last1: 0,
+                last7: 0,
+                last30: 0
+              });
+              fetchWorkerInfo(selected.value);
+            } }/>
+            <div className="dashCard">
+              <span>
+                امروز
+              </span>
+              <span>
+                {workerInfo.last1}
+              </span>
+            </div>
+            <div className="dashCard">
+              <span>
+                ۷ روز گذشته
+              </span>
+              <span>
+                {workerInfo.last7}
+              </span>
+            </div>
+            <div className="dashCard">
+              <span>
+                ۳۰ روز گذشته
+              </span>
+              <span>
+                {workerInfo.last30}
+              </span>
+            </div>
+          </div>
         </div>
       </main>
       </body>
