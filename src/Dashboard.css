@@ -159,6 +159,7 @@ content: url("/public/svg/article.svg");
 .dashBoardTitle{
     color:#00142A;
     text-align: right;
+    direction: rtl;
     font-size: 20px;
     font-weight: 600;
     line-height: 18px; /* 90% */
@@ -1342,6 +1343,11 @@ table{
 
 .modalForm.workerOff{
     width: 100%;
+}
+.attachmentImage{
+    max-height: 300px;
+    max-width: 300px;
+    height: auto !important;
 }
 .modalForm div {
     width: calc(50% - 8px);

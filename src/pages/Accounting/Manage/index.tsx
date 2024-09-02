@@ -5,6 +5,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import { DatePicker } from 'zaman';
 import endpoints from '../../../config/endpoints';
+import globalEnum from '../../../enums/globalEnum';
 import TransactionModal from '../../../layouts/Modal/TransactionModal';
 import WorkerOffModal from '../../../layouts/Modal/WorkerOffModal';
 import { Sidebar } from '../../../layouts/Sidebar';
@@ -12,6 +13,7 @@ import { popupSlice } from '../../../services/reducers';
 import { setLoading } from '../../../services/reducers/homeSlice';
 import restApi from '../../../services/restApi';
 import tools from '../../../utils/tools';
+import orderStatus = globalEnum.orderStatus;
 
 const AccountingManage = () => {
   const navigate = useNavigate();
@@ -52,6 +54,20 @@ const AccountingManage = () => {
 
     dispatch(setLoading(false));
   };
+
+  const orderList = () => {
+    return form?.orders.filter(e => e.status == orderStatus.Done).slice(0, 30)?.map((order, index) =>
+      <tr>
+        <td>{order.transactionId > 0 ? 'بله' : 'خیر'}</td>
+        <td>{tools.formatPrice((order.price * order.workerPercent / 100) + 100000)}</td>
+        <td>{order.workerPercent}</td>
+        <td>{tools.formatPrice(order.finalPrice)}</td>
+        <td><a href={`/order/edit/${order.id}`} target='_blank'>{order.code}</a></td>
+        <td>{++index}</td>
+      </tr>
+    )
+  };
+
 
   const transactionList = () => {
     return form?.transactions?.map((transaction, index) =>
@@ -94,7 +110,8 @@ const AccountingManage = () => {
       heasbNumber: res[0].data?.heasbNumber,
       shebaNumber: res[0].data?.shebaNumber,
       bankName: res[0].data?.bankName,
-      transactions: res[0].data?.transactions
+      transactions: res[0].data?.transactions,
+      orders: res[0].data?.jobs
     });
 
     dispatch(setLoading(false));
@@ -162,7 +179,7 @@ const AccountingManage = () => {
           </section>
           <section className="bottom">
             <h6 className="dashBoardTitle">پرداخت ها</h6>
-            <span className="dashboardHeader keepRight clickable" onClick={() => dispatch(popupSlice.middle(<TransactionModal userId={paramId} />))} >
+            <span className="dashboardHeader keepRight clickable" onClick={() => dispatch(popupSlice.middle(<TransactionModal userId={paramId} orders={form.orders.filter(e => e.status == orderStatus.Done && !e.isTransacted)} />))} >
               افزودن
             </span>
             <table>
@@ -178,6 +195,24 @@ const AccountingManage = () => {
               </thead>
               <tbody>
               {transactionList()}
+              </tbody>
+            </table>
+          </section>
+          <section className="bottom">
+            <h6 className="dashBoardTitle">۳۰ سفارش اخیر</h6>
+            <table>
+              <thead>
+              <tr>
+                <th>تسویه شده</th>
+                <th>سهم استایلیست</th>
+                <th>درصد استایلیست</th>
+                <th>مبلغ کل</th>
+                <th>کد</th>
+                <th>ردیف</th>
+              </tr>
+              </thead>
+              <tbody>
+              {orderList()}
               </tbody>
             </table>
           </section>

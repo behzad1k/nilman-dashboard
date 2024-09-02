@@ -1,15 +1,20 @@
 // import mapImg from '../../../../public/img/map.jpg'
-import { useState } from 'react';
+import moment from 'jalali-moment';
+import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import Swal from 'sweetalert2';
 import endpoints from '../../config/endpoints';
 import { popupSlice } from '../../services/reducers';
 import { setLoading } from '../../services/reducers/homeSlice';
 import restApi from '../../services/restApi';
+import tools from '../../utils/tools';
 
-const TransactionModal = ({ userId }) => {
+const TransactionModal = ({ userId, orders }) => {
   const dispatch: any = useDispatch();
-  const [transaction, setTransaction] = useState<any>({});
+  const [selectedOrders, setSelectedOrders] = useState([]);
+  const [transaction, setTransaction] = useState<any>({
+    date: moment().format('jYYYY/jMM/jDD')
+  });
   const [image, setImage] = useState<any>({});
   const send = async () => {
     dispatch(setLoading(true));
@@ -19,15 +24,16 @@ const TransactionModal = ({ userId }) => {
       code: transaction.code,
       amount: transaction.amount,
       description: transaction.description,
-      userId: userId
+      userId: userId,
+      orders: selectedOrders
     });
+    if (image.data) {
+      const formData = new FormData();
 
-    const formData = new FormData()
+      formData.append('file', image.data);
 
-    formData.append('file', image.data)
-
-    await restApi(endpoints.transaction.medias + res.data?.id).upload(formData);
-
+      await restApi(endpoints.transaction.medias + res.data?.id).upload(formData);
+    }
     if (res.code == 200) {
       Swal.fire({
         title: 'موفق',
@@ -50,11 +56,43 @@ const TransactionModal = ({ userId }) => {
     dispatch(setLoading(false));
   };
 
+  const list = () => {
+    return orders.map((order, index) =>
+      <tr>
+        <td>{tools.formatPrice((order.price * order.workerPercent / 100) + 100000)}</td>
+        <td>{tools.formatPrice(order.finalPrice)}</td>
+        <td><a href={`/order/edit/${order.id}`} target='_blank'>{order.code}</a></td>
+        <td>{++index}</td>
+        <td><input type='checkbox' checked={selectedOrders.includes(order.id)} onChange={(e) => setSelectedOrders(prev => prev.includes(order.id) ? prev.filter(e => e != order.id) : [...prev, order.id])}/></td>
+      </tr>
+    )
+  };
+
+  useEffect(() => {
+    setTransaction(prev => ({ ...prev, amount: orders.filter(e => selectedOrders.includes(e.id)).reduce((acc, order) => acc + (order.price * order.workerPercent / 100) + 100000,0)}))
+  }, [selectedOrders]);
+
   return (
     <div className="modalContainer">
       <div className="rowSection">
         <h2>پرداختی جدید</h2>
         <i className="modalExit" onClick={() => dispatch(popupSlice.hide())}></i>
+      </div>
+      <div>
+        <table>
+          <thead>
+          <tr>
+            <th>سهم استایلیست</th>
+            <th>مبلغ کل</th>
+            <th>کد</th>
+            <th>ردیف</th>
+            <th></th>
+          </tr>
+          </thead>
+          <tbody>
+          {list()}
+          </tbody>
+        </table>
       </div>
       <div className="modalContent">
         <div className="modalForm workerOff">
@@ -80,7 +118,7 @@ const TransactionModal = ({ userId }) => {
               data: input.target.files[0],
               preview: URL.createObjectURL(input.target.files[0]),
             })}/>
-            <img src={image.preview} alt="نمونه کار"/>
+            <img className='attachmentImage' src={image.preview} alt="فیش"/>
           </div>
         </div>
       </div>
