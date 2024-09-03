@@ -170,10 +170,13 @@ const AccountingManage = () => {
 
             </div>
             <div>
-              کارکرد در بازه مشخص شده: {salesInRange}
+              کارکرد در بازه مشخص شده: {tools.formatPrice(salesInRange)}
             </div>
             <div>
-              طلب زیباکار: {form?.walletBalance}
+              طلب زیباکار: {tools.formatPrice(form?.walletBalance)}
+            </div>
+            <div>
+              سود زیباکار برای مجموعه: {form?.orders?.reduce((acc, curr) => acc + (curr.finalPrice - (curr.price * curr.workerPercent / 100) - 100000), 0)}
             </div>
 
           </section>

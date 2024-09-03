@@ -86,7 +86,7 @@ const TransactionModal = ({ userId, orders }) => {
             <th>مبلغ کل</th>
             <th>کد</th>
             <th>ردیف</th>
-            <th></th>
+            <th><input type='checkbox' checked={selectedOrders?.length == orders?.length} onChange={(e) => setSelectedOrders(prev => prev?.length == orders?.length ? [] : orders?.map(e => e.id))} /></th>
           </tr>
           </thead>
           <tbody>
