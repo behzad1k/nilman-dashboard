@@ -20,6 +20,7 @@ const UserManage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const serviceReducer = useAppSelector(state => state.serviceReducer)
+  const [workerOffs, setWorkerOffs] = useState<any>({});
   const [showModal, setShowModal] = useState(false);
   const [item, setItem] = useState<any>();
   const [services, setServices] = useState<IService[]>([]);
@@ -87,13 +88,20 @@ const UserManage = () => {
   };
 
   const workerOffList = () => {
-    return item?.workerOffs?.map(worekrOff =>
-    <tr key={worekrOff.id}>
-      <td>{worekrOff.date}</td>
-      <td>{worekrOff.fromTime}</td>
-      <td>{worekrOff.toTime}</td>
-      <td>{worekrOff.order?.id ? <a href={`/order/edit/${worekrOff.order?.id}`}>{worekrOff.order?.code}</a> : '-'}</td>
-    </tr>
+
+
+    return Object.entries(workerOffs).map(([key, value]: [key: string, value: any]) =>
+      <tr key={key}>
+        <td>{key}</td>
+        {value.map(e =>
+          <>
+            <td>
+              <span>({e.fromTime} - {e.toTime})</span>
+              <br/>
+              <small>{e.order?.id ? <a href={`/order/edit/${e.order?.id}`}>{e.order?.code}</a> : '-'}</small></td>
+          </>
+        )}
+      </tr>
     )
   };
 
@@ -150,6 +158,15 @@ const UserManage = () => {
       if (res[2].data?.profilePic?.url){
         setImage({ data: undefined, preview: res[2].data?.profilePic?.url })
       }
+
+      const formattedData: any = {};
+      res[2].data?.workerOffs?.map(worekrOff => {
+        if (!formattedData[worekrOff.date]){
+          formattedData[worekrOff.date] = []
+        }
+        formattedData[worekrOff.date].push(worekrOff)
+      })
+      setWorkerOffs(formattedData)
     }
     dispatch(setLoading(false));
   };
@@ -157,7 +174,6 @@ const UserManage = () => {
   useEffect(() => {
     fetchData();
   }, []);
-
   return (
     <>
       <main className="dashboardBody">
@@ -268,13 +284,11 @@ const UserManage = () => {
             <span className="dashboardHeader keepRight clickable" onClick={() => dispatch(popupSlice.middle(<WorkerOffModal userId={item.id}/>))} >
               افزودن
             </span>
-            <table>
+            <table dir="rtl">
               <thead>
               <tr>
                 <th>تاریخ</th>
-                <th>از ساعت</th>
-                <th>تا ساعت</th>
-                <th>سفارش</th>
+                <th>سانس ها</th>
               </tr>
               </thead>
               <tbody>

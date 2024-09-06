@@ -176,13 +176,13 @@ const AccountingManage = () => {
               طلب زیباکار: {tools.formatPrice(form?.walletBalance)}
             </div>
             <div>
-              سود زیباکار برای مجموعه: {form?.orders?.reduce((acc, curr) => acc + (curr.finalPrice - (curr.price * curr.workerPercent / 100) - 100000), 0)}
+              سود زیباکار برای مجموعه: {tools.formatPrice(form?.orders?.reduce((acc, curr) => acc + (curr.finalPrice - (curr.price * curr.workerPercent / 100) - 100000), 0))}
             </div>
 
           </section>
           <section className="bottom">
             <h6 className="dashBoardTitle">پرداخت ها</h6>
-            <span className="dashboardHeader keepRight clickable" onClick={() => dispatch(popupSlice.middle(<TransactionModal userId={paramId} orders={form.orders.filter(e => e.status == orderStatus.Done && !e.isTransacted)} />))} >
+            <span className="dashboardHeader keepRight clickable" onClick={() => dispatch(popupSlice.middle(<TransactionModal userId={paramId} orders={form.orders.filter(e => e.status == orderStatus.Done && !e.transactionId)} />))} >
               افزودن
             </span>
             <table>
