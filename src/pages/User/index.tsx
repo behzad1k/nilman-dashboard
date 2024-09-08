@@ -7,10 +7,13 @@ import { Sidebar } from "../../layouts/Sidebar";
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { setLoading } from '../../services/reducers/homeSlice';
+import { services } from '../../services/reducers/serviceSlice';
 import restApi from '../../services/restApi';
 
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import Swal from "sweetalert2";
+import { useAppSelector } from '../../services/store';
+import tools from '../../utils/tools';
 
 const UsersList = () => {
   const dispatch = useDispatch();
@@ -20,6 +23,7 @@ const UsersList = () => {
   const [query, setQuery] = useState('');
   const [tab, setTab] = useState('all');
   const [itemOffset, setItemOffset] = useState(0);
+  const serviceReducer = useAppSelector(state => state.serviceReducer)
   const itemsPerPage = 10;
   const endOffset = (itemOffset || 0) + itemsPerPage;
   const filteredData = data?.filter((e: any) => {
@@ -103,6 +107,8 @@ const UsersList = () => {
     const rows = [];
     
     currentItems?.map((user: any, index) => {
+      const userServices: any = {}
+      user.services?.map(e => userServices[tools.findAncestors(serviceReducer.services, e.id).reverse()[0].title] = true)
       rows.push(
         <tr className="dashTr2">
           <td className="svgContainer">
@@ -111,7 +117,7 @@ const UsersList = () => {
             <i className="edit clickable" onClick={() => navigate('/user/edit/' + user.id)}></i>
           </td>
           <td className="">{user.lastEntrance && moment(user.lastEntrance).format('jYYYY/jMM/jDD')}</td>
-          <td className="">{user.tmpCode}</td>
+          <td className="">{tab == 'worker' ? Object.keys(userServices).reduce((acc, curr, index) => acc + curr + (index == 0 ? '' : ', ') ,'') : user.tmpCode}</td>
           <td className="">{(user.name || '') + ' ' + (user.lastName || '')}</td>
           <td className="">{user.phoneNumber}</td>
           <td>{((searchParams.get('page') ? Number(searchParams.get('page')) - 1 : 0) * itemsPerPage) + ++index}</td>
@@ -191,7 +197,7 @@ const UsersList = () => {
           <tr className="dashTr1">
             <th>عملیات</th>
             <th>آخرین ورود</th>
-            <th>آخرین کد ورود</th>
+              <th>{tab == 'worker' ? 'لاین خدمت دهی' :'آخرین کد ورود'}</th>
             <th>نام و نام خانوادگی</th>
             <th>شماره موبایل</th>
             <th>ردیف</th>

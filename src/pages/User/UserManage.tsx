@@ -93,7 +93,7 @@ const UserManage = () => {
     return Object.entries(workerOffs).map(([key, value]: [key: string, value: any]) =>
       <tr key={key}>
         <td>{key}</td>
-        {value.map(e =>
+        {value.sort((a, b) => a.fromTime - b.fromTime).map(e =>
           <>
             <td>
               <span>({e.fromTime} - {e.toTime})</span>
