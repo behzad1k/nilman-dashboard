@@ -57,7 +57,7 @@ const OrderManage = () => {
       date: form.date,
       time: form.time,
       status: form.status,
-      finalPrice: form.finalPrice * (form?.isUrgent ? 1.5 : 1),
+      finalPrice: form.finalPrice ,
       price: form.price * (form?.isUrgent ? 1.5 : 1),
       serviceId: form.serviceId,
       discountAmount: form.discountAmount,
