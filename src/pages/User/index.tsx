@@ -108,7 +108,12 @@ const UsersList = () => {
     
     currentItems?.map((user: any, index) => {
       const userServices: any = {}
-      user.services?.map(e => userServices[tools.findAncestors(serviceReducer.services, e.id).reverse()[0].title] = true)
+      user.services?.map(e => {
+        const ancs = tools.findAncestors(serviceReducer.services, e.id)?.reverse()
+        if (ancs.length) {
+          userServices[ancs[0]?.title] = true;
+        }
+      })
       rows.push(
         <tr className="dashTr2">
           <td className="svgContainer">
