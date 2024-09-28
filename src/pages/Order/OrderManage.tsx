@@ -6,6 +6,8 @@ import Select from 'react-select';
 import Swal from 'sweetalert2';
 import endpoints from '../../config/endpoints';
 import globalEnum from '../../enums/globalEnum';
+import MapModal from '../../layouts/Modal/MapModal';
+import { popupSlice } from '../../services/reducers';
 import { setLoading } from '../../services/reducers/homeSlice';
 import restApi from '../../services/restApi';
 import { useAppSelector } from '../../services/store';
@@ -18,7 +20,8 @@ const OrderManage = () => {
   const { id } = useParams();
   const dispatch = useDispatch();
   const serviceReducer = useAppSelector(state => state.serviceReducer);
-  const [form, setForm] = useState<any>({ isMulti: false, orderServices: [], transportation: 0, finalPrice: 0, discountAmount: 0, serviceId: null});
+  const [form, setForm] = useState<any>({ isMulti: false, orderServices: [], transportation: 0, finalPrice: 0, discountAmount: 0, serviceId: null, date: moment().format('jYYYY/jMM/jDD')});
+  const [address, setAddress] = useState(form?.address);
   const navigate = useNavigate();
   const send = async () => {
     dispatch(setLoading(true));
@@ -49,7 +52,9 @@ const OrderManage = () => {
         description: form.address.description,
         vahed: form.address.vahed,
         pelak: form.address.pelak,
-        userId: userRes.data?.id
+        userId: userRes.data?.id,
+        longitude: form.address.longitude,
+        latitude: form?.address?.latitude
       })
     }
 
@@ -161,6 +166,7 @@ const OrderManage = () => {
         isUrgent: res.data?.isUrgent,
         finalImage: res.data?.finalImage
       });
+      setAddress(res.data?.address)
     }
     dispatch(setLoading(false));
   };
@@ -181,6 +187,9 @@ const OrderManage = () => {
     setForm(prev => ({ ...prev, price: newPrice, finalPrice: ((newPrice * (form?.isUrgent ? 1.5 : 1))) + form?.transportation}))
   }, [...form?.orderServices, form?.transportation, form?.isUrgent]);
 
+  useEffect(() => {
+    setForm(prev => ({...prev, address: address}))
+  }, [address]);
   return(
     <>
       <body className="dashboardBody">
@@ -250,7 +259,7 @@ const OrderManage = () => {
               label: orderStatus[Object.keys(orderStatus).find(e => e == form?.status)]
             }} options={Object.entries(orderStatus).map(([key, value]) => ({value: key, label: value}))} className="dashCardLog" id="infoTitle" onChange={(selected) => setForm(prev => ({ ...prev, status: selected.value }))}/>
             <label className="sideBarTitle">تاریخ</label>
-            <input className="editProductInput" value={(form?.date || moment().add(2, 'd').format('jYYYY/jMM/jDD'))} onChange={(input) => setForm(prev => ({ ...prev, date: input.target.value}))}/>
+            <input className="editProductInput" value={(form?.date)} onChange={(input) => setForm(prev => ({ ...prev, date: input.target.value}))}/>
             <label className="sideBarTitle" >ساعت</label>
             <input className="editProductInput" value={form?.time} onChange={(input) => setForm(prev => ({ ...prev, time: input.target.value}))}/>
             <div className='inputRow'>
@@ -288,10 +297,20 @@ const OrderManage = () => {
               <Select className="addressInput dirRtl width100" options={tools.selectFormatter(form.user?.addresses, 'id', 'description', 'آدرس جدید')} defaultValue={{
                 value: form?.addressId || '',
                 label: form.user?.addresses?.find(e => e.id == form?.addressId)?.description
-              }} id="infoTitle" onChange={(selected) => setForm(prev => ({
-                ...prev,
-                address: form.user?.addresses?.find(e => e.id == selected.value) || { phoneNumber: '',title: '', vahed: '', pelak: '', description: '', id: null}
-              }))}/>
+              }} id="infoTitle" onChange={(selected) => {
+                setForm(prev => ({
+                  ...prev,
+                  address: form.user?.addresses?.find(e => e.id == selected.value) || {
+                    phoneNumber: '',
+                    title: '',
+                    vahed: '',
+                    pelak: '',
+                    description: '',
+                    id: null
+                  }
+                }));
+                setAddress(form?.user?.addresses?.find(e => e.id == selected.value))
+              }}/>
               <label className="sideBarTitle" htmlFor="phoneNumber">عنوان</label>
               <input className="editProductInput" type="text" id="phoneNumber" name="addressPhone" value={form.address?.title} onChange={(input: any) => setForm(prev => ({
                 ...prev,
@@ -332,6 +351,7 @@ const OrderManage = () => {
                   description: input.target.value
                 }
               }))}/>
+              <span onClick={() => dispatch(popupSlice.middle(<MapModal address={address} setAddress={setAddress}/>))}>جزئیات آدرس</span>
             </div>
           </div>
           <div className="infoSection">

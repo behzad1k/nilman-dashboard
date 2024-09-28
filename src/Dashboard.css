@@ -1349,7 +1349,7 @@ table{
     max-width: 300px;
     height: auto !important;
 }
-.modalForm div {
+.modalForm> div {
     width: calc(50% - 8px);
     display: flex;
     flex-direction: column;
@@ -1380,6 +1380,10 @@ table{
 .addressSection textarea {
     height: 96px;
     margin-bottom: 0;
+}
+.modalMapContainer{
+    width: 100% !important;
+    height: 500px;
 }
 .modalBtns {
     display: flex;
@@ -1548,4 +1552,61 @@ table{
     gap: 10px;
     justify-content: center;
     align-items: center;
+}
+
+.mapSearchInput{
+    background: #FFF;
+    border-radius: 12px;
+    width: 90%;
+    position: absolute;
+    margin: 25px auto 0 ;
+    z-index: 10;
+}
+.mapSearchInputBox{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 10px;
+}
+.mapSearchInput ul{
+    list-style-type: none;
+    padding: 10px
+}
+.mapSearchInput li{
+    padding: 5px;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+.mapSearchInput input{
+    border: 0;
+    direction: rtl;
+    width: 100%;
+    height: 50px;
+}
+.mapSearchInput i{
+    content: url("/public/img/search.png");
+    width: 35px;
+    height: 35px;
+}
+.mapTargetIcon{
+    content: url("/public/img/target.png");
+    padding: 13px;
+    background: #FFF;
+    border-radius: 100px;
+    width: 60px;
+    height: 60px;
+    position: absolute;
+    right: 30px;
+    bottom: -440px
+}
+
+.largeMap{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    /*padding: 20px 0;*/
 }

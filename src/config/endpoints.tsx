@@ -41,6 +41,7 @@ const endpoints = {
     index: format('address'),
     single: format('address/single'),
     basic: format('address/basic'),
+    search: format('address/search', false)
   },
   color:{
     index: format('color'),

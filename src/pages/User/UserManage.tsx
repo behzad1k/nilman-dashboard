@@ -21,7 +21,6 @@ const UserManage = () => {
   const dispatch = useDispatch();
   const serviceReducer = useAppSelector(state => state.serviceReducer)
   const [workerOffs, setWorkerOffs] = useState<any>({});
-  const [showModal, setShowModal] = useState(false);
   const [item, setItem] = useState<any>();
   const [services, setServices] = useState<IService[]>([]);
   const [districts, setDistricts] = useState<any[]>([]);
@@ -114,22 +113,17 @@ const UserManage = () => {
               <i className="mapPin"></i>
               <h6>{address?.title}</h6>
             </span>
-             <p className="adressText marginZero">{address?.text}
+             <p className="adressText marginZero">{address?.description}
                <br/>{address?.phoneNumber}</p>
           </div>
           <div className="addressImage">
           <img src="/img/map.jpg" className="mapPhoto"/>
         <span className="svgContainer">
             {/* <i className="trash"></i> */}
-          <i className="edit clickable" onClick={() => setShowModal(true)}></i>
+          <i className="edit clickable" onClick={() => dispatch(popupSlice.middle(<MapModal address={address}/>))}></i>
         </span>
             </div>
         </span>
-        <div className={`formModal ${showModal ? 'flex' : ''}`}>
-          <div className="modalOverLay" onClick={() => setShowModal(false)}>
-          </div>
-          <MapModal setShowModal={setShowModal} address={address} setAddress={setAddresses}/>
-        </div>
       </div>
     )
   };
