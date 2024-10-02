@@ -94,7 +94,7 @@ const Orders = () => {
             <i className="trash clickable" onClick={() => deleteOrder(order.id)}></i>
             <i className="edit clickable" onClick={() => navigate('/order/edit/' + order.id)}></i>
             <i className="usersSvg clickable" onClick={() => dispatch(popupSlice.middle(<Bill order={order} /> ))}></i>
-            {order.status == orderStatus.Done && <i className="feedbackIcon clickable" onClick={() => dispatch(popupSlice.middle(<FeedbackModal order={order}/>))}></i>}
+            {order.isFeedbacked && <i className="feedbackIcon clickable" onClick={() => dispatch(popupSlice.middle(<FeedbackModal order={order}/>))}></i>}
           </td>
           <td className="">{tools.formatPrice(order.finalPrice)}</td>
           <td>{order.worker ? `${order.worker?.name} ${order.worker?.lastName}` : '-'}</td>
