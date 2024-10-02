@@ -16,6 +16,7 @@ import { Sidebar } from "../../layouts/Sidebar"
 import Derham from '../Dashboard/Modal/Derham';
 import Excel from '../Dashboard/Modal/Excel';
 import Bill from './Bill';
+import FeedbackModal from './FeedbackModal';
 import Status from './Status';
 import BillDetail from './\u200CBillDetail';
 import orderStatus = globalEnum.orderStatus;
@@ -93,6 +94,7 @@ const Orders = () => {
             <i className="trash clickable" onClick={() => deleteOrder(order.id)}></i>
             <i className="edit clickable" onClick={() => navigate('/order/edit/' + order.id)}></i>
             <i className="usersSvg clickable" onClick={() => dispatch(popupSlice.middle(<Bill order={order} /> ))}></i>
+            {order.status == orderStatus.Done && <i className="feedbackIcon clickable" onClick={() => dispatch(popupSlice.middle(<FeedbackModal order={order}/>))}></i>}
           </td>
           <td className="">{tools.formatPrice(order.finalPrice)}</td>
           <td>{order.worker ? `${order.worker?.name} ${order.worker?.lastName}` : '-'}</td>

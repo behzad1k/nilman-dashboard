@@ -27,6 +27,7 @@ const endpoints = {
     single: format('order/single'),
     relatedWorkers: format('order/relatedWorkers'),
     assign: format('order/assign'),
+    feedback: format('order/feedback'),
   },
   user:{
     index: format('user'),
@@ -62,6 +63,9 @@ const endpoints = {
     index: format('log'),
     single: format('district/single'),
     basic: format('district/basic'),
+  },
+  feedback:{
+    index: format('feedback'),
   },
   dashboard:{
     index: format('dashboard'),

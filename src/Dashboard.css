@@ -415,6 +415,16 @@ table{
     content: url("/public/svg/trash.svg");
 
 }
+.feedbackIcon{
+    content: url("/public/img/feedback.png");
+    width: 20px;
+    height: 20px;
+}
+.star{
+    content: url("/public/img/star.png");
+    width: 40px;
+    height: 40px;
+}
 .edit{
     content: url("/public/svg/dashEdit.svg");
 }
@@ -1609,4 +1619,40 @@ table{
     align-items: center;
     flex-direction: column;
     /*padding: 20px 0;*/
+}
+.feebackModalContainer{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    background: #FFF;
+    min-height: 400px;
+    height: auto;
+    min-width: 500px;
+}
+.feedbackModalRow{
+    display: flex;
+    width: 100%;
+    padding: 10px 30px;
+    justify-content: space-between;
+}
+.feedbackModalColumn{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+}
+.feedbackModalCard{
+    text-align: center;
+    padding: 8px;
+    border-radius: 12px;
+    min-width: 200px;
+}
+.feedbackModalCard.negative{
+    background: #ff8484;
+}
+.feedbackModalCard.positive{
+    background: #92f6a9;
 }
