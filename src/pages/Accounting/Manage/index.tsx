@@ -173,10 +173,10 @@ const AccountingManage = () => {
               کارکرد در بازه مشخص شده: {tools.formatPrice(salesInRange)}
             </div>
             <div>
-              طلب زیباکار: {tools.formatPrice(form?.walletBalance)}
+              طلب زیباکار: {tools.formatPrice(form?.walletBalance + form?.orders?.filter(e => !e.transactionId && e.status == orderStatus.Done).reduce((acc, curr) => acc + (curr.price * curr.workerPercent / 100) + 100000, 0))}
             </div>
             <div>
-              سود زیباکار برای مجموعه: {tools.formatPrice(form?.orders?.reduce((acc, curr) => acc + (curr.finalPrice - (curr.price * curr.workerPercent / 100) - 100000), 0))}
+              سود زیباکار برای مجموعه: {tools.formatPrice(form?.orders.filter(e => e.status == orderStatus.Done)?.reduce((acc, curr) => acc + (curr.finalPrice - (curr.price * curr.workerPercent / 100) - 100000), 0))}
             </div>
 
           </section>

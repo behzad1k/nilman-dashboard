@@ -70,6 +70,7 @@ const endpoints = {
   dashboard:{
     index: format('dashboard'),
     sales: format('dashboard/sales'),
+    generalInfo: format('dashboard/generalInfo'),
     single: format('dashboard/single'),
     basic: format('district/basic'),
   }

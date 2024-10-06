@@ -52,7 +52,7 @@
     align-items: center;
     gap: 20px;
     border-radius: 44px;
-    border: 0.5px solid #5F4D3F;
+    border: 0.5px solid #c89dc7;
     height: 40px;
     width: 356px;
 }
@@ -114,7 +114,7 @@
 }
 .headerLinks:hover {
     display: flex;
-    border-bottom: 2px solid #5F4D3F;
+    border-bottom: 2px solid #c89dc7;
 }
 .menuBox{
     display: none;
@@ -136,7 +136,7 @@
     margin-left: 100px;
 }
 .links h5{
-    color: #5F4D3F;
+    color: #c89dc7;
     text-align: right;
     font-size: 14px;
     font-weight: 600;
@@ -167,7 +167,7 @@
     height: 80%;
 }
 .rightLinks>a{
-    color: #5F4D3F;
+    color: #c89dc7;
     text-align: right;
     font-size: 16px;
     font-weight: 600;
@@ -317,7 +317,7 @@
     padding-top: 24px;
 }
 .magCardTitle{
-    color: #5F4D3F;
+    color: #c89dc7;
     text-align: right;
     font-size: 20px;
     font-style: normal;
@@ -342,7 +342,7 @@
     padding: 24px 100px;
 }
 .magTitle{
-    color: #5F4D3F;
+    color: #c89dc7;
     text-align: right;
     font-size: 32px;
     font-style: normal;
@@ -350,7 +350,7 @@
     line-height: 18px;
 }
 .readMore{
-    color: #5F4D3F;
+    color: #c89dc7;
     text-align: right;
     font-size: 16px;
     font-style: normal;
@@ -455,7 +455,7 @@
 .singleImg{
 }
 .singleCode{
-    color: #5F4D3F;
+    color: #c89dc7;
     font-size: 16px;
     font-weight: 400;
     margin-right: 31px;
@@ -506,7 +506,7 @@
     flex-direction: column;
 }
 .productBrand{
-    color:  #5F4D3F;
+    color:  #c89dc7;
     text-align: right;
     font-style: normal;
     font-weight: 600;
@@ -523,7 +523,7 @@
     justify-content: space-evenly;
 }
 .sku{
-    color: #5F4D3F;
+    color: #c89dc7;
     text-align: right;
     font-size: 14px;
     font-style: normal;
@@ -543,7 +543,7 @@
     align-items: center;
 }
 .price1{
-    color: #5F4D3F;
+    color: #c89dc7;
     text-align: right;
     font-size: 32px;
     font-weight: 400;
@@ -692,10 +692,10 @@
 .preOrder{
     padding: 7px 46px;
     border-radius: 8px;
-    border: 1px solid #5F4D3F;
+    border: 1px solid #c89dc7;
     /*margin-top: 15px;*/
     margin: 36px;
-    color:  #5F4D3F;
+    color:  #c89dc7;
     text-align: right;
     font-size: 12px;
     font-weight: 400;
@@ -751,7 +751,7 @@
     font-style: normal;
     margin-left: -12px;
     margin-top: 26px;
-    color: #5F4D3F;
+    color: #c89dc7;
 }
 .tablePersianPrice{
     display: flex;
@@ -820,11 +820,11 @@
 }
 .tableAddToCard{
     color: #FFFFFF;
-    background-color: #5F4D3F;
+    background-color: #c89dc7;
     align-self: center;
     padding: 10px 10px;
     border-radius: 8px;
-    border: 1px solid #5F4D3F;
+    border: 1px solid #c89dc7;
     text-align: right;
     font-size: 16px;
     font-weight: 400;
@@ -884,7 +884,7 @@
     width:100px;
     height: 33px;
     justify-content: space-between;
-    color: #5F4D3F;
+    color: #c89dc7;
 }
 .quantityNumber{
     font-size: 16px;
@@ -894,11 +894,11 @@
     text-align: center;
 }
 .tableCollapsIcon{
-    color: #5F4D3F;
+    color: #c89dc7;
     content: url("/public/svg/tableCollaps.svg");
 }
 .tablePlusIcon{
-    color: #5F4D3F;
+    color: #c89dc7;
     content: url("/public/svg/tablePlus.svg");
 }
 .iconContainer{
@@ -907,7 +907,7 @@
     padding: 7px;
     align-items: flex-start;
     border-radius: 8px;
-    background: #5F4D3F;
+    background: #c89dc7;
 }
 .tableCardSvg{
     content: url("/public/svg/tableCard.svg");
@@ -942,7 +942,7 @@
     background-color: #F5F5F5;
 }
 .loginTextName{
-    color: #5F4D3F;
+    color: #c89dc7;
     text-align: right;
     font-size: 20px;
     font-weight: 400;
@@ -955,7 +955,7 @@
     padding-top: 55px;
 }
 .loginInfo{
-    color: #5F4D3F;
+    color: #c89dc7;
     font-size: 16px;
     font-weight: 600;
 }
@@ -973,7 +973,7 @@
     border: 0
 }
 .forgotPassword{
-    color:  #5F4D3F;
+    color:  #c89dc7;
     font-size: 14px;
     font-weight: 400;
     margin-top: 22px ;
@@ -984,7 +984,7 @@
     width: 85%;
     height: 50px;
     border-radius: 4px;
-    background:  #5F4D3F;
+    background:  #c89dc7;
     align-items: center;
     justify-content: center;
     display: flex;
@@ -1082,13 +1082,13 @@
     justify-content: center;
     align-items: center;
     border-radius: 4px;
-    background: #5F4D3F;
+    background: #c89dc7;
     color: white;
     margin-top: 18px;
 }
 .billLink{
     margin-top: 22px;
-    color: #5F4D3F;
+    color: #c89dc7;
     font-size: 16px;
     font-weight: 400;
     text-decoration-line: underline;
@@ -1127,7 +1127,7 @@
     margin-left: 24px;
 }
 .basketProductBrand{
-    color: #5F4D3F;
+    color: #c89dc7;
     font-size: 16px;
     font-weight: 500;
 }
@@ -1137,7 +1137,7 @@
     font-weight: 400;
 }
 .basketPrice {
-    color: #5F4D3F;
+    color: #c89dc7;
     text-align: right;
     font-size: 12px;
     font-weight: 400;
@@ -1150,7 +1150,7 @@
     padding-left: 24px;
 }
 .basketLenzModel{
-    color: #5F4D3F;
+    color: #c89dc7;
     font-size: 12px;
     font-weight: 400;
 }
@@ -1192,7 +1192,7 @@
 
 }
 .BlogTitle{
-    color:  #5F4D3F;
+    color:  #c89dc7;
     text-align: center;
     font-size: 30px;
     font-style: normal;
@@ -1200,7 +1200,7 @@
     line-height: 47px;
 }
 .blogExit{
-    color: #5F4D3F;
+    color: #c89dc7;
     font-size: 18px;
     font-weight: 400;
     /*margin-left: 5px;*/
@@ -1272,12 +1272,12 @@
     margin-bottom: 24px;
 }
 .categoryBreadCrumb1{
-    color: #5F4D3F;
+    color: #c89dc7;
     font-size: 20px;
     font-weight: 500;
 }
 .categoryBreadCrumb2{
-    color:  #5F4D3F;
+    color:  #c89dc7;
     font-size: 20px;
     font-weight: 300;
 }
@@ -1299,7 +1299,7 @@
     justify-content: center;
     align-items: center;
     border-radius: 80px;
-    background: #5F4D3F;
+    background: #c89dc7;
     color: white;
     width: 45px;
     height: 17px;
@@ -1329,7 +1329,7 @@
     height: 30%;
 }
 .catCardName{
-    color: #5F4D3F;
+    color: #c89dc7;
     text-align: left;
     font-size: 14px;
     font-weight: 500;
@@ -1446,13 +1446,13 @@
     margin-bottom: 30px;
 }
 .successText{
-    color: #5F4D3F;
+    color: #c89dc7;
     font-size: 32px;
     font-weight: 700;
     margin-bottom: 24px;
 }
 .successText2{
-    color: #5F4D3F;
+    color: #c89dc7;
     font-size: 24px;
     font-weight: 400;
     margin-bottom: 48px;
@@ -1465,8 +1465,8 @@
     padding: 9px;
     justify-content: flex-end;
     border-radius: 4px;
-    border: 1px solid  #5F4D3F;
-    color: #5F4D3F;
+    border: 1px solid  #c89dc7;
+    color: #c89dc7;
     font-size: 24px;
     font-weight: 400;
 }
@@ -1501,7 +1501,7 @@
     margin-right: auto
 }
 .tabsText{
-    color: #5F4D3F;
+    color: #c89dc7;
     font-size: 14px;
     font-weight: 400;
     display: flex;
@@ -1509,7 +1509,7 @@
     align-items: center;
 }
 .active{
-    border-bottom: 2px solid  #5F4D3F;
+    border-bottom: 2px solid  #c89dc7;
 }
 .dashboardTableContainer{
     width: 100%;
@@ -1610,8 +1610,8 @@
     justify-content: center;
     align-items: center;
     border-radius: 4px;
-    border: 0.5px solid #5F4D3F;
-    color: #5F4D3F;
+    border: 0.5px solid #c89dc7;
+    color: #c89dc7;
     font-size: 12px;
     font-weight: 400;
     height: 30px;
@@ -1708,7 +1708,7 @@
     align-items: center;
     gap: 10px;
     border-radius: 4px;
-    background: #5F4D3F;
+    background: #c89dc7;
     color: white;
     margin-left: 10px;
 }
@@ -1743,7 +1743,7 @@
     content: url("/public/svg/back3.svg");
 }
 .orderDtailTitle{
-    color: #5F4D3F;
+    color: #c89dc7;
     font-size: 16px;
     font-weight: 400;
 }
@@ -1778,7 +1778,7 @@
     height: 38px;
 }
 .orderDtailBillText{
-    color:  #5F4D3F;
+    color:  #c89dc7;
     text-align: right;
     font-size: 14px;
     font-weight: 400;
@@ -1792,7 +1792,7 @@
     align-items: center;
     gap: 10px;
     border-radius: 4px;
-    background: #5F4D3F;
+    background: #c89dc7;
     color: #FFF;
     font-size: 12px;
     font-weight: 400;
@@ -1839,7 +1839,7 @@
     flex-direction: row;
     justify-content: flex-end;
     margin-right: 18px;
-    color: #5F4D3F;
+    color: #c89dc7;
     font-size: 12px;
     font-weight: 400;
     margin-top: 20px;
@@ -1877,7 +1877,7 @@
     justify-content: center;
     align-items: center;
     gap: 10px;
-    color: #5F4D3F;
+    color: #c89dc7;
     text-align: right;
     font-size: 12px;
     font-weight: 400;
@@ -1904,10 +1904,10 @@
     font-size: 14px;
     font-weight: 400;
     font-style: normal;
-    background: #5F4D3F;
+    background: #c89dc7;
 }
 .catalogLink{
-    color: #5F4D3F;
+    color: #c89dc7;
     text-decoration: none;
 }
 .detailPriceContainer{
@@ -1983,7 +1983,7 @@
 .title{
     display: inline-flex;
     align-items: center;
-    color: #5F4D3F;
+    color: #c89dc7;
     text-align: right;
     font-size: 20px;
     font-weight: 600;
@@ -2037,7 +2037,7 @@
     margin-bottom: 10px;
 }
 .cardTitle{
-    color:  #5F4D3F;
+    color:  #c89dc7;
     text-align: right;
     font-size: 16px;
     font-weight: 600;
@@ -2166,7 +2166,7 @@
     gap: 10px;
     border-radius: 100px;
     background:  #D8CEBC;
-    color: #5F4D3F;
+    color: #c89dc7;
     text-align: right;
     font-size: 14px;
     font-weight: 400;
@@ -2220,7 +2220,7 @@
 }
 .tag{
     background-color: #F5F5F5;
-    color: #5F4D3F;
+    color: #c89dc7;
 }
 .cancelTag{
     content: url("/public/svg/cancelTag.svg");
@@ -2303,7 +2303,7 @@
     width: 50%;
     height: 40px;
     border-radius: 4px;
-    border: 1px solid #5F4D3F;
+    border: 1px solid #c89dc7;
     font-size: 12px;
     display: flex;
     flex-direction: row;
@@ -2314,7 +2314,7 @@
 .pay{
    width: 50%;
     border-radius: 4px;
-    background:  #5F4D3F;
+    background:  #c89dc7;
     color: white;
     height: 40px;
     border: 0;
@@ -2326,8 +2326,8 @@
 }
 .payHeader{
     width: 100%;
-    border-bottom: 1px solid #5F4D3F;
-    color: #5F4D3F;
+    border-bottom: 1px solid #c89dc7;
+    color: #c89dc7;
     text-align: center;
     font-size: 18px;
     font-weight: 600;
@@ -2344,7 +2344,7 @@
     justify-content: space-between;
 }
 .payDetail>h5{
-    color:  #5F4D3F;
+    color:  #c89dc7;
     text-align: right;
     font-size: 14px;
     font-weight: 400;
@@ -2482,7 +2482,7 @@
     max-width: 70px;
 }
 .galleryImage.selected {
-    border: 1px solid #5F4D3F;
+    border: 1px solid #c89dc7;
     border-radius: 8px;
 }
 .addressModal{
@@ -2571,7 +2571,7 @@
 }
 .logoutSvg{
     content: url("/public/svg/Exit.svg");
-    border: 2px solid #5F4D3F;
+    border: 2px solid #c89dc7;
 }
 .marginTopRight{
     margin-top: auto;

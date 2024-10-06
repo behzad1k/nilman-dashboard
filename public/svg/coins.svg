@@ -1,15 +1,15 @@
 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
 <g id="Icons">
 <g id="SVGRepo_iconCarrier">
-<path id="Vector" d="M8.25 6.75C10.7353 6.75 12.75 5.74264 12.75 4.5C12.75 3.25736 10.7353 2.25 8.25 2.25C5.76472 2.25 3.75 3.25736 3.75 4.5C3.75 5.74264 5.76472 6.75 8.25 6.75Z" stroke="#14337D" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
-<path id="Vector_2" d="M3.75 4.5V7.5C3.75 8.775 5.775 9.75 8.25 9.75C10.725 9.75 12.75 8.775 12.75 7.5V4.5" stroke="#14337D" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
-<path id="Vector_3" d="M3.75 7.5V10.5C3.75 11.775 5.775 12.75 8.25 12.75C10.725 12.75 12.75 11.775 12.75 10.5V7.5" stroke="#14337D" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
-<path id="Vector_4" d="M3.75 10.5V13.5C3.75 14.775 5.775 15.75 8.25 15.75C10.725 15.75 12.75 14.775 12.75 13.5V10.5" stroke="#14337D" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
-<path id="Vector_5" d="M3.75 13.5V16.5C3.75 17.775 5.775 18.75 8.25 18.75C10.725 18.75 12.75 17.775 12.75 16.5V13.5" stroke="#14337D" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
-<path id="Vector_6" d="M3.75 16.5V19.5C3.75 20.775 5.775 21.75 8.25 21.75C10.725 21.75 12.75 20.775 12.75 19.5V16.5" stroke="#14337D" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
-<path id="Vector_7" d="M12.75 16.65C13.575 17.025 14.625 17.25 15.75 17.25C18.225 17.25 20.25 16.275 20.25 15V12" stroke="#14337D" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
-<path id="Vector_8" d="M12.75 10.35C13.575 9.975 14.625 9.75 15.75 9.75C18.225 9.75 20.25 10.725 20.25 12C20.25 13.275 18.225 14.25 15.75 14.25C14.625 14.25 13.575 14.025 12.75 13.65" stroke="#14337D" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
-<path id="Vector_9" d="M12.75 19.65C13.575 20.025 14.625 20.25 15.75 20.25C18.225 20.25 20.25 19.275 20.25 18V15" stroke="#14337D" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+<path id="Vector" d="M8.25 6.75C10.7353 6.75 12.75 5.74264 12.75 4.5C12.75 3.25736 10.7353 2.25 8.25 2.25C5.76472 2.25 3.75 3.25736 3.75 4.5C3.75 5.74264 5.76472 6.75 8.25 6.75Z" stroke="#c89dc7" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+<path id="Vector_2" d="M3.75 4.5V7.5C3.75 8.775 5.775 9.75 8.25 9.75C10.725 9.75 12.75 8.775 12.75 7.5V4.5" stroke="#c89dc7" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+<path id="Vector_3" d="M3.75 7.5V10.5C3.75 11.775 5.775 12.75 8.25 12.75C10.725 12.75 12.75 11.775 12.75 10.5V7.5" stroke="#c89dc7" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+<path id="Vector_4" d="M3.75 10.5V13.5C3.75 14.775 5.775 15.75 8.25 15.75C10.725 15.75 12.75 14.775 12.75 13.5V10.5" stroke="#c89dc7" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+<path id="Vector_5" d="M3.75 13.5V16.5C3.75 17.775 5.775 18.75 8.25 18.75C10.725 18.75 12.75 17.775 12.75 16.5V13.5" stroke="#c89dc7" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+<path id="Vector_6" d="M3.75 16.5V19.5C3.75 20.775 5.775 21.75 8.25 21.75C10.725 21.75 12.75 20.775 12.75 19.5V16.5" stroke="#c89dc7" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+<path id="Vector_7" d="M12.75 16.65C13.575 17.025 14.625 17.25 15.75 17.25C18.225 17.25 20.25 16.275 20.25 15V12" stroke="#c89dc7" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+<path id="Vector_8" d="M12.75 10.35C13.575 9.975 14.625 9.75 15.75 9.75C18.225 9.75 20.25 10.725 20.25 12C20.25 13.275 18.225 14.25 15.75 14.25C14.625 14.25 13.575 14.025 12.75 13.65" stroke="#c89dc7" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
+<path id="Vector_9" d="M12.75 19.65C13.575 20.025 14.625 20.25 15.75 20.25C18.225 20.25 20.25 19.275 20.25 18V15" stroke="#c89dc7" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
 </g>
 </g>
 </svg>

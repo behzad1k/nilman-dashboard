@@ -1,12 +1,15 @@
 import moment from 'jalali-moment';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import ReactPaginate from 'react-paginate';
 import { useDispatch } from 'react-redux';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import Select from 'react-select';
 import Swal from 'sweetalert2';
+import { DatePicker } from 'zaman';
 import endpoints from '../../config/endpoints';
 import globalEnum from '../../enums/globalEnum';
+import TransactionModal from '../../layouts/Modal/TransactionModal';
+import { popupSlice } from '../../services/reducers';
 import { setLoading } from '../../services/reducers/homeSlice';
 import restApi from '../../services/restApi';
 import { Sidebar } from '../../layouts/Sidebar';
@@ -21,7 +24,13 @@ const Dashboard = () => {
   const [itemOffset, setItemOffset] = useState(0);
   const [searchParams, setSearchParams] = useSearchParams();
   const [workers, setWorkers] = useState([]);
-  const [workerInfo, setWorkerInfo] = useState({ id: 1, last1: 0, last7: 0, last30: 0 });
+  const [generalInfo, setGeneralInfo] = useState<any>({});
+  const [generalWorkerId, setGeneralWorkerId] = useState<any>(0);
+  const [workerInfo, setWorkerInfo] = useState({ id: 0, last1: 0, last7: 0, last30: 0 });
+  const [dateRange, setDateRange] = useState({
+    from: '1403/05/01',
+    to: moment().format('jYYYY/jMM/jDD')
+  });
   const itemsPerPage = 25;
   const endOffset = (itemOffset || 0) + itemsPerPage;
   let currentItems = data.filter(e => e.title?.toLowerCase()?.includes(query.toLowerCase()))?.slice(itemOffset, endOffset);
@@ -81,6 +90,15 @@ const Dashboard = () => {
     return rows;
   };
 
+  const fetchGeneralInfo = async () => {
+    const res = await restApi(endpoints.dashboard.generalInfo).get({
+      from: dateRange.from,
+      to: dateRange.to,
+      worker: generalWorkerId
+    })
+    setGeneralInfo(res.data)
+  };
+
   const fetchData = async () => {
     dispatch(setLoading(true));
 
@@ -97,6 +115,7 @@ const Dashboard = () => {
         }));
       }
     }
+
 
     dispatch(setLoading(false));
   };
@@ -139,6 +158,7 @@ const Dashboard = () => {
     fetchLogs();
     fetchData();
     fetchWorkerInfo(workerInfo.id)
+    fetchGeneralInfo()
   }, []);
 
   useEffect(() => {
@@ -147,12 +167,11 @@ const Dashboard = () => {
     }
   }, [data]);
 
-  console.log(workers);
   return(
     <>
       <body className="dashboardBody">
       <Sidebar />
-      <main className="dashBoardMain">
+      <main className="accountingMain">
         <div>
           <div className="dashCardContainer">
             <Select options={[
@@ -196,7 +215,7 @@ const Dashboard = () => {
         </div>
         <div>
           <div className="dashCardContainer">
-            <Select className="dashCardLog" value={{ label: workers?.find(e => e.id == workerInfo?.id)?.name + ' ' + workers?.find(e => e.id == workerInfo?.id)?.lastName, value: workerInfo?.id}} options={workers?.map(e => ({ label: `${e.name} ${e.lastName}`, value: e.id }))} onChange={(selected) => {
+            <Select className="dashCardLog" value={{ label: [...workers, { id: 0, name: 'انتخاب ', lastName: 'کنید'}]?.find(e => e.id == workerInfo?.id)?.name + ' ' + [...workers, { id: 0, name: 'انتخاب ', lastName: 'کنید'}]?.find(e => e.id == workerInfo?.id)?.lastName, value: workerInfo?.id}} options={[...workers, { id: 0, name: 'انتخاب ', lastName: 'کنید'}]?.map(e => ({ label: `${e.name} ${e.lastName}`, value: e.id }))} onChange={(selected) => {
               setWorkerInfo({
                 id: selected.value,
                 last1: 0,
@@ -231,6 +250,52 @@ const Dashboard = () => {
             </div>
           </div>
         </div>
+        <div className="dashCardContainer">
+          <Select className="dashCardLog" value={{ label: [...workers, { id: 0, name: 'انتخاب ', lastName: 'همه'}]?.find(e => e.id == generalWorkerId)?.name + ' ' + [...workers, { id: 0, name: 'انتخاب ', lastName: 'همه'}]?.find(e => e.id == generalWorkerId)?.lastName, value: generalWorkerId}} options={[...workers, { id: 0, name: 'انتخاب ', lastName: 'همه'}]?.map(e => ({ label: `${e.name} ${e.lastName}`, value: e.id }))} onChange={(selected) => {
+            setGeneralWorkerId(
+               selected.value
+            )
+          }} />
+          <div>
+            <DatePicker inputClass="editProductInput" defaultValue={moment(dateRange?.to, 'jYYYY/jMM/jDD').toDate()} onChange={(e) => setDateRange(prev => ({ ...prev, to: moment(e.value.valueOf()).format('jYYYY/jMM/jDD') }))} />
+            <label className="sideBarTitle">از</label>
+            <DatePicker inputClass="editProductInput" defaultValue={moment(dateRange?.from, 'jYYYY/jMM/jDD').toDate()} onChange={(e) => setDateRange(prev => ({ ...prev, from: moment(e.value.valueOf()).format('jYYYY/jMM/jDD') }))} />
+            <label className="sideBarTitle">تا</label>
+          </div>
+          <span className="dashboardHeader keepRight clickable" onClick={() => fetchGeneralInfo()} >
+              ثبت
+            </span>
+          <h2>گذشته</h2>
+            <div className="dashCard">
+              <span>
+                سود خالص
+              </span>
+              <span>
+                {tools.formatPrice(generalInfo?.past?.profit)}
+              </span>
+            </div>
+            <div className="dashCard">
+              <span>فروش کل</span>
+              <span>
+                {tools.formatPrice(generalInfo?.past?.all)}
+              </span>
+            </div>
+          <h2>آینده</h2>
+          <div className="dashCard">
+              <span>
+                سود خالص
+              </span>
+            <span>
+                {tools.formatPrice(generalInfo?.future?.profit)}
+              </span>
+          </div>
+          <div className="dashCard">
+            <span>فروش کل</span>
+            <span>
+                {tools.formatPrice(generalInfo?.future?.all)}
+              </span>
+          </div>
+          </div>
       </main>
       </body>
     </>

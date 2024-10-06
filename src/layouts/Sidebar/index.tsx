@@ -31,6 +31,7 @@ export const Sidebar = () => {
           <p className="adminTitle">ادمین</p>
         </div>
       </span>
+        <SidebarRow title="داشبورد" url="/"/>
         <SidebarRow title="سفارشات" url="/order/"/>
         <SidebarRow title="خدمات" url="/Service"/>
         <SidebarRow title="کاربران" url="/User"/>
