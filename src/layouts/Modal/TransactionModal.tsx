@@ -59,7 +59,7 @@ const TransactionModal = ({ userId, orders }) => {
   const list = () => {
     return orders.map((order, index) =>
       <tr>
-        <td>{tools.formatPrice((order.price * order.workerPercent / 100) + 100000)}</td>
+        <td>{tools.formatPrice((order.price * order.workerPercent / 100) + order.transportation)}</td>
         <td>{tools.formatPrice(order.finalPrice)}</td>
         <td><a href={`/order/edit/${order.id}`} target='_blank'>{order.code}</a></td>
         <td>{++index}</td>
@@ -69,7 +69,7 @@ const TransactionModal = ({ userId, orders }) => {
   };
 
   useEffect(() => {
-    setTransaction(prev => ({ ...prev, amount: orders.filter(e => selectedOrders.includes(e.id)).reduce((acc, order) => acc + (order.price * order.workerPercent / 100) + 100000,0)}))
+    setTransaction(prev => ({ ...prev, amount: orders.filter(e => selectedOrders.includes(e.id)).reduce((acc, order) => acc + (order.price * order.workerPercent / 100) + order.transportation,0)}))
   }, [selectedOrders]);
 
   return (

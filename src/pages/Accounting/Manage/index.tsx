@@ -59,7 +59,7 @@ const AccountingManage = () => {
     return form?.orders.filter(e => e.status == orderStatus.Done).slice(0, 30)?.map((order, index) =>
       <tr>
         <td>{order.transactionId > 0 ? 'بله' : 'خیر'}</td>
-        <td>{tools.formatPrice((order.price * order.workerPercent / 100) + 100000)}</td>
+        <td>{tools.formatPrice((order.price * order.workerPercent / 100) + order.transportation)}</td>
         <td>{order.workerPercent}</td>
         <td>{tools.formatPrice(order.finalPrice)}</td>
         <td><a href={`/order/edit/${order.id}`} target='_blank'>{order.code}</a></td>
@@ -173,10 +173,10 @@ const AccountingManage = () => {
               کارکرد در بازه مشخص شده: {tools.formatPrice(salesInRange)}
             </div>
             <div>
-              طلب زیباکار: {tools.formatPrice(form?.walletBalance + form?.orders?.filter(e => !e.transactionId && e.status == orderStatus.Done).reduce((acc, curr) => acc + (curr.price * curr.workerPercent / 100) + 100000, 0))}
+              طلب زیباکار: {tools.formatPrice(form?.walletBalance + form?.orders?.filter(e => !e.transactionId && e.status == orderStatus.Done).reduce((acc, curr) => acc + (curr.price * curr.workerPercent / 100) + curr.transportation, 0))}
             </div>
             <div>
-              سود زیباکار برای مجموعه: {tools.formatPrice(form?.orders.filter(e => e.status == orderStatus.Done)?.reduce((acc, curr) => acc + (curr.finalPrice - (curr.price * curr.workerPercent / 100) - 100000), 0))}
+              سود زیباکار برای مجموعه: {tools.formatPrice(form?.orders.filter(e => e.status == orderStatus.Done)?.reduce((acc, curr) => acc + (curr.finalPrice - (curr.price * curr.workerPercent / 100) - curr.transportation), 0))}
             </div>
 
           </section>
