@@ -62,6 +62,7 @@ const AccountingManage = () => {
         <td>{tools.formatPrice((order.price * order.workerPercent / 100) + order.transportation)}</td>
         <td>{order.workerPercent}</td>
         <td>{tools.formatPrice(order.finalPrice)}</td>
+        <td>{order.feedback ? order.feedback.rating : '-'}</td>
         <td><a href={`/order/edit/${order.id}`} target='_blank'>{order.code}</a></td>
         <td>{++index}</td>
       </tr>
@@ -178,6 +179,9 @@ const AccountingManage = () => {
             <div>
               سود زیباکار برای مجموعه: {tools.formatPrice(form?.orders.filter(e => e.status == orderStatus.Done)?.reduce((acc, curr) => acc + (curr.finalPrice - (curr.price * curr.workerPercent / 100) - curr.transportation), 0))}
             </div>
+            <div>
+              میانگین ستاره های کاربر:  {form?.orders?.filter(e => e.feedback).reduce((acc, curr) => curr.feedback?.rating + acc, 0) / form?.orders?.filter(e => e.feedback).length}
+            </div>
 
           </section>
           <section className="bottom">
@@ -210,6 +214,7 @@ const AccountingManage = () => {
                 <th>سهم استایلیست</th>
                 <th>درصد استایلیست</th>
                 <th>مبلغ کل</th>
+                <th>ستاره</th>
                 <th>کد</th>
                 <th>ردیف</th>
               </tr>

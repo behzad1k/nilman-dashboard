@@ -76,6 +76,7 @@ const OrderManage = () => {
     await restApi(process.env.REACT_APP_BASE_URL + '/admin/order/products/' + res.data.id).put({
       services: form.orderServices.map(e => ({
         serviceId: e.serviceId,
+        count: e.count
       }))
     })
 
@@ -107,21 +108,37 @@ const OrderManage = () => {
       rows.push(
         <tr className="" key={'product' + index}>
           <td className="backGround1">
+            <p>{tools.formatPrice(form?.orderServices[key].count * serviceReducer.allServices?.find(e => e.id == orderProduct.serviceId)?.price)}</p>
+          </td>
+         <td className="">
             <p>{tools.formatPrice(serviceReducer.allServices?.find(e => e.id == orderProduct.serviceId)?.price)}</p>
           </td>
           <td className="quantity">
           <div className="quantityButtom">
-            <i className="tablePlusIcon" onClick={(e: any) => {
-              e.target.nextElementSibling.value = Number(e.target.nextElementSibling.value) + 1;
-              // e.target.parentElement.parentElement.previousElementSibling.previousElementSibling.children[0].innerHTML = Number(e.target.nextElementSibling.value) * Number(e.target.parentElement.parentElement.previousElementSibling.children[0].value)
-            }}></i>
-            <input className="quantityNumber" defaultValue={1}
-                   // onChange={(e: any) => e.target.parentElement.parentElement.previousElementSibling.previousElementSibling.children[0].innerHTML = Number(e.target.value) * Number(e.target.parentElement.parentElement.nextElementSibling.children[0].value)}
+            <i className="tablePlusIcon" onClick={(e: any) => setForm(prev => {
+              const cp = { ...form };
+
+              cp.orderServices[key].count = Number(cp.orderServices[key].count) + 1;
+
+              return cp
+            })}></i>
+            <input type='number' className="quantityNumber" value={form?.orderServices[key].count}
+               onChange={(input: any) => setForm(prev => {
+                 const cp = { ...prev }
+
+                 cp.orderServices[key].count = input.target.value
+
+                 return cp;
+               })}
             />
-            <i className="tableCollapsIcon" onClick={(e: any) => {
-              e.target.previousElementSibling.value = Number(e.target.previousElementSibling.value) - 1;
-              // e.target.parentElement.parentElement.previousElementSibling.previousElementSibling.children[0].innerHTML = Number(e.target.previousElementSibling.value) * Number(e.target.parentElement.parentElement.previousElementSibling.children[0].value)
-            }}></i>
+            <i className="tableCollapsIcon" onClick={(e: any) =>
+              form?.orderServices[key].count > 1 && setForm(prev => {
+                const cp = { ...prev };
+
+                cp.orderServices[key].count = Number(cp.orderServices[key].count) - 1;
+
+                return cp;
+            })}></i>
           </div>
         </td>
           <td className="">
@@ -143,6 +160,13 @@ const OrderManage = () => {
     return rows;
   };
 
+  const fetchUser = async (phoneNumber) => {
+    const res = await restApi(endpoints.user.findBy, true).get({ phoneNumber: phoneNumber });
+    if (res.code == 200){
+      setForm(prev => ({ ...prev, user: res.data }))
+    }
+  };
+
   const fetchData = async () => {
     dispatch(setLoading(true));
 
@@ -153,13 +177,14 @@ const OrderManage = () => {
         date: res.data?.date,
         time: res.data?.fromTime,
         status: res.data?.status,
-        finalPrice: Number(res.data?.price) * (res.data?.isUrgent ? 1.5 : 1),
+        finalPrice: res.data.finalPrice,
         price: Number(res.data?.price) * (res.data?.isUrgent ? 1.5 : 1),
         serviceId: res.data?.serviceId,
         transportation: res.data?.transportation,
         discountAmount: res.data?.discountAmount,
         orderServices: res.data?.orderServices,
-        address: res.data?.address,
+        address: res.data?.user?.addresses?.find(e => e.id == res.data?.addressId),
+        addressId: res.data?.addressId,
         user: res.data?.user,
         createdAt: res.data?.createdAt,
         isMulti: res.data?.isMulti,
@@ -167,6 +192,10 @@ const OrderManage = () => {
         finalImage: res.data?.finalImage
       });
       setAddress(res.data?.address)
+      console.log(res.data?.user);
+      console.log(res.data?.addressId);
+      console.log(res.data?.user?.addresses?.find(e => e.id == res.data?.addressId));
+
     }
     dispatch(setLoading(false));
   };
@@ -175,21 +204,21 @@ const OrderManage = () => {
     fetchData();
   }, []);
 
-  const fetchUser = async (phoneNumber) => {
-    const res = await restApi(endpoints.user.findBy, true).get({ phoneNumber: phoneNumber });
-    if (res.code == 200){
-      setForm(prev => ({ ...prev, user: res.data }))
-    }
-  };
-
   useEffect(() => {
-    const newPrice = form.orderServices?.reduce((acc, curr) => acc + Number(serviceReducer.allServices?.find(e => e.id == curr.serviceId)?.price), 0)
-    setForm(prev => ({ ...prev, price: newPrice, finalPrice: ((newPrice * (form?.isUrgent ? 1.5 : 1))) + form?.transportation}))
-  }, [...form?.orderServices, form?.transportation, form?.isUrgent]);
+    if (serviceReducer.allServices.length > 0) {
+      const newPrice = form.orderServices?.reduce((acc, curr) => acc + Number(serviceReducer.allServices?.find(e => e.id == curr.serviceId)?.price * Number(curr.count)), 0);
+      setForm(prev => ({
+        ...prev,
+        price: newPrice,
+        finalPrice: ((newPrice * (form?.isUrgent ? 1.5 : 1))) + form?.transportation
+      }));
+    }
+  }, [JSON.stringify(form?.orderServices), form?.transportation, form?.isUrgent]);
 
   useEffect(() => {
     setForm(prev => ({...prev, address: address}))
   }, [address]);
+
   return(
     <>
       <body className="dashboardBody">
@@ -294,9 +323,9 @@ const OrderManage = () => {
             <h1 className="dashBoardTitle">آدرس</h1>
             <div className="userInfoContainer">
               <label className="sideBarTitle">آدرس های پیشین</label>
-              <Select className="addressInput dirRtl width100" options={tools.selectFormatter(form.user?.addresses, 'id', 'description', 'آدرس جدید')} defaultValue={{
-                value: form?.addressId || '',
-                label: form.user?.addresses?.find(e => e.id == form?.addressId)?.description
+              <Select className="addressInput dirRtl width100" options={tools.selectFormatter(form.user?.addresses, 'id', 'description', 'آدرس جدید')} value={{
+                value: form?.address?.id || '',
+                label: form.user?.addresses?.find(e => e.id == form?.address?.id)?.description
               }} id="infoTitle" onChange={(selected) => {
                 setForm(prev => ({
                   ...prev,
@@ -405,6 +434,7 @@ const OrderManage = () => {
           <table className="productTable">
           <thead className="editOrderTable">
             <th className="sideBarTitle center" >قیمت کل</th>
+            <th className="sideBarTitle center" >قیمت واحد</th>
             <th className="sideBarTitle center" >تعداد</th>
             <th className="sideBarTitle center" >خدمت</th>
             <th className="sideBarTitle center" >ردیف</th>
@@ -413,7 +443,7 @@ const OrderManage = () => {
             <tbody>
             {list()}
             <tr className="addProductTr">
-              <td className="addProductButton clickable" onClick={() => form?.serviceId && setForm(prev => ({ ...prev, orderServices: [...prev.orderServices, {serviceId: 1 }] }))}>اضافه کردن محصول</td>
+              <td className="addProductButton clickable" onClick={() => form?.serviceId && setForm(prev => ({ ...prev, orderServices: [...prev.orderServices, {serviceId: 1, count: 1 }] }))}>اضافه کردن محصول</td>
             </tr>
             </tbody>
           </table>

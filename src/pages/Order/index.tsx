@@ -44,7 +44,7 @@ const Orders = () => {
         return e.status == orderStatus.InProgress;
       default: return true;
     }
-  })?.filter(e => e.code.toLowerCase().includes(query.toLowerCase()));
+  }).sort((a, b) => Number(b.code.split('-')[1]) - Number(a.code.split('-')[1]))?.filter(e => e.code.toLowerCase().includes(query.toLowerCase()));
   let currentItems = filteredData.slice(itemOffset, endOffset);
   const pageCount = Math.ceil(filteredData.length / itemsPerPage)
   const dispatch = useDispatch();
@@ -87,7 +87,7 @@ const Orders = () => {
   const list = () => {
     const rows: ReactElement[] = [];
 
-    currentItems?.sort((a, b) => moment(b.createdAt).unix() - moment(a.createdAt).unix()).map((order: any, index) => {
+    currentItems.map((order: any, index) => {
       rows.push(
         <tr className="dashTr2" key={'order' + index}>
           <td className="svgContainer">
