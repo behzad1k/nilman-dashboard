@@ -50,7 +50,7 @@ const ServiceManage = () => {
   const submit = async () => {
     dispatch(setLoading(true));
 
-    const data: any = tools.extractor(form, ['title', 'parentId', 'description', 'price', 'hasColor', 'section', 'sort', 'hasMedia', 'isMulti', 'pricePlus', 'openDrawer']);
+    const data: any = tools.extractor(form, ['title', 'parentId', 'description', 'price', 'hasColor', 'section', 'sort', 'hasMedia', 'isMulti', 'pricePlus', 'openDrawer', 'addOns']);
     data.specifics = selectedSpecifics;
 
     const res = await restApi(endpoints.service.basic + (paramId || '')).post(data);
@@ -113,6 +113,7 @@ const ServiceManage = () => {
         sort: res[1].data?.sort,
         pricePlus: res[1].data?.pricePlus,
         openDrawer: res[1].data?.openDrawer,
+        addOns: res[1].data?.addOns?.map(e => e.id.toString())
       });
       if (res[1].data?.media?.url) {
         setImage({
@@ -128,6 +129,7 @@ const ServiceManage = () => {
   useEffect(() => {
     fetchData();
   }, []);
+  console.log(form);
   return (
     <>
       <main className="dashboardBody">
@@ -212,6 +214,11 @@ const ServiceManage = () => {
               }} className="width100" id="infoTitle" onChange={(selected: any) => setForm(prev => ({
                 ...prev,
                 parentId: selected.value
+              }))}/>
+              <label>خدمات اجباری</label>
+              <Select isMulti options={tools.selectFormatter(services, 'id', 'title')} value={tools.selectFormatter(services.filter(e => form.addOns?.includes(e.id.toString())), 'id', 'title')} className="width100" id="infoTitle" onChange={(selected: any) => setForm(prev => ({
+                ...prev,
+                addOns: selected.map(e => e.value.toString())
               }))}/>
               <label>توضیحات</label>
               <textarea className="ShortDiscription" defaultValue={form?.description} onChange={(input) => setForm((prev) => ({
