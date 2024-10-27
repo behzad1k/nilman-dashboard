@@ -13,7 +13,7 @@ import tools from '../../../utils/tools';
 const ServiceManage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [form, setForm] = useState<any>();
+  const [form, setForm] = useState<any>({});
   const [services, setServices] = useState<IService[]>([]);
   const [image, setImage] = useState<any>({});
   const [data, setData] = useState<any>({});
@@ -225,7 +225,7 @@ const ServiceManage = () => {
                 parentId: selected.value
               }))}/>
               <label>خدمات اجباری</label>
-              <Select isMulti options={tools.selectFormatter(services, 'id', 'title')} value={tools.selectFormatter(services.filter(e => form.addOns?.includes(e.id.toString())), 'id', 'title')} className="width100" id="infoTitle" onChange={(selected: any) => setForm(prev => ({
+              <Select isMulti options={tools.selectFormatter(services, 'id', 'title')} value={tools.selectFormatter(services.filter(e => form.addOns?.includes(e.id?.toString())), 'id', 'title')} className="width100" id="infoTitle" onChange={(selected: any) => setForm(prev => ({
                 ...prev,
                 addOns: selected.map(e => e.value.toString())
               }))}/>
