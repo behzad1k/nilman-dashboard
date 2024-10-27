@@ -50,7 +50,7 @@ const ServiceManage = () => {
   const submit = async () => {
     dispatch(setLoading(true));
 
-    const data: any = tools.extractor(form, ['title', 'parentId', 'description', 'price', 'hasColor', 'section', 'sort', 'hasMedia', 'isMulti', 'pricePlus', 'openDrawer', 'addOns']);
+    const data: any = tools.extractor(form, ['title', 'parentId', 'description', 'price', 'hasColor', 'section', 'sort', 'hasMedia', 'isMulti', 'pricePlus', 'openDrawer', 'addOns', 'showInList']);
     data.specifics = selectedSpecifics;
 
     const res = await restApi(endpoints.service.basic + (paramId || '')).post(data);
@@ -113,6 +113,7 @@ const ServiceManage = () => {
         sort: res[1].data?.sort,
         pricePlus: res[1].data?.pricePlus,
         openDrawer: res[1].data?.openDrawer,
+        showInList: res[1].data?.showInList,
         addOns: res[1].data?.addOns?.map(e => e.id.toString())
       });
       if (res[1].data?.media?.url) {
@@ -181,6 +182,14 @@ const ServiceManage = () => {
                   hasColor: input.target.checked
                 }))}/>
                 <label>رنگ</label>
+              </div>
+
+              <div className="inputRow">
+                <input className="checkBox" type="checkbox" checked={form?.showInList} onChange={(input) => setForm((prev) => ({
+                  ...prev,
+                  showInList: input.target.checked
+                }))}/>
+                <label>نمایش در فهرست</label>
               </div>
               {data?.attributes?.length > 0 &&
                   <>
