@@ -87,7 +87,7 @@ const Orders = () => {
   const list = () => {
     const rows: ReactElement[] = [];
 
-    currentItems.map((order: any, index) => {
+    currentItems?.map((order: any, index) => {
       rows.push(
         <tr className="dashTr2" key={'order' + index}>
           <td className="svgContainer">
