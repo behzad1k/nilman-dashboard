@@ -30,7 +30,7 @@ const Orders = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const itemsPerPage = 25;
   const endOffset = (itemOffset || 0) + itemsPerPage;
-  const filteredData = data?.filter((e) => e.code.includes(query)).filter((e: any) => {
+  const filteredData = data?.filter((e) => e.code.includes(query))?.filter((e: any) => {
     switch (tab){
       case('Paid'):
         return e.status == orderStatus.Paid;
@@ -45,8 +45,8 @@ const Orders = () => {
       default: return true;
     }
   }).sort((a, b) => Number(b.code.split('-')[1]) - Number(a.code.split('-')[1]))?.filter(e => e.code.toLowerCase().includes(query.toLowerCase()));
-  let currentItems = filteredData.slice(itemOffset, endOffset);
-  const pageCount = Math.ceil(filteredData.length / itemsPerPage)
+  let currentItems = filteredData?.slice(itemOffset, endOffset);
+  const pageCount = Math.ceil(filteredData?.length / itemsPerPage)
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const tabTitles = {
