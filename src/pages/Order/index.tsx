@@ -30,7 +30,12 @@ const Orders = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const itemsPerPage = 25;
   const endOffset = (itemOffset || 0) + itemsPerPage;
-  const filteredData = data?.filter((e) => e.code.includes(query))?.filter((e: any) => {
+  const filteredData = data?.filter((e) =>
+    e.code.includes(query) ||
+    e.user?.name?.includes(query) ||
+    e.worker?.name?.toLowerCase()?.includes(query.toLowerCase()) ||
+    e.user?.phoneNumber?.includes(query)
+  )?.filter((e: any) => {
     switch (tab){
       case('Paid'):
         return e.status == orderStatus.Paid;
@@ -44,7 +49,7 @@ const Orders = () => {
         return e.status == orderStatus.InProgress;
       default: return true;
     }
-  }).sort((a, b) => Number(b.code.split('-')[1]) - Number(a.code.split('-')[1]))?.filter(e => e.code.toLowerCase().includes(query.toLowerCase()));
+  }).sort((a, b) => moment(b.date, 'jYYYY/jMM/jDD').unix() - moment(a.date, 'jYYYY/jMM/jDD').unix());
   let currentItems = filteredData?.slice(itemOffset, endOffset);
   const pageCount = Math.ceil(filteredData?.length / itemsPerPage)
   const dispatch = useDispatch();
@@ -107,7 +112,7 @@ const Orders = () => {
           </td>
           <td className="">{order?.user?.name + ' ' + order?.user?.lastName}</td>
           <td className="">
-            <p>{moment(order?.createdAt).format('jYYYY/jMM/jDD HH:MM')}</p>
+            <p>{order?.date + ' - ' + order?.fromTime}</p>
           </td>
           <td className="">{order?.code}</td>
         </tr>

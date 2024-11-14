@@ -1,14 +1,17 @@
 import { useEffect, useState } from 'react';
 import Swal from 'sweetalert2';
 import endpoints from '../../config/endpoints';
+import LoadingSpinner from '../../layouts/LoadingSpinner/insdex';
 import { popupSlice } from "../../services/reducers";
 import { useDispatch } from "react-redux";
 import restApi from '../../services/restApi';
+import LoadingBody from '../App/loading/LoadingBody';
 
-const Bill = ({ order }: any) =>{
+const Bill = ({ order }) => {
   const dispatch: any = useDispatch();
   const [workers, setWorkers] = useState([]);
-  const [selectedWorker, setSelectedWorker] = useState({})
+  const [isLoading, setIsLoading] = useState(false);
+  const [selectedWorker, setSelectedWorker] = useState(null)
   const submit = async () => {
     if (!selectedWorker){
       Swal.fire({
@@ -42,12 +45,14 @@ const Bill = ({ order }: any) =>{
   };
 
   const fetchData = async () => {
+    setIsLoading(true)
     const res = await restApi(endpoints.order.relatedWorkers + order.id).get();
 
     setWorkers(res.data)
 
+    setIsLoading(false)
   };
-
+  console.log(selectedWorker);
   useEffect(() => {
     fetchData()
   }, []);
@@ -59,10 +64,12 @@ const Bill = ({ order }: any) =>{
           محول کردن
         </span>
         <span className="billDetSpan">
-          <select className='selectBox width96 backGrey' defaultValue={order?.workerId} onChange={(e) => setSelectedWorker(e.target.value)}>
-            <option value={null}>انتخاب کنید</option>
-            {workers.map(e => <option value={e.id}>{e.name + ' ' + e.lastName}</option>)}
-          </select>
+          {isLoading ? <LoadingSpinner/> : <>
+            <select className='selectBox width96 backGrey' defaultValue={order?.workerId} onChange={(e) => setSelectedWorker(e.target.value)}>
+              <option value={null}>انتخاب کنید</option>
+              {workers.map(e => <option value={e.id}>{e.name + ' ' + e.lastName}</option>)}
+            </select>
+          </>}
             <label>زیباکار </label>
     </span>
         <span className="billDetSpan" onClick={submit}>

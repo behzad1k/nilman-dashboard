@@ -1,3 +1,4 @@
+import moment from 'jalali-moment';
 import React, { ReactElement, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -89,7 +90,7 @@ const UserManage = () => {
   const workerOffList = () => {
 
 
-    return Object.entries(workerOffs).map(([key, value]: [key: string, value: any]) =>
+    return Object.entries(workerOffs).sort(([key, value]: any, [key2, value2]: any) => moment(value2.date, 'jYYYY/jMM/JDD').unix() || moment(value.date, 'jYYYY/jMM/JDD').unix() ).map(([key, value]: [key: string, value: any]) =>
       <tr key={key}>
         <td>{key}</td>
         {value.sort((a, b) => a.fromTime - b.fromTime).map(e =>
