@@ -31,7 +31,7 @@ const Orders = () => {
   const itemsPerPage = 25;
   const endOffset = (itemOffset || 0) + itemsPerPage;
   const filteredData = data?.filter((e) =>
-    e.code.includes(query) ||
+    e.code?.includes(query) ||
     e.user?.name?.includes(query) ||
     e.worker?.name?.toLowerCase()?.includes(query.toLowerCase()) ||
     e.user?.phoneNumber?.includes(query)

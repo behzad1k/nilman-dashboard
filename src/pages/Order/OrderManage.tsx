@@ -189,7 +189,9 @@ const OrderManage = () => {
         createdAt: res.data?.createdAt,
         isMulti: res.data?.isMulti,
         isUrgent: res.data?.isUrgent,
-        finalImage: res.data?.finalImage
+        finalImage: res.data?.finalImage,
+        doneDate: res.data?.doneDate,
+        startDate: res.data?.startDate,
       });
       setAddress(res.data?.address)
       console.log(res.data?.user);
@@ -448,6 +450,9 @@ const OrderManage = () => {
             </tbody>
           </table>
         </section>
+
+        {form?.startDate && <h6 className="dashBoardTitle">زمان شروع: {moment(form?.startDate).format('jYYYY/jMM/jDD HH:mm')}</h6>}
+        {form?.doneDate && <h6 className="dashBoardTitle">زمان پایان: {moment(form?.doneDate).format('jYYYY/jMM/jDD HH:mm')}</h6>}
 
         {form.finalImage?.url && <section className="bottom width100">
           <h6 className="dashBoardTitle">عکس پایان کار</h6>
