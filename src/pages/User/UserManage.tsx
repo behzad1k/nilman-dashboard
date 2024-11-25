@@ -22,7 +22,7 @@ const UserManage = () => {
   const dispatch = useDispatch();
   const serviceReducer = useAppSelector(state => state.serviceReducer)
   const [workerOffs, setWorkerOffs] = useState<any>({});
-  const [item, setItem] = useState<any>();
+  const [item, setItem] = useState<any>({});
   const [services, setServices] = useState<IService[]>([]);
   const [districts, setDistricts] = useState<any[]>([]);
   const [selectedWorkerServices, setSelectedWorkerServices] = useState([]);
@@ -87,8 +87,18 @@ const UserManage = () => {
     dispatch(setLoading(false));
   };
 
-  const workerOffList = () => {
+  const ordersList = () => {
+    return [...(item?.orders || []), ...(item?.jobs || [])]?.map((order, index) =>
+        <tr key={order?.id}>
+          <td>{++index}</td>
+          <td><a href={`/order/edit/${order?.id}`}>{order?.code}</a></td>
+          <td>{order?.date + ' - ' + order?.fromTime}</td>
+          <td>{order?.status}</td>
+          <td>{tools.formatPrice(order?.finalPrice)}</td>
+        </tr>)
+  };
 
+  const workerOffList = () => {
 
     return Object.entries(workerOffs).sort(([key, value]: any, [key2, value2]: any) => moment(value2.date, 'jYYYY/jMM/JDD').unix() || moment(value.date, 'jYYYY/jMM/JDD').unix() ).map(([key, value]: [key: string, value: any]) =>
       <tr key={key}>
@@ -169,6 +179,7 @@ const UserManage = () => {
   useEffect(() => {
     fetchData();
   }, []);
+
   return (
     <>
       <main className="dashboardBody">
@@ -274,6 +285,23 @@ const UserManage = () => {
             {addressList()}
           </div>
         </section>
+          <section className="bottom">
+            <h6 className="dashBoardTitle">سفارش ها</h6>
+            <table dir="rtl">
+              <thead>
+              <tr>
+                <th>ردیف</th>
+                <th>کد</th>
+                <th>تاریخ</th>
+                <th>وضعیت</th>
+                <th>قیمت</th>
+              </tr>
+              </thead>
+              <tbody>
+              {ordersList()}
+              </tbody>
+            </table>
+          </section>
           <section className="bottom">
             <h6 className="dashBoardTitle">تایم های مشغولی</h6>
             <span className="dashboardHeader keepRight clickable" onClick={() => dispatch(popupSlice.middle(<WorkerOffModal userId={item.id}/>))} >

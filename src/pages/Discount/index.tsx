@@ -105,7 +105,7 @@ const Discount = () => {
         <h1 className="dashBoardTitle">لیست تخفیف ها</h1>
         <div className="searchContainer">
           <div className="keepRight svgContainer">
-          <span className="dashboardHeader clickable" onClick={() => navigate('/service/add')}>
+          <span className="dashboardHeader clickable" onClick={() => navigate('/discount/add')}>
             <p>افزودن تخفیف جدید</p>
             <i className="addPlus"></i>
           </span>

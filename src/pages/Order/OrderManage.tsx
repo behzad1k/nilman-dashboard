@@ -63,7 +63,7 @@ const OrderManage = () => {
       time: form.time,
       status: form.status,
       finalPrice: form.finalPrice ,
-      price: form.price * (form?.isUrgent ? 1.5 : 1),
+      price: form.price,
       serviceId: form.serviceId,
       discountAmount: form.discountAmount,
       transportation: form.transportation,
@@ -178,7 +178,7 @@ const OrderManage = () => {
         time: res.data?.fromTime,
         status: res.data?.status,
         finalPrice: res.data.finalPrice,
-        price: Number(res.data?.price) * (res.data?.isUrgent ? 1.5 : 1),
+        price: Number(res.data?.price),
         serviceId: res.data?.serviceId,
         transportation: res.data?.transportation,
         discountAmount: res.data?.discountAmount,
@@ -194,9 +194,6 @@ const OrderManage = () => {
         startDate: res.data?.startDate,
       });
       setAddress(res.data?.address)
-      console.log(res.data?.user);
-      console.log(res.data?.addressId);
-      console.log(res.data?.user?.addresses?.find(e => e.id == res.data?.addressId));
 
     }
     dispatch(setLoading(false));
@@ -208,14 +205,14 @@ const OrderManage = () => {
 
   useEffect(() => {
     if (serviceReducer.allServices.length > 0) {
-      const newPrice = form.orderServices?.reduce((acc, curr) => acc + Number(serviceReducer.allServices?.find(e => e.id == curr.serviceId)?.price * Number(curr.count)), 0);
+      const newPrice = form.orderServices?.reduce((acc, curr) => acc + Number(serviceReducer.allServices?.find(e => e.id == curr.serviceId)?.price * Number(curr.count) * (form?.isUrgent ? 1.5 : 1)), 0);
       setForm(prev => ({
         ...prev,
         price: newPrice,
-        finalPrice: ((newPrice * (form?.isUrgent ? 1.5 : 1))) + form?.transportation
+        finalPrice: (newPrice) + form?.transportation - Number(form?.discountAmount)
       }));
     }
-  }, [JSON.stringify(form?.orderServices), form?.transportation, form?.isUrgent]);
+  }, [JSON.stringify(form?.orderServices), form?.transportation, form?.discountAmount, form?.isUrgent]);
 
   useEffect(() => {
     setForm(prev => ({...prev, address: address}))
@@ -400,7 +397,7 @@ const OrderManage = () => {
               <span className="billItems dashboardBill">
               <h3 className="billItem">مبلغ سفارش</h3>
               <div className="pricePart">
-                <input className="billPrice" value={form?.price * (form?.isUrgent ? 1.5 : 1)} onChange={(input) => setForm(prev => ({ ...prev, price: Number(input.target.value)}))}/>
+                <input className="billPrice" value={form?.price} onChange={(input) => setForm(prev => ({ ...prev, price: Number(input.target.value)}))}/>
               </div>
             </span>
               <span className="billItems dashboardBill">
@@ -419,7 +416,7 @@ const OrderManage = () => {
               <span className="billItems dashboardBill">
               <h3 className="billItem">مبلغ قابل پرداخت</h3>
               <div className="pricePart">
-                <input className="tablePrice1" value={(form?.finalPrice - form?.discountAmount)} onChange={(input) => setForm(prev => ({ ...prev, finalPrice: Number(input.target.value)}))}/>
+                <input className="tablePrice1" value={form?.finalPrice} onChange={(input) => setForm(prev => ({ ...prev, finalPrice: Number(input.target.value)}))}/>
               </div>
             </span>
             </div>

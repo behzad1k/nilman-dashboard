@@ -125,7 +125,7 @@ const DiscountManage = () => {
               <label>برای کاربر</label>
               <Select options={tools.selectFormatter(users, 'id', 'phoneNumber', 'انتخاب کنید')} value={{
                 value: form?.forUserId,
-                label: users.find(e => e.id == form.forUserId)?.phoneNumber
+                label: users?.find(e => e.id == form?.forUserId)?.phoneNumber
               }} className="width100" id="infoTitle" onChange={(selected: any) => setForm(prev => ({
                 ...prev,
                 forUserId: selected.value
