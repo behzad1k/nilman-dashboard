@@ -1,5 +1,5 @@
 import moment from 'jalali-moment';
-import { ReactElement, useEffect, useState } from 'react';
+import React, { ReactElement, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import Select from 'react-select';
@@ -21,6 +21,7 @@ const OrderManage = () => {
   const dispatch = useDispatch();
   const serviceReducer = useAppSelector(state => state.serviceReducer);
   const [form, setForm] = useState<any>({ isMulti: false, orderServices: [], transportation: 0, finalPrice: 0, discountAmount: 0, serviceId: null, date: moment().format('jYYYY/jMM/jDD')});
+  const [colors, setColors] = useState([]);
   const [address, setAddress] = useState(form?.address);
   const navigate = useNavigate();
   const send = async () => {
@@ -76,7 +77,8 @@ const OrderManage = () => {
     await restApi(process.env.REACT_APP_BASE_URL + '/admin/order/products/' + res.data.id).put({
       services: form.orderServices.map(e => ({
         serviceId: e.serviceId,
-        count: e.count
+        count: e.count,
+        colors: e.colors
       }))
     })
 
@@ -104,6 +106,7 @@ const OrderManage = () => {
   const list = () => {
     const rows: ReactElement[] = []
     form?.orderServices?.map((orderProduct: any, index) => {
+      console.log(orderProduct.colors);
       const key = form.orderServices?.findIndex(e => e.serviceId == orderProduct.serviceId)
       rows.push(
         <tr className="" key={'product' + index}>
@@ -141,6 +144,29 @@ const OrderManage = () => {
             })}></i>
           </div>
         </td>
+          <td>
+            <Select
+              styles={{valueContainer: (base) => ({
+                  ...base,
+                  maxHeight: '120px',
+                  overflow: 'auto',
+                  minWidth: '120px'
+                })
+              }}
+              options={tools.selectFormatter(colors, 'id', 'title', 'انتخاب کنید')}
+              defaultValue={orderProduct.colors?.map(e => ({
+                value: e,
+                label: colors.find(j => j.id == e)?.title
+              }))}
+              className="width100" id="infoTitle" isMulti={true} name='workerServices'
+              onChange={(selected: any) => setForm(prev => {
+                const cp: any = {...prev}
+                if (key != undefined && key >= 0) {
+                  cp.orderServices[key].colors = selected.map((e: any) => e.value);
+                }
+                return cp
+              })}/>
+          </td>
           <td className="">
             <Select
               options={serviceReducer.allServices.filter(e => e.price > 0).map(e => ({ value: e.id, label: tools.findAncestors(serviceReducer.allServices, e.id)?.reverse()?.reduce((acc, curr, index) => acc + ((index == 0 ? '' : '> ') + curr?.title), '')}))}
@@ -170,6 +196,10 @@ const OrderManage = () => {
   const fetchData = async () => {
     dispatch(setLoading(true));
 
+    const res = await Promise.all([restApi(endpoints.color.index, true).get()]);
+
+    setColors(res[0].data);
+
     if (id) {
       const res = await restApi(endpoints.order.single + id, true).get();
 
@@ -182,7 +212,10 @@ const OrderManage = () => {
         serviceId: res.data?.serviceId,
         transportation: res.data?.transportation,
         discountAmount: res.data?.discountAmount,
-        orderServices: res.data?.orderServices,
+        orderServices: res.data?.orderServices.map(e => ({
+          ...e,
+          colors: e.colors.map(j => j.id)
+        })),
         address: res.data?.user?.addresses?.find(e => e.id == res.data?.addressId),
         addressId: res.data?.addressId,
         user: res.data?.user,
@@ -435,6 +468,7 @@ const OrderManage = () => {
             <th className="sideBarTitle center" >قیمت کل</th>
             <th className="sideBarTitle center" >قیمت واحد</th>
             <th className="sideBarTitle center" >تعداد</th>
+            <th className="sideBarTitle center" >رنگ</th>
             <th className="sideBarTitle center" >خدمت</th>
             <th className="sideBarTitle center" >ردیف</th>
             <th className="sideBarTitle center" ></th>
