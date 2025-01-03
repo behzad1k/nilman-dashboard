@@ -24,6 +24,7 @@ const OrderManage = () => {
   const [colors, setColors] = useState([]);
   const [address, setAddress] = useState(form?.address);
   const navigate = useNavigate();
+  const isColored = form?.orderServices?.filter(e => serviceReducer?.allServices?.find(j => j.id == e.serviceId)?.hasColor) ?.length > 0
   const send = async () => {
     dispatch(setLoading(true));
     let addressRes, userRes, verifyNationalCode
@@ -144,6 +145,7 @@ const OrderManage = () => {
             })}></i>
           </div>
         </td>
+          {isColored &&
           <td>
             <Select
               styles={{valueContainer: (base) => ({
@@ -167,6 +169,7 @@ const OrderManage = () => {
                 return cp
               })}/>
           </td>
+          }
           <td className="">
             <Select
               options={serviceReducer.allServices.filter(e => e.price > 0).map(e => ({ value: e.id, label: tools.findAncestors(serviceReducer.allServices, e.id)?.reverse()?.reduce((acc, curr, index) => acc + ((index == 0 ? '' : '> ') + curr?.title), '')}))}
@@ -468,7 +471,7 @@ const OrderManage = () => {
             <th className="sideBarTitle center" >قیمت کل</th>
             <th className="sideBarTitle center" >قیمت واحد</th>
             <th className="sideBarTitle center" >تعداد</th>
-            <th className="sideBarTitle center" >رنگ</th>
+            {isColored && <th className="sideBarTitle center" >رنگ</th>}
             <th className="sideBarTitle center" >خدمت</th>
             <th className="sideBarTitle center" >ردیف</th>
             <th className="sideBarTitle center" ></th>
