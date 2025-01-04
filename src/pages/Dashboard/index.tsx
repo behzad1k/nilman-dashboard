@@ -274,31 +274,39 @@ const Dashboard = () => {
               ثبت
             </span>
           <h2>گذشته</h2>
-            <div className="dashCard">
-              <span>
-                سود خالص
-              </span>
-              <span>
+          <div className="dashCard">
+            <span>سهم شرکت</span>
+            <span>
                 {tools.formatPrice(generalInfo?.past?.profit)}
               </span>
-            </div>
-            <div className="dashCard">
-              <span>فروش کل</span>
-              <span>
+          </div>
+          <div className="dashCard">
+            <span>سهم زیباکار</span>
+            <span>
+                {tools.formatPrice(generalInfo?.past?.worker)}
+              </span>
+          </div>
+          <div className="dashCard">
+            <span>درآمد کل</span>
+            <span>
                 {tools.formatPrice(generalInfo?.past?.all)}
               </span>
-            </div>
+          </div>
           <h2>آینده</h2>
           <div className="dashCard">
-              <span>
-                سود خالص
-              </span>
+              <span>سهم شرکت</span>
             <span>
                 {tools.formatPrice(generalInfo?.future?.profit)}
               </span>
           </div>
           <div className="dashCard">
-            <span>فروش کل</span>
+              <span>سهم زیباکار</span>
+            <span>
+                {tools.formatPrice(generalInfo?.future?.worker)}
+              </span>
+          </div>
+          <div className="dashCard">
+            <span>درآمد کل</span>
             <span>
                 {tools.formatPrice(generalInfo?.future?.all)}
               </span>
