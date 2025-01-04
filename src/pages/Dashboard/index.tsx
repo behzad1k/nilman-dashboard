@@ -13,16 +13,19 @@ import { popupSlice } from '../../services/reducers';
 import { setLoading } from '../../services/reducers/homeSlice';
 import restApi from '../../services/restApi';
 import { Sidebar } from '../../layouts/Sidebar';
+import { useAppSelector } from '../../services/store';
 import { IService } from '../../types/types';
 import tools from '../../utils/tools';
 import roles = globalEnum.roles;
 
 const Dashboard = () => {
+  const serviceReducer = useAppSelector(state => state.serviceReducer)
   const [data, setData] = useState<IService[]>([]);
   const [logs, setLogs] = useState<any[]>([]);
   const [query, setQuery] = useState('');
   const [itemOffset, setItemOffset] = useState(0);
   const [searchParams, setSearchParams] = useSearchParams();
+  const [selectedService, setSelectedService] = useState(0);
   const [workers, setWorkers] = useState([]);
   const [generalInfo, setGeneralInfo] = useState<any>({});
   const [generalWorkerId, setGeneralWorkerId] = useState<any>(0);
@@ -94,7 +97,8 @@ const Dashboard = () => {
     const res = await restApi(endpoints.dashboard.generalInfo).get({
       from: dateRange.from,
       to: dateRange.to,
-      worker: generalWorkerId
+      worker: generalWorkerId,
+      service: selectedService
     })
     setGeneralInfo(res.data)
   };
@@ -116,7 +120,6 @@ const Dashboard = () => {
       }
     }
 
-
     dispatch(setLoading(false));
   };
 
@@ -124,9 +127,9 @@ const Dashboard = () => {
     dispatch(setLoading(true));
 
     const res = await Promise.all([
-      restApi(endpoints.dashboard.sales, true).get({ worker: id, from: moment().subtract(1, 'd').format('jYYYY-jMM-jDD-HH-ss'), to: moment().format('jYYYY-jMM-jDD-HH-ss'), }),
-      restApi(endpoints.dashboard.sales, true).get({ worker: id, from: moment().subtract(1, 'd').format('jYYYY-jMM-jDD-HH-ss'), to: moment().format('jYYYY-jMM-jDD-HH-ss'), }),
-      restApi(endpoints.dashboard.sales, true).get({ worker: id, from: moment().subtract(1, 'd').format('jYYYY-jMM-jDD-HH-ss'), to: moment().format('jYYYY-jMM-jDD-HH-ss'), }),
+      restApi(endpoints.dashboard.sales, true).get({ service: selectedService ,worker: id, from: moment().subtract(1, 'd').format('jYYYY-jMM-jDD-HH-ss'), to: moment().format('jYYYY-jMM-jDD-HH-ss'), }),
+      restApi(endpoints.dashboard.sales, true).get({ service: selectedService ,worker: id, from: moment().subtract(1, 'd').format('jYYYY-jMM-jDD-HH-ss'), to: moment().format('jYYYY-jMM-jDD-HH-ss'), }),
+      restApi(endpoints.dashboard.sales, true).get({ service: selectedService ,worker: id, from: moment().subtract(1, 'd').format('jYYYY-jMM-jDD-HH-ss'), to: moment().format('jYYYY-jMM-jDD-HH-ss'), }),
     ]);
 
     if(res[0].code == 200){
@@ -155,7 +158,7 @@ const Dashboard = () => {
   };
 
   useEffect(() => {
-    fetchLogs();
+    // fetchLogs();
     fetchData();
     fetchWorkerInfo(workerInfo.id)
     fetchGeneralInfo()
@@ -253,6 +256,11 @@ const Dashboard = () => {
         <div className="dashCardContainer">
           <Select className="dashCardLog" value={{ label: [...workers, { id: 0, name: 'انتخاب ', lastName: 'همه'}]?.find(e => e.id == generalWorkerId)?.name + ' ' + [...workers, { id: 0, name: 'انتخاب ', lastName: 'همه'}]?.find(e => e.id == generalWorkerId)?.lastName, value: generalWorkerId}} options={[...workers, { id: 0, name: 'انتخاب ', lastName: 'همه'}]?.map(e => ({ label: `${e.name} ${e.lastName}`, value: e.id }))} onChange={(selected) => {
             setGeneralWorkerId(
+               selected.value
+            )
+          }} />
+          <Select className="dashCardLog" value={{ label: [...serviceReducer.services, { id: 0, title: 'انتخاب همه'}]?.find(e => e.id == selectedService)?.title , value: selectedService}} options={[...serviceReducer.services.filter(e => !e.parent), { id: 0, title: 'انتخاب همه'}]?.map(e => ({ label: e.title, value: e.id }))} onChange={(selected) => {
+            setSelectedService(
                selected.value
             )
           }} />
