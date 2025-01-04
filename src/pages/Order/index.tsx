@@ -49,7 +49,7 @@ const Orders = () => {
         return e.status == orderStatus.InProgress;
       default: return true;
     }
-  }).sort((a, b) => moment(b.date, 'jYYYY/jMM/jDD').unix() - moment(a.date, 'jYYYY/jMM/jDD').unix());
+  })?.sort((a, b) => b.fromTime - a.fromTime)?.sort((a, b) => moment(b.date, 'jYYYY/jMM/jDD').unix() - moment(a.date, 'jYYYY/jMM/jDD').unix());
   let currentItems = filteredData?.slice(itemOffset, endOffset);
   const pageCount = Math.ceil(filteredData?.length / itemsPerPage)
   const dispatch = useDispatch();
