@@ -87,6 +87,29 @@ const UserManage = () => {
     dispatch(setLoading(false));
   };
 
+  const deleteWorkerOff = async (e: any) => {
+    if (confirm(`تایم ${e.fromTime} - ${e.toTime} در تاریخ ${e.date} حذف شود؟`)){
+      const res = await restApi(endpoints.user.workerOff + e.id).delete({});
+
+      if (res.code == 200) {
+        await fetchData();
+        Swal.fire({
+          title: 'موفق',
+          text: `تایم مشغولی با موفقیت حذف شد`,
+          icon: 'success',
+          confirmButtonText: 'متوجه شدم',
+        });
+      } else {
+        Swal.fire({
+          title: 'ناموفق',
+          text: res?.data,
+          icon: 'error',
+          confirmButtonText: 'متوجه شدم'
+        });
+      }
+    }
+  };
+
   const ordersList = () => {
     return [...(item?.orders || []), ...(item?.jobs || [])]?.map((order, index) =>
         <tr key={order?.id}>
@@ -106,6 +129,7 @@ const UserManage = () => {
         {value.sort((a, b) => a.fromTime - b.fromTime).map(e =>
           <>
             <td>
+              <i onClick={() => deleteWorkerOff(e)} style={{ color: 'red' }}>X</i>
               <span>({e.fromTime} - {e.toTime})</span>
               <br/>
               <small>{e.order?.id ? <a href={`/order/edit/${e.order?.id}`}>{e.order?.code}</a> : '-'}</small></td>
@@ -304,7 +328,7 @@ const UserManage = () => {
           </section>
           <section className="bottom">
             <h6 className="dashBoardTitle">تایم های مشغولی</h6>
-            <span className="dashboardHeader keepRight clickable" onClick={() => dispatch(popupSlice.middle(<WorkerOffModal userId={item.id}/>))} >
+            <span className="dashboardHeader keepRight clickable" onClick={() => dispatch(popupSlice.middle(<WorkerOffModal userId={item.id.toString()}/>))} >
               افزودن
             </span>
             <table dir="rtl">

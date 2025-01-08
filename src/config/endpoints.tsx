@@ -36,7 +36,7 @@ const endpoints = {
     basic: format('user/basic'),
     medias: format('user/medias'),
     active: format('user/status'),
-    workerOff: format('user/workerOff '),
+    workerOff: format('user/workerOff'),
   },
   address:{
     index: format('address'),
