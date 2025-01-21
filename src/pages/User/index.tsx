@@ -38,7 +38,7 @@ const UsersList = () => {
         return e.role == globalEnum.roles.OPERATOR;
       default: return true;
     }
-  })?.filter(e => e.name?.toLowerCase()?.includes(query.toLowerCase()) || e.phoneNumber?.toLowerCase()?.includes(query.toLowerCase()));
+  })?.filter(e => e.name?.toLowerCase()?.includes(query.toLowerCase()) || e.phoneNumber?.toLowerCase()?.includes(query.toLowerCase()) || e.lastName?.toLowerCase()?.includes(query.toLowerCase()));
   let currentItems = filteredData?.slice(itemOffset, endOffset);
   const pageCount = Math.ceil(filteredData.length / itemsPerPage);
 

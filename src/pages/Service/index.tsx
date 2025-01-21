@@ -80,6 +80,7 @@ const Service = () => {
             <p>{moment(service?.updatedAt).format('jYYYY/jMM/jDD')}</p>
             <p>{moment(service?.updatedAt).format('HH:ss')}</p>
           </td>
+          <td className="">{tools.findAncestors(data, service.id).reverse().filter((e, index) => e && index < 2).reduce((acc, curr) => acc + ' -> ' + curr.title, '')}</td>
           <td className="">{service?.title}</td>
           <td>
             <img src={service?.media?.url} className="width100p"/>
@@ -103,7 +104,7 @@ const Service = () => {
       res.data.filter(e => e?.price == 0).map(e => {
         tabs[e.slug] = e.title;
       })
-      setTabTitles(prev => ({ ...prev, ...tabs}))
+      setTabTitles(prev => ({ ...prev, ...tabs }))
       res.data.map(e => tools.extractChildren(e, formatedData))
       setData(formatedData);
     }
@@ -135,7 +136,6 @@ const Service = () => {
                   if (key != 'all'){
                     const ancs = tools.findAncestors(data, e.id)
                     if (ancs.length > 0){
-                      console.log(ancs);
                       return key == ancs.reverse()[0]?.slug
                     }
                     return false;
@@ -168,6 +168,7 @@ const Service = () => {
             <p> آخرین ویرایش</p>
             <i className="upDown"></i>
           </th>
+          <th className="">والد</th>
           <th className="">عنوان</th>
           <th>عکس</th>
           <th>ردیف</th>

@@ -1,6 +1,7 @@
 // import mapImg from '../../../../public/img/map.jpg'
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
+import { useParams } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import endpoints from '../../config/endpoints';
 import { popupSlice } from '../../services/reducers';
@@ -8,7 +9,7 @@ import { setLoading } from '../../services/reducers/homeSlice';
 import restApi from '../../services/restApi';
 import Neshan from '../Neshan';
 
-const MapModal = ({ address, setAddress = null }: any) => {
+const MapModal = ({ userId, address = {}, setAddress = null }: any) => {
   const dispatch: any = useDispatch();
   const [form, setForm] = useState(address);
   const defaultPosition = {
@@ -34,13 +35,13 @@ const MapModal = ({ address, setAddress = null }: any) => {
       postalCode: form.postalCode,
       longitude: position.lng,
       latitude: position.lat,
-
+      userId: userId
     });
 
     if (res.code == 200) {
       Swal.fire({
         title: 'موفق',
-        text: `آدرس با موفقیت ${address ? 'ویرایش' : 'ساخته'} شد`,
+        text: `آدرس با موفقیت ${address ? 'ثبت' : 'ساخته'} شد`,
         icon: 'success',
         confirmButtonText: 'متوجه شدم',
         didClose() {

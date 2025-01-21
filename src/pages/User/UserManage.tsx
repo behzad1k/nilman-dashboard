@@ -157,7 +157,7 @@ const UserManage = () => {
           <img src="/img/map.jpg" className="mapPhoto"/>
         <span className="svgContainer">
             {/* <i className="trash"></i> */}
-          <i className="edit clickable" onClick={() => dispatch(popupSlice.middle(<MapModal address={address}/>))}></i>
+          <i className="edit clickable" onClick={() => dispatch(popupSlice.middle(<MapModal userId={paramId} address={address}/>))}></i>
         </span>
             </div>
         </span>
@@ -313,6 +313,7 @@ const UserManage = () => {
         </section>
         <section className="bottom">
           <h6 className="dashBoardTitle">آدرس ها</h6>
+          <button type="button" onClick={() => dispatch(popupSlice.middle(<MapModal userId={paramId}/>))}>افزودن آدرس</button>
           <div>
             {addressList()}
           </div>
