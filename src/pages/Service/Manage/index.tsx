@@ -130,7 +130,7 @@ const ServiceManage = () => {
   useEffect(() => {
     fetchData();
   }, []);
-  console.log(form);
+
   return (
     <>
       <main className="dashboardBody">

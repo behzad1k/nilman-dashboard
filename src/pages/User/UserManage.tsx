@@ -1,5 +1,6 @@
 import moment from 'jalali-moment';
 import React, { ReactElement, useEffect, useState } from 'react';
+import Switch from 'react-ios-switch';
 import { useDispatch } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import Select from 'react-select';
@@ -56,6 +57,7 @@ const UserManage = () => {
       walletBalance: formData.get('walletBalance'),
       services: selectedWorkerServices,
       districts: selectedDistricts,
+      isWorkerChoosable: item?.isWorkerChoosable,
     });
 
     if (res.data?.id && image.data){
@@ -260,6 +262,12 @@ const UserManage = () => {
                       <input className="editProductInput" defaultValue={item?.username} name="username"/>
                     <label className="sideBarTitle">رمز عبور <small>(فقط در صورت نیاز به تغییر وارد کنید)</small></label>
                       <input className="editProductInput" name="password"/>
+                  </>
+              }
+              {item?.role == globalEnum.roles.USER &&
+                  <>
+                      <label className="sideBarTitle">قابلیت انتخاب آرایشگر</label>
+                      <Switch checked={item?.isWorkerChoosable} name="isWorkerChoosable" onChange={(checked) => setItem(prev => ({ ...prev, isWorkerChoosable: checked }))}/>
                   </>
               }
                 {/* <div> */}

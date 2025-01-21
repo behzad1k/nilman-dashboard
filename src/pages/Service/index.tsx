@@ -8,6 +8,7 @@ import endpoints from '../../config/endpoints';
 import { setLoading } from '../../services/reducers/homeSlice';
 import restApi from '../../services/restApi';
 import { Sidebar } from '../../layouts/Sidebar';
+import { useAppSelector } from '../../services/store';
 import { IService } from '../../types/types';
 import tools from '../../utils/tools';
 
@@ -16,12 +17,27 @@ const Service = () => {
   const [query, setQuery] = useState('');
   const [itemOffset, setItemOffset] = useState(0);
   const [searchParams, setSearchParams] = useSearchParams();
+  const [tab, setTab] = useState('all');
   const itemsPerPage = 25;
   const endOffset = (itemOffset || 0) + itemsPerPage;
-  let currentItems = data.filter(e => e.title?.toLowerCase()?.includes(query.toLowerCase()))?.slice(itemOffset, endOffset);
-  const pageCount = Math.ceil(data.length / itemsPerPage)
+  const filteredData = data.filter(e => e.title?.toLowerCase()?.includes(query.toLowerCase())).filter(e => {
+    if (tab != 'all'){
+      const ancs = tools.findAncestors(data, e.id)
+      if (ancs.length > 0){
+        return tab == ancs.reverse()[0]?.slug
+      }
+      return false;
+    }
+    return true
+  });
+  let currentItems = filteredData?.slice(itemOffset, endOffset);
+  const pageCount = Math.ceil(filteredData.length / itemsPerPage)
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [tabTitles, setTabTitles] = useState({
+    all: 'همه',
+  })
+
   const deleteItem = async (id: number) => {
     if(confirm('آیا مطمئن هستید؟')){
       dispatch(setLoading(true));
@@ -55,7 +71,7 @@ const Service = () => {
         <tr className="dashTr2">
           <td className="">
             <i className="trash clickable" onClick={() => deleteItem(service.id)}></i>
-            <i className="edit clickable" onClick={() => navigate('/service/edit/' + service.id)}></i>
+            <a href={'/service/edit/' + service.id}><i className="edit clickable"></i></a>
           </td>
           <td>{service?.section}</td>
           <td className="">{service?.hasColor ? 'دارد' : 'ندارد'}</td>
@@ -83,6 +99,11 @@ const Service = () => {
 
     if(res.code == 200){
       const formatedData = [];
+      const tabs: any = {}
+      res.data.filter(e => e?.price == 0).map(e => {
+        tabs[e.slug] = e.title;
+      })
+      setTabTitles(prev => ({ ...prev, ...tabs}))
       res.data.map(e => tools.extractChildren(e, formatedData))
       setData(formatedData);
     }
@@ -106,6 +127,24 @@ const Service = () => {
       <Sidebar />
       <main className="dashBoardMain">
         <h1 className="dashBoardTitle">لیست خدمات</h1>
+        <div className="dashTabs">
+          {Object.entries(tabTitles).map(([key, value]) =>
+              <span className={`ordersTag clickable ${key == tab ? 'activeTab' : ''}`} onClick={() => setTab(key)}>
+            {value}
+                <span className={`numberTag ${key == tab ? 'activeTab' : ''}`}>{data?.filter((e: any) => {
+                  if (key != 'all'){
+                    const ancs = tools.findAncestors(data, e.id)
+                    if (ancs.length > 0){
+                      console.log(ancs);
+                      return key == ancs.reverse()[0]?.slug
+                    }
+                    return false;
+                  }
+                  return true
+                }).length}</span>
+          </span>
+          )}
+        </div>
         <div className="searchContainer">
           <div className="keepRight svgContainer">
           <span className="dashboardHeader clickable" onClick={() => navigate('/service/add')}>
