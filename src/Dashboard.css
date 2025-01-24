@@ -1665,3 +1665,6 @@ table{
 .feedbackModalCard.positive{
     background: #92f6a9;
 }
+.orderServiceSelect{
+    min-width: 400px;
+}

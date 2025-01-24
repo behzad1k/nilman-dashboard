@@ -108,6 +108,11 @@ const OrderManage = () => {
     const rows: ReactElement[] = []
     form?.orderServices?.map((orderProduct: any, index) => {
       const key = form.orderServices?.findIndex(e => e.serviceId == orderProduct.serviceId)
+      const ancestors = tools.findAncestors(serviceReducer.allServices, orderProduct.serviceId)
+      let title = ancestors?.reverse()?.filter((e, index ) => index <= 3 && index > 1)?.reduce((acc, curr, index) => acc + ((index == 0 ? '' : '> ') + curr?.title), '')
+      if(!title){
+        title = 'hi'
+      }
       rows.push(
         <tr className="" key={'product' + index}>
           <td className="backGround1">
@@ -171,13 +176,14 @@ const OrderManage = () => {
           }
           <td className="">
             <Select
-              options={serviceReducer.allServices.filter(e => e.price > 0).map(e => ({ value: e.id, label: tools.findAncestors(serviceReducer.allServices, e.id)?.reverse()?.filter((e, index ) => index <= 3 && index > 1)?.reduce((acc, curr, index) => acc + ((index == 0 ? '' : '> ') + curr?.title), '')}))}
-              value={{value: orderProduct.serviceId, label: tools.findAncestors(serviceReducer.allServices, orderProduct.serviceId)?.reverse()?.filter((e, index ) => index == 3).map((attr, index) => <span key={'bread' + index} className="breadCrumbItem">{(index == 0 ? '' : '> ') + attr?.title}</span>)}}
-              onChange={(selected) => {setForm(prev => ({ ...prev, orderServices: (key == undefined || key < 0) ? [...prev, { serviceId: selected.value }] : prev.orderServices.map(e => e.serviceId == orderProduct.serviceId ? {...e, serviceId: selected.value } : e)}))}}
+              className="orderServiceSelect"
+              options={serviceReducer.allServices.filter(e => e.price > 0).map(e => ({ value: e.id, label: tools.findAncestors(serviceReducer.allServices, e.id)?.filter((e, index ) => (index == 0 || index == 1))?.reduce((acc, curr, index) => acc + ((index == 0 ? '' : '> ') + curr?.title), '')}))}
+              value={{value: orderProduct.serviceId, label: tools.findAncestors(serviceReducer.allServices, orderProduct.serviceId)?.filter((e, index ) => (index == 0 || index == 1)).map((attr, index) => <span key={'bread' + index} className="breadCrumbItem">{(index == 0 ? '' : '> ') + attr?.title}</span>)}}
+              onChange={(selected) => {setForm(prev => ({ ...prev, orderServices: (key == undefined || key < 0) ? [...prev, { serviceId: selected.value }] : prev.orderServices.map(e => e.serviceId == orderProduct.serviceId ? {...e, serviceId: selected.value } : e )}))}}
             />
           </td>
           {/* <td><img className="width100p" src={orderProduct.product.medias.find(e => e.code == 'main')?.url}/></td> */}
-          <td>{++index}</td>
+          {/* <td>{++index}</td> */}
           <td>
             <i className="cancelSvg" onClick={() => setForm(prev => ({ ...prev, orderServices: prev.orderServices.filter(e => e.serviceId != orderProduct.serviceId)}))}></i>
           </td>
@@ -472,8 +478,8 @@ const OrderManage = () => {
             <th className="sideBarTitle center" >تعداد</th>
             {isColored && <th className="sideBarTitle center" >رنگ</th>}
             <th className="sideBarTitle center" >خدمت</th>
-            <th className="sideBarTitle center" >ردیف</th>
-            <th className="sideBarTitle center" ></th>
+            {/* <th className="sideBarTitle center" >ردیف</th> */}
+            <th className="sideBarTitle" ></th>
           </thead>
             <tbody>
             {list()}
