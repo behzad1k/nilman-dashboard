@@ -471,7 +471,7 @@ const OrderManage = () => {
             onChange={(selected) => {setForm(prev => ({ ...prev, serviceId: selected.value }))}}
             className='width300p'
           />
-          <table className="productTable">
+          <table className="">
           <thead className="editOrderTable">
             <th className="sideBarTitle center" >قیمت کل</th>
             <th className="sideBarTitle center" >قیمت واحد</th>

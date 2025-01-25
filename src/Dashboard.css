@@ -1666,5 +1666,6 @@ table{
     background: #92f6a9;
 }
 .orderServiceSelect{
-    min-width: 400px;
+    width: fit-content;
+    flex: 1
 }
