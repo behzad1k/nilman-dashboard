@@ -317,6 +317,16 @@ const OrderManage = () => {
                 }
               }))
             }}/>
+            <label className="sideBarTitle" >کیف پول</label>
+            <input disabled className="editProductInput" value={form?.user?.walletBalance} onChange={(input) => {
+              setForm(prev => ({
+                ...prev,
+                user: {
+                  ...prev.user,
+                  walletBalance: input.target.value
+                }
+              }))
+            }}/>
           </div>
         </div>
           <div className="infoSection">

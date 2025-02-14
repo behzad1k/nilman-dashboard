@@ -5,6 +5,16 @@ namespace globalEnum {
     WORKER = 'WORKER',
     USER = 'USER',
   };
+
+  export enum orderStatusNames  {
+    Created = 'سبد خرید',
+    Paid = 'پرداخت شده',
+    Assigned = 'محول شده',
+    InProgress = 'در حال انجام',
+    Canceled = 'کنسل شده',
+    Done = 'تمام شده'
+  };
+
   export enum orderStatus  {
     Created = 'Created',
     Paid = 'Paid',

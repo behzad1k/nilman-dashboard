@@ -6,6 +6,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import endpoints from '../../config/endpoints';
 import globalEnum from '../../enums/globalEnum';
+import usePagination from '../../hooks/usePagination';
 import useTicker from '../../hooks/useTicker';
 import { popupSlice } from '../../services/reducers';
 import { setLoading } from '../../services/reducers/homeSlice';
@@ -26,32 +27,8 @@ const Orders = () => {
   const [workers, setWorkers] = useState([]);
   const [query, setQuery] = useState('');
   const [tab, setTab] = useState('all');
-  const [itemOffset, setItemOffset] = useState(0);
   const [searchParams, setSearchParams] = useSearchParams();
-  const itemsPerPage = 25;
-  const endOffset = (itemOffset || 0) + itemsPerPage;
-  const filteredData = data?.filter((e) =>
-    e.code?.includes(query) ||
-    e.user?.name?.includes(query) ||
-    e.worker?.name?.toLowerCase()?.includes(query.toLowerCase()) ||
-    e.user?.phoneNumber?.includes(query)
-  )?.filter((e: any) => {
-    switch (tab){
-      case('Paid'):
-        return e.status == orderStatus.Paid;
-      case('Canceled'):
-        return e.status == orderStatus.Canceled;
-      case('Done'):
-        return e.status == orderStatus.Done;
-      case('Assigned'):
-        return e.status == orderStatus.Assigned;
-      case('InProgress'):
-        return e.status == orderStatus.InProgress;
-      default: return true;
-    }
-  })?.sort((a, b) => b.fromTime - a.fromTime)?.sort((a, b) => moment(b.date, 'jYYYY/jMM/jDD').unix() - moment(a.date, 'jYYYY/jMM/jDD').unix());
-  let currentItems = filteredData?.slice(itemOffset, endOffset);
-  const pageCount = Math.ceil(filteredData?.length / itemsPerPage)
+  const { pageCount, endOffset, itemOffset, itemsPerPage, setPageCount, setItemOffset, setItemsPerPage } = usePagination(data)
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const tabTitles = {
@@ -62,7 +39,6 @@ const Orders = () => {
     Canceled: 'لغو شده',
     Done: 'تمام شده',
   }
-
   const deleteOrder = async (id: number) => {
     if(confirm('آیا مطمئن هستید؟')){
       dispatch(setLoading(true));
@@ -92,7 +68,7 @@ const Orders = () => {
   const list = () => {
     const rows: ReactElement[] = [];
 
-    currentItems?.map((order: any, index) => {
+    data.orders?.map((order: any, index) => {
       rows.push(
         <tr className="dashTr2" key={'order' + index}>
           <td className="svgContainer">
@@ -115,6 +91,7 @@ const Orders = () => {
             <p>{order?.date + ' - ' + order?.fromTime}</p>
           </td>
           <td className="">{order?.code}</td>
+          <td className="">{++index}</td>
         </tr>
       )
     })
@@ -122,36 +99,57 @@ const Orders = () => {
     return rows;
   };
 
-  const fetchData = async () => {
+  const fetchOrders = async () => {
     dispatch(setLoading(true));
 
+    const params: any = {
+      page: searchParams.get('page') || 1,
+      perPage: itemsPerPage,
+      query: query
+    }
+    if (tab != 'all'){
+      params.status = tab
+    }
     await Promise.all([
-      await restApi(endpoints.order.index, true).get(),
-      await restApi(endpoints.user.index, true).get({ role: 'WORKER'}),
-      await restApi(process.env.REACT_APP_BASE_URL + '/order/status', true).get(),
+      await restApi(endpoints.order.index, true).get(params),
     ]).then((res) => {
-      setData(res[0].data?.filter(e => e.status != orderStatus.Created));
-      setWorkers(res[1].data);
-      // setStatuses(res[1].data);
+      setData(res[0].data);
+    })
+
+    dispatch(setLoading(false));
+  }
+  const fetchData = async () => {
+    dispatch(setLoading(true));
+    const params: any = {
+      page: searchParams.get('page') || 1,
+      perPage: itemsPerPage,
+      query: query
+    }
+    if (tab != 'all'){
+      params.status = tab
+    }
+    await Promise.all([
+      await restApi(endpoints.user.index, true).get({ role: 'WORKER'}),
+    ]).then((res) => {
+      setWorkers(res[0].data);
     })
 
     dispatch(setLoading(false));
   };
 
   useEffect(() => {
-    fetchData();
+    fetchData()
   }, []);
 
   useEffect(() => {
-    const curPage = searchParams.get('page')
-    if (curPage){
-      if (Number(curPage) > pageCount){
-        setSearchParams({['page']: '1'})
-        // searchParams.set('page', '1')
-      }
-      setItemOffset(((Number(searchParams.get('page')) - 1) * itemsPerPage) % data.length)
+    fetchOrders();
+  }, [searchParams.get('page'), itemsPerPage, query, tab]);
+
+  useEffect(() => {
+    if (tab != 'all') {
+      setSearchParams({ ['page']: '1' })
     }
-  }, [data]);
+  }, [tab]);
 
   return (
     <>
@@ -163,21 +161,7 @@ const Orders = () => {
           {Object.entries(tabTitles).map(([key, value]) =>
             <span className={`ordersTag clickable ${key == tab ? 'activeTab' : ''}`} onClick={() => setTab(key)}>
             {value}
-            <span className={`numberTag ${key == tab ? 'activeTab' : ''}`}>{data?.filter((e: any) => {
-              switch (key){
-                case('Paid'):
-                  return e.status == orderStatus.Paid;
-                case('Canceled'):
-                  return e.status == orderStatus.Canceled;
-                case('Done'):
-                  return e.status == orderStatus.Done;
-                case('Assigned'):
-                  return e.status == orderStatus.Assigned;
-                case('InProgress'):
-                  return e.status == orderStatus.InProgress;
-                default: return true;
-              }
-            }).length}</span>
+              {data?.statusCount && <span className={`numberTag ${key == tab ? 'activeTab' : ''}`}>{data?.statusCount[key]?.count}</span>}
           </span>
           )}
         </div>
@@ -197,6 +181,10 @@ const Orders = () => {
           {/*   <i className="derhamSvg"></i> */}
           {/* </span> */}
             </span>
+          <div className='itemsPerPage'>
+            <label htmlFor="itemPerPage">تعداد در صفحه</label>
+            <input id='itemPerPage' defaultValue={itemsPerPage} onChange={(input) => input.target.value && Number(input.target.value) > 0 && setItemsPerPage(Number(input.target.value))}/>
+          </div>
           <div className="dashboardseaechBox">
             <i className="dashMagnifierIcon"></i>
             <input className="dashSearchInput" placeholder="جستجو" onChange={(input: any) => setQuery(input.target.value)}></input>
@@ -213,6 +201,7 @@ const Orders = () => {
             <th>کاربر</th>
             <th className="">تاریخ</th>
             <th>شماره سفارش</th>
+            <th>ردیف</th>
           </tr>
           </thead>
           {list()}
@@ -224,7 +213,8 @@ const Orders = () => {
             setSearchParams({['page']: (Number(event.selected) + 1).toString()})
             setItemOffset((event.selected * itemsPerPage) % data.length);
           }}
-          initialPage={Number(searchParams.get('page')) - 1}
+          forcePage={Number(searchParams.get('page')) - 1}
+          initialPage={searchParams.get('page') != null ? Number(searchParams.get('page')) - 1 : 0}
           pageRangeDisplayed={5}
           pageCount={pageCount}
           previousLabel="< قبلی"

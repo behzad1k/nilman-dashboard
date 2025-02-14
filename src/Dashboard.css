@@ -249,6 +249,9 @@ content: url("/public/svg/article.svg");
     justify-content: space-around;
     align-items: center;
 }
+.itemsPerPage input{
+    max-width: 30px;
+}
 .dashboardseaechBox{
     width: 490px;
     height: 36px;
