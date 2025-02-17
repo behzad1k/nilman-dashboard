@@ -533,6 +533,16 @@
     display: flex;
     align-items: center;
 }
+.itemsPerPage input{
+    text-align: center;
+}
+.itemsPerPage{
+    font-size: 9px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
 .skuNumber{
     color: #00142A;
     text-align: right;
@@ -634,7 +644,7 @@
     height: 50px;
 }
 .skuTable > * > th, td{
-    min-width: 8.6vw;
+    /*min-width: 8.6vw;*/
     text-align: center;
 }
 .skuTable > * > tr > td:last-child{

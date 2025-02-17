@@ -185,7 +185,7 @@ content: url("/public/svg/article.svg");
     padding-top: 42px;
     padding-right: 24px;
     padding-left: 24px;
-    width: 100%;
+    width: 80%;
 }
 .form{
     display: flex;
