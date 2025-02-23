@@ -18,6 +18,7 @@ export interface IService {
   slug: string;
   section: number;
   parent?: IService;
+  parentId?: number;
   attributes?: IService[];
   hasColor: boolean;
   color?: string;

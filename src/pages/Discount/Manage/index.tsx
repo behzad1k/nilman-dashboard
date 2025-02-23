@@ -7,6 +7,7 @@ import endpoints from '../../../config/endpoints';
 import { Sidebar } from '../../../layouts/Sidebar';
 import { setLoading } from '../../../services/reducers/homeSlice';
 import restApi from '../../../services/restApi';
+import { useAppSelector } from '../../../services/store';
 import { IService } from '../../../types/types';
 import tools from '../../../utils/tools';
 
@@ -18,12 +19,13 @@ const DiscountManage = () => {
   const [image, setImage] = useState<any>({});
   const [data, setData] = useState<any>({});
   const [selectedSpecifics, setSelectedSpecifics] = useState([]);
+  const serviceReducer = useAppSelector(state => state.serviceReducer);
   const { id: paramId } = useParams();
 
   const submit = async () => {
     dispatch(setLoading(true));
 
-    const data: any = tools.extractor(form, ['title', 'percent', 'amount', 'maxCount', 'forUserId', 'code']);
+    const data: any = tools.extractor(form, ['title', 'percent', 'amount', 'maxCount', 'forUserId', 'code', 'serviceId']);
 
     const res = await restApi(endpoints.discount.basic + (paramId || '')).post(data);
 
@@ -67,6 +69,7 @@ const DiscountManage = () => {
         maxCount: res[1].data?.maxCount,
         forUserId: res[1].data?.forUserId,
         code: res[1].data?.code,
+        serviceId: res[1].data?.serviceId,
       });
     }
 
@@ -129,6 +132,14 @@ const DiscountManage = () => {
               }} className="width100" id="infoTitle" onChange={(selected: any) => setForm(prev => ({
                 ...prev,
                 forUserId: selected.value
+              }))}/>
+              <label>برای خدمت</label>
+              <Select options={tools.selectFormatter(serviceReducer.allServices.filter(e => !e.parent), 'id', 'title', 'انتخاب کنید')} value={{
+                value: form?.serviceId,
+                label: serviceReducer.allServices?.find(e => e.id == form?.serviceId)?.title
+              }} className="width100" id="infoTitle" onChange={(selected: any) => setForm(prev => ({
+                ...prev,
+                serviceId: selected.value
               }))}/>
             </div>
           </section>
