@@ -16,16 +16,13 @@ const DiscountManage = () => {
   const dispatch = useDispatch();
   const [form, setForm] = useState<any>();
   const [users, setUsers] = useState<any[]>([]);
-  const [image, setImage] = useState<any>({});
-  const [data, setData] = useState<any>({});
-  const [selectedSpecifics, setSelectedSpecifics] = useState([]);
   const serviceReducer = useAppSelector(state => state.serviceReducer);
   const { id: paramId } = useParams();
 
   const submit = async () => {
     dispatch(setLoading(true));
 
-    const data: any = tools.extractor(form, ['title', 'percent', 'amount', 'maxCount', 'forUserId', 'code', 'serviceId']);
+    const data: any = tools.extractor(form, ['title', 'percent', 'amount', 'maxCount', 'forUserId', 'code', 'serviceId', 'expirationDay']);
 
     const res = await restApi(endpoints.discount.basic + (paramId || '')).post(data);
 
@@ -69,6 +66,7 @@ const DiscountManage = () => {
         maxCount: res[1].data?.maxCount,
         forUserId: res[1].data?.forUserId,
         code: res[1].data?.code,
+        expirationDay: res[1].data?.expirationDay,
         serviceId: res[1].data?.serviceId,
       });
     }
@@ -120,7 +118,12 @@ const DiscountManage = () => {
                 code: input.target.value
               }))}/>
 
-              <label>حداکثر استفاده</label>
+              <label>حداکثر زمان استفاده(روز)</label>
+              <input className="persianName" defaultValue={form?.expirationDay} onChange={(input) => setForm((prev) => ({
+                ...prev,
+                expirationDay: input.target.value
+              }))}/>
+              <label>حداکثر تعداد استفاده</label>
               <input className="persianName" defaultValue={form?.maxCount} onChange={(input) => setForm((prev) => ({
                 ...prev,
                 maxCount: input.target.value
