@@ -4,6 +4,7 @@ import { useDispatch } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import Select from 'react-select';
 import Swal from 'sweetalert2';
+import DatePicker from 'react-multi-date-picker';
 import endpoints from '../../config/endpoints';
 import globalEnum from '../../enums/globalEnum';
 import MapModal from '../../layouts/Modal/MapModal';
@@ -15,6 +16,7 @@ import tools from '../../utils/tools';
 import { Sidebar } from '../../layouts/Sidebar';
 import orderStatus = globalEnum.orderStatus;
 import Switch from 'react-ios-switch';
+import persian_fa from "react-date-object/locales/persian_fa"
 
 const OrderManage = () => {
   const { id } = useParams();
@@ -259,6 +261,8 @@ const OrderManage = () => {
     setForm(prev => ({...prev, address: address}))
   }, [address]);
 
+  console.log(moment(form?.date, 'jYYYY/jMM/jDD').toDate());
+
   return(
     <>
       <body className="dashboardBody">
@@ -336,10 +340,10 @@ const OrderManage = () => {
             <Select name='status' value={{
               value: Object.keys(orderStatus).find(e => e == form?.status),
               label: orderStatus[Object.keys(orderStatus).find(e => e == form?.status)]
-            }} options={Object.entries(orderStatus).map(([key, value]) => ({value: key, label: value}))} className="dashCardLog" id="infoTitle" onChange={(selected) => setForm(prev => ({ ...prev, status: selected.value }))}/>
+            }} options={Object.entries(orderStatus).map(([key, value]) => ({value: key, label: value}))} className="/dashCardLog" id="infoTitle" onChange={(selected) => setForm(prev => ({ ...prev, status: selected.value }))}/>
             <label className="sideBarTitle">تاریخ</label>
-            <input className="editProductInput" value={(form?.date)} onChange={(input) => setForm(prev => ({ ...prev, date: input.target.value}))}/>
-            <label className="sideBarTitle" >ساعت</label>
+            <DatePicker inputClass="editProductInput" locale={persian_fa} value={form?.date} onChange={(e) => setForm(prev => ({ ...prev, date: e }))} />
+            <label className="sideBarTitle">ساعت</label>
             <input className="editProductInput" value={form?.time} onChange={(input) => setForm(prev => ({ ...prev, time: input.target.value}))}/>
             <div className='inputRow'>
               <Switch
@@ -503,7 +507,7 @@ const OrderManage = () => {
         {form?.startDate && <h6 className="dashBoardTitle">زمان شروع: {moment(form?.startDate).format('jYYYY/jMM/jDD HH:mm')}</h6>}
         {form?.doneDate && <h6 className="dashBoardTitle">زمان پایان: {moment(form?.doneDate).format('jYYYY/jMM/jDD HH:mm')}</h6>}
 
-        {form.finalImage?.url && <section className="bottom width100">
+        {form?.finalImage?.url && <section className="bottom width100">
           <h6 className="dashBoardTitle">عکس پایان کار</h6>
           <img className='orderFinalImage' src={form.finalImage?.url}/>
 
