@@ -79,7 +79,7 @@ const extractor = (object: any ,params: readonly string[]) => {
 
   return data;
 };
-
+const persianNumToEn = (str: any) => str.replace(/[۰-۹]/g, d => '۰۱۲۳۴۵۶۷۸۹'.indexOf(d))
 
 export default {
   isEmpty,
@@ -89,4 +89,5 @@ export default {
   extractor,
   formatPrice,
   findAncestors,
+  persianNumToEn
 };
