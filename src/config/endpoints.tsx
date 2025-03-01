@@ -33,6 +33,7 @@ const endpoints = {
     index: format('user'),
     single: format('user/single'),
     findBy: format('user/findBy'),
+    textMessage: format('user/textMessage'),
     basic: format('user/basic'),
     medias: format('user/medias'),
     active: format('user/status'),

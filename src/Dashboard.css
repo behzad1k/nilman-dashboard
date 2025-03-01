@@ -45,6 +45,11 @@
 .usersSvg{
     content: url("/public/svg/users.svg");
 }
+.messageIcon{
+    content: url("/public/img/message.png");
+    width: 20px;
+    height: 20px;
+}
 .menuSvg{
     content: url("/public/svg/menu.svg");
 }
@@ -1672,4 +1677,9 @@ table{
     font-size:10px;
     width: fit-content;
     flex: 1
+}
+@media (min-width: 1024px) {
+    .workerOffCell {
+        font-size: 12px;
+    }
 }

@@ -18,6 +18,7 @@ import Derham from '../Dashboard/Modal/Derham';
 import Excel from '../Dashboard/Modal/Excel';
 import Bill from './Bill';
 import FeedbackModal from './FeedbackModal';
+import Message from './Message';
 import Status from './Status';
 import BillDetail from './\u200CBillDetail';
 import orderStatus = globalEnum.orderStatus;
@@ -75,6 +76,7 @@ const Orders = () => {
             <i className="trash clickable" onClick={() => deleteOrder(order.id)}></i>
             <i className="edit clickable" onClick={() => navigate('/order/edit/' + order.id)}></i>
             <i className="usersSvg clickable" onClick={() => dispatch(popupSlice.middle(<Bill order={order} /> ))}></i>
+            <i className="messageIcon clickable" onClick={() => dispatch(popupSlice.middle(<Message user={order.user} /> ))}></i>
             {order.isFeedbacked && <i className="feedbackIcon clickable" onClick={() => dispatch(popupSlice.middle(<FeedbackModal order={order}/>))}></i>}
           </td>
           <td className="">{tools.formatPrice(order.finalPrice)}</td>

@@ -124,13 +124,12 @@ const UserManage = () => {
   };
 
   const workerOffList = () => {
-
-    return Object.entries(workerOffs).sort(([key, value]: any, [key2, value2]: any) => moment(value2.date, 'jYYYY/jMM/jDD').unix() || moment(value.date, 'jYYYY/jMM/jDD').unix() ).map(([key, value]: [key: string, value: any]) =>
+    return Object.entries(workerOffs).sort(([key, value]: any, [key2, value2]: any) => moment(key2, 'jYYYY/jMM/jDD').unix() - moment(key, 'jYYYY/jMM/jDD').unix()).map(([key, value]: [key: string, value: any]) =>
       <tr key={key}>
         <td>{key}</td>
         {value.sort((a, b) => a.fromTime - b.fromTime).map(e =>
           <>
-            <td>
+            <td className="workerOffCell">
               <i onClick={() => deleteWorkerOff(e)} style={{ color: 'red' }}>X</i>
               <span>({e.fromTime} - {e.toTime})</span>
               <br/>
