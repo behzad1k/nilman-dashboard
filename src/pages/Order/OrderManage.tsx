@@ -17,6 +17,7 @@ import { Sidebar } from '../../layouts/Sidebar';
 import orderStatus = globalEnum.orderStatus;
 import Switch from 'react-ios-switch';
 import persian_fa from "react-date-object/locales/persian_fa"
+import persian from "react-date-object/calendars/persian"
 
 const OrderManage = () => {
   const { id } = useParams();
@@ -340,7 +341,7 @@ const OrderManage = () => {
               label: orderStatus[Object.keys(orderStatus).find(e => e == form?.status)]
             }} options={Object.entries(orderStatus).map(([key, value]) => ({value: key, label: value}))} className="/dashCardLog" id="infoTitle" onChange={(selected) => setForm(prev => ({ ...prev, status: selected.value }))}/>
             <label className="sideBarTitle">تاریخ</label>
-            <DatePicker inputClass="editProductInput"  weekStartDayIndex={7} locale={persian_fa} value={form?.date} onChange={(e) => setForm(prev => ({ ...prev, date: tools.persianNumToEn(e.format('YYYY/MM/DD')) }))} />
+            <DatePicker inputClass="editProductInput" calendar={persian} locale={persian_fa} value={form?.date}  onChange={(e) => setForm(prev => ({ ...prev, date: tools.persianNumToEn(e.format('YYYY/MM/DD')) }))} />
             <label className="sideBarTitle">ساعت</label>
             <input className="editProductInput" value={form?.time} onChange={(input) => setForm(prev => ({ ...prev, time: input.target.value}))}/>
             <div className='inputRow'>
