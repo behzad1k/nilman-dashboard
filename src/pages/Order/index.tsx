@@ -123,7 +123,7 @@ const Orders = () => {
 
   useEffect(() => {
     if (data.count) {
-      const newPage = Number(searchParams.get('page')) <= Math.ceil(data.count / itemsPerPage) ? searchParams.get('page') : '1';
+      const newPage = Number(searchParams.get('page')) <= Math.ceil(data.count / itemsPerPage) ? searchParams.get('page') || '1' : '1';
       console.log(newPage);
       console.log(data.count);
       console.log(Math.ceil(data.count / itemsPerPage));
