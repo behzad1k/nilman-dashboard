@@ -5,9 +5,9 @@ import LoadingSpinner from '../../layouts/LoadingSpinner/insdex';
 import { popupSlice } from "../../services/reducers";
 import { useDispatch } from "react-redux";
 import restApi from '../../services/restApi';
-import LoadingBody from '../App/loading/LoadingBody';
+import LoadingBody from '../../pages/App/loading/LoadingBody';
 
-const Message = ({ user }: any) => {
+const Message = ({ user = null }: any) => {
   const dispatch: any = useDispatch();
   const [text, setText] = useState('');
   const submit = async () => {
@@ -45,7 +45,7 @@ const Message = ({ user }: any) => {
   return(
     <main className="billMain flex">
       <div className="billSec">
-        <span className="billHeader">پیام به {user.name + ' ' + user.lastName} به شماره {user.phoneNumber}</span>
+        <span className="billHeader">پیام به {user.name + ' ' + user.lastName}  {user.phoneNumber}</span>
         <textarea rows={10} onChange={(input) => setText(input.target.value)}>{text}</textarea>
         <div>
 

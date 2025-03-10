@@ -7,13 +7,11 @@ const usePagination = (data) => {
   const endOffset = (itemOffset || 0) + itemsPerPage;
   const [pageCount, setPageCount] = useState(1);
   const [searchParams, setSearchParams] = useSearchParams();
-  console.log(itemOffset, endOffset);
+
   useEffect(() => {
-    if (searchParams.get('page')){
       setItemOffset(((Number(searchParams.get('page') || 1) - 1) * itemsPerPage) % (data?.count))
       setPageCount(data?.count / itemsPerPage)
-    }
-  }, [data, searchParams.get('page')]);
+  }, [data, searchParams.get('page'), searchParams.get('tab')]);
 
   return {
     itemOffset,

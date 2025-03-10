@@ -919,6 +919,7 @@ table{
     width: 100%;
     align-items: flex-end;
     gap: 16px;
+    max-width: 50%;
 }
 .width{
     width: 100%;

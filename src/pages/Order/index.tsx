@@ -1,34 +1,24 @@
-import moment from 'jalali-moment';
 import { LegacyRef, ReactElement, useEffect, useRef, useState } from 'react';
 import ReactPaginate from 'react-paginate';
 import { useDispatch } from 'react-redux';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import endpoints from '../../config/endpoints';
-import globalEnum from '../../enums/globalEnum';
 import usePagination from '../../hooks/usePagination';
-import useTicker from '../../hooks/useTicker';
 import { popupSlice } from '../../services/reducers';
 import { setLoading } from '../../services/reducers/homeSlice';
-import { orders } from '../../services/reducers/userSlice';
 import restApi from '../../services/restApi';
 import tools from '../../utils/tools';
 import { Sidebar } from "../../layouts/Sidebar"
-import Derham from '../Dashboard/Modal/Derham';
-import Excel from '../Dashboard/Modal/Excel';
 import Bill from './Bill';
 import FeedbackModal from './FeedbackModal';
-import Message from './Message';
-import Status from './Status';
-import BillDetail from './\u200CBillDetail';
-import orderStatus = globalEnum.orderStatus;
+import Message from '../../layouts/Modal/Message';
 
 const Orders = () => {
-  const [data, setData] = useState<any>([]);
-  const [workers, setWorkers] = useState([]);
-  const [query, setQuery] = useState('');
-  const [tab, setTab] = useState('all');
   const [searchParams, setSearchParams] = useSearchParams();
+  const [data, setData] = useState<any>([]);
+  const [query, setQuery] = useState('');
+  const [tab, setTab] = useState(searchParams.get('tab') || 'all');
   const { pageCount, endOffset, itemOffset, itemsPerPage, setPageCount, setItemOffset, setItemsPerPage } = usePagination(data)
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -40,6 +30,7 @@ const Orders = () => {
     Canceled: 'لغو شده',
     Done: 'تمام شده',
   }
+
   const deleteOrder = async (id: number) => {
     if(confirm('آیا مطمئن هستید؟')){
       dispatch(setLoading(true));
@@ -110,6 +101,7 @@ const Orders = () => {
       query: query
     }
     if (tab != 'all'){
+      console.log('eee');
       params.status = tab
     }
     await Promise.all([
@@ -120,38 +112,27 @@ const Orders = () => {
 
     dispatch(setLoading(false));
   }
-  const fetchData = async () => {
-    dispatch(setLoading(true));
-    const params: any = {
-      page: searchParams.get('page') || 1,
-      perPage: itemsPerPage,
-      query: query
-    }
-    if (tab != 'all'){
-      params.status = tab
-    }
-    await Promise.all([
-      await restApi(endpoints.user.index, true).get({ role: 'WORKER'}),
-    ]).then((res) => {
-      setWorkers(res[0].data);
-    })
-
-    dispatch(setLoading(false));
-  };
-
-  useEffect(() => {
-    fetchData()
-  }, []);
 
   useEffect(() => {
     fetchOrders();
   }, [searchParams.get('page'), itemsPerPage, query, tab]);
 
+  // useEffect(() => {
+  //   setSearchParams({ ['page']: searchParams.get('page'), ['tab']: tab })
+  // }, [tab]);
+
   useEffect(() => {
-    if (tab != 'all') {
-      setSearchParams({ ['page']: '1' })
+    if (data.count) {
+      const newPage = Number(searchParams.get('page')) <= Math.ceil(data.count / itemsPerPage) ? searchParams.get('page') : '1';
+      console.log(newPage);
+      console.log(data.count);
+      console.log(Math.ceil(data.count / itemsPerPage));
+      setSearchParams({
+        ['page']: newPage,
+        ['tab']: tab
+      })
     }
-  }, [tab]);
+  }, [data]);
 
   return (
     <>
@@ -161,7 +142,10 @@ const Orders = () => {
         <h1 className="dashBoardTitle">سفارش ها</h1>
         <div className="dashTabs">
           {Object.entries(tabTitles).map(([key, value]) =>
-            <span className={`ordersTag clickable ${key == tab ? 'activeTab' : ''}`} onClick={() => setTab(key)}>
+            <span className={`ordersTag clickable ${key == tab ? 'activeTab' : ''}`} onClick={() => {
+              setTab(key);
+              setSearchParams({ ['page']: '1', ['tab']: tab })
+            }}>
             {value}
               {data?.statusCount && <span className={`numberTag ${key == tab ? 'activeTab' : ''}`}>{data?.statusCount[key]?.count}</span>}
           </span>
@@ -212,7 +196,7 @@ const Orders = () => {
           breakLabel="..."
           nextLabel="بعدی >"
           onPageChange={(event) => {
-            setSearchParams({['page']: (Number(event.selected) + 1).toString()})
+            setSearchParams({['page']: (Number(event.selected) + 1).toString(), ['tab']: tab})
             setItemOffset((event.selected * itemsPerPage) % data.length);
           }}
           forcePage={Number(searchParams.get('page')) - 1}
