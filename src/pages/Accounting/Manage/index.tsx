@@ -56,7 +56,7 @@ const AccountingManage = () => {
   };
 
   const orderList = () => {
-    return form?.orders.filter(e => e.status == orderStatus.Done).slice(0, 30)?.map((order, index) =>
+    return form?.orders?.filter(e => e.status == orderStatus.Done)?.sort((a, b) => b.id - a.id)?.slice(0, 30)?.map((order, index) =>
       <tr>
         <td>{order.transactionId > 0 ? 'بله' : 'خیر'}</td>
         <td>{tools.formatPrice((order.price * order.workerPercent / 100) + order.transportation)}</td>

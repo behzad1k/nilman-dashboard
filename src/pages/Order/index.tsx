@@ -22,6 +22,7 @@ const Orders = () => {
   const { pageCount, endOffset, itemOffset, itemsPerPage, setPageCount, setItemOffset, setItemsPerPage } = usePagination(data)
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
   const tabTitles = {
     all: 'همه',
     Paid: 'پرداخت شده',
@@ -124,9 +125,6 @@ const Orders = () => {
   useEffect(() => {
     if (data.count) {
       const newPage = Number(searchParams.get('page')) <= Math.ceil(data.count / itemsPerPage) ? searchParams.get('page') || '1' : '1';
-      console.log(newPage);
-      console.log(data.count);
-      console.log(Math.ceil(data.count / itemsPerPage));
       setSearchParams({
         ['page']: newPage,
         ['tab']: tab
