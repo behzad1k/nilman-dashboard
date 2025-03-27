@@ -168,7 +168,6 @@ const AccountingManage = () => {
               <label className="sideBarTitle">تا</label>
               <DatePicker inputClass="editProductInput" defaultValue={moment(dateRange?.from, 'jYYYY/jMM/jDD').toDate()} onChange={(e) => setDateRange(prev => ({ ...prev, from: moment(e.value.valueOf()).format('jYYYY/jMM/jDD') }))} />
               <label className="sideBarTitle">از</label>
-
             </div>
             <div>
               کارکرد در بازه مشخص شده: {tools.formatPrice(salesInRange)}

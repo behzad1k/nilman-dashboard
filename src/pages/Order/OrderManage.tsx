@@ -114,15 +114,15 @@ const OrderManage = () => {
       const ancestors = tools.findAncestors(serviceReducer.allServices, orderProduct.serviceId)
       let title = ancestors?.reverse()?.filter((e, index ) => index <= 3 && index > 1)?.reduce((acc, curr, index) => acc + ((index == 0 ? '' : '> ') + curr?.title), '')
       if(!title){
-        title = 'hi'
+        title = 'none'
       }
       rows.push(
         <tr className="" key={'product' + index}>
           <td className="backGround1">
-            <p>{tools.formatPrice(form?.orderServices[key].count * serviceReducer.allServices?.find(e => e.id == orderProduct.serviceId)?.price)}</p>
+            <p>{tools.formatPrice(form?.orderServices[key].price || (form?.orderServices[key].count * (form?.orderServices[key].singlePrice || serviceReducer.allServices?.find(e => e.id == orderProduct.serviceId)?.price)))}</p>
           </td>
          <td className="">
-            <p>{tools.formatPrice(serviceReducer.allServices?.find(e => e.id == orderProduct.serviceId)?.price)}</p>
+            <p>{tools.formatPrice(form?.orderServices[key].singlePrice || serviceReducer.allServices?.find(e => e.id == orderProduct.serviceId)?.price)}</p>
           </td>
           <td className="quantity">
           <div className="quantityButtom">

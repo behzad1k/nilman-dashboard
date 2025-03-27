@@ -9,7 +9,10 @@ import LoadingBody from '../App/loading/LoadingBody';
 
 const Bill = ({ order }) => {
   const dispatch: any = useDispatch();
-  const [workers, setWorkers] = useState([]);
+  const [data, setData] = useState({
+    availableWorkers: [],
+    suggestedWorkers: [],
+  });
   const [isLoading, setIsLoading] = useState(false);
   const [selectedWorker, setSelectedWorker] = useState(null)
   const submit = async () => {
@@ -48,11 +51,11 @@ const Bill = ({ order }) => {
     setIsLoading(true)
     const res = await restApi(endpoints.order.relatedWorkers + order.id).get();
 
-    setWorkers(res.data)
+    setData(res.data)
 
     setIsLoading(false)
   };
-  console.log(selectedWorker);
+
   useEffect(() => {
     fetchData()
   }, []);
@@ -67,11 +70,15 @@ const Bill = ({ order }) => {
           {isLoading ? <LoadingSpinner/> : <>
             <select className='selectBox width96 backGrey' defaultValue={order?.workerId} onChange={(e) => setSelectedWorker(e.target.value)}>
               <option value={null}>انتخاب کنید</option>
-              {workers.map(e => <option value={e.id}>{e.name + ' ' + e.lastName}</option>)}
+              {data.availableWorkers.map(e => <option value={e.id}>{e.name + ' ' + e.lastName}</option>)}
             </select>
           </>}
             <label>زیباکار </label>
     </span>
+        <div className="billSec">
+          <span>زیبا کار های پیشنهادی: </span>
+          <span>{data.suggestedWorkers.sort((a, b) => (b.approximatedDistance?.value - a.approximatedDistance?.value)).map(worker => <p className="text-center">{worker.name + ' ' + worker.lastName} {worker.approximatedDistance != null ? ` : ${worker.approximatedDistance.text}(${worker.approximatedDistance.value}M) ~ ${worker.approximatedTime.text}(${worker.approximatedTime.value}s)` : ''}</p>)}</span>
+        </div>
         <span className="billDetSpan" onClick={submit}>
           <button className="billButton">ثبت</button>
     </span>
