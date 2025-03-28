@@ -116,13 +116,16 @@ const OrderManage = () => {
       if(!title){
         title = 'none'
       }
+
+      const price = (form?.orderServices[key].count * (form?.orderServices[key].singlePrice || serviceReducer.allServices?.find(e => e.id == orderProduct.serviceId)?.price))
+      const singlePrice = form?.orderServices[key].singlePrice || serviceReducer.allServices?.find(e => e.id == orderProduct.serviceId)?.price
       rows.push(
         <tr className="" key={'product' + index}>
           <td className="backGround1">
-            <p>{tools.formatPrice(form?.orderServices[key].price || (form?.orderServices[key].count * (form?.orderServices[key].singlePrice || serviceReducer.allServices?.find(e => e.id == orderProduct.serviceId)?.price)))}</p>
+            <p>{tools.formatPrice(form?.isUrgent && form?.orderServices[key].id ? price / 1.5 : price)}</p>
           </td>
          <td className="">
-            <p>{tools.formatPrice(form?.orderServices[key].singlePrice || serviceReducer.allServices?.find(e => e.id == orderProduct.serviceId)?.price)}</p>
+            <p>{tools.formatPrice(form?.isUrgent && form?.orderServices[key].id? singlePrice / 1.5 : singlePrice)}</p>
           </td>
           <td className="quantity">
           <div className="quantityButtom">
