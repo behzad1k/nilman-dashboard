@@ -1,3 +1,4 @@
+import moment from 'jalali-moment';
 import { LegacyRef, ReactElement, useEffect, useRef, useState } from 'react';
 import ReactPaginate from 'react-paginate';
 import { useDispatch } from 'react-redux';
@@ -61,7 +62,7 @@ const Orders = () => {
   const list = () => {
     const rows: ReactElement[] = [];
 
-    data.orders?.map((order: any, index) => {
+    data?.orders?.map((order: any, index) => {
       rows.push(
         <tr className="dashTr2" key={'order' + index}>
           <td className="svgContainer">
@@ -83,6 +84,7 @@ const Orders = () => {
           <td className="">{order?.user?.name + ' ' + order?.user?.lastName}</td>
           <td className="">
             <p>{order?.date + ' - ' + order?.fromTime}</p>
+            <p>{moment(order?.createdAt).format('jYYYY/jMM/jDD HH:mm:ss')}</p>
           </td>
           <td className="">{order?.code}</td>
           <td className="">{++index}</td>

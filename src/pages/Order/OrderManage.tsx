@@ -106,7 +106,6 @@ const OrderManage = () => {
     }
     dispatch(setLoading(false));
   };
-
   const list = () => {
     const rows: ReactElement[] = []
     form?.orderServices?.map((orderProduct: any, index) => {
@@ -116,7 +115,6 @@ const OrderManage = () => {
       if(!title){
         title = 'none'
       }
-
       const price = (form?.orderServices[key].count * (form?.orderServices[key].singlePrice || serviceReducer.allServices?.find(e => e.id == orderProduct.serviceId)?.price))
       const singlePrice = form?.orderServices[key].singlePrice || serviceReducer.allServices?.find(e => e.id == orderProduct.serviceId)?.price
       rows.push(
@@ -185,7 +183,7 @@ const OrderManage = () => {
               className="orderServiceSelect"
               options={serviceReducer.allServices.filter(e => e.price > 0).map(e => ({ value: e.id, label: tools.findAncestors(serviceReducer.allServices, e.id)?.filter((e, index ) => (index < 3)).reverse()?.reduce((acc, curr, index) => acc + ((index == 0 ? '' : '> ') + curr?.title), '')}))}
               value={{value: orderProduct.serviceId, label: tools.findAncestors(serviceReducer.allServices, orderProduct.serviceId)?.filter((e, index ) => (index < 3)).reverse().map((attr, index) => <span key={'bread' + index} className="breadCrumbItem">{(index == 0 ? '' : '> ') + attr?.title}</span>)}}
-              onChange={(selected) => {setForm(prev => ({ ...prev, orderServices: (key == undefined || key < 0) ? [...prev, { serviceId: selected.value }] : prev.orderServices.map(e => e.serviceId == orderProduct.serviceId ? {...e, serviceId: selected.value } : e )}))}}
+              onChange={(selected) => {setForm(prev => ({ ...prev, orderServices: (key == undefined || key < 0) ? [...prev, { serviceId: selected.value, id: null }] : prev.orderServices.map(e => e.serviceId == orderProduct.serviceId ? {...e, serviceId: selected.value, id: null } : e )}))}}
             />
           </td>
           {/* <td><img className="width100p" src={orderProduct.product.medias.find(e => e.code == 'main')?.url}/></td> */}
