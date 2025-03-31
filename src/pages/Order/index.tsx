@@ -83,8 +83,10 @@ const Orders = () => {
           </td>
           <td className="">{order?.user?.name + ' ' + order?.user?.lastName}</td>
           <td className="">
-            <p>{order?.date + ' - ' + order?.fromTime}</p>
-            <p>{moment(order?.createdAt).format('jYYYY/jMM/jDD HH:mm:ss')}</p>
+            <div className="column">
+              <p>{order?.date + ' - ' + order?.fromTime}</p>
+              <p>{moment(order?.createdAt).format('jYYYY/jMM/jDD HH:mm:ss')}</p>
+            </div>
           </td>
           <td className="">{order?.code}</td>
           <td className="">{++index}</td>
