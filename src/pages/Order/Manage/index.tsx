@@ -175,6 +175,7 @@ const OrderManage: React.FC = () => {
           <PaymentInfoSection
             form={form}
             updateNestedField={updateNestedField}
+            id={id}
           />
         </section>
 

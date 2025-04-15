@@ -142,5 +142,20 @@ export const orderService = {
       console.error('Error saving order:', error);
       return { success: false, error: error.message || 'خطا در ذخیره سفارش' };
     }
+  },
+  sendPortal: async (id: string) => {
+    try {
+      const res = await restApi(process.env.REACT_APP_BASE_URL + '/admin/order/sendPortal/' + id).post({});
+      return {
+        success: true,
+        data: res.data
+      };
+    } catch (error) {
+      console.error('Error sending portal:', error);
+      return {
+        success: false,
+        error: error.message || 'خطا در ارسال پورتال'
+      };
+    }
   }
 };

@@ -1,17 +1,20 @@
 import React from 'react';
 import Select from 'react-select';
 import globalEnum from '../../../enums/globalEnum';
+import { orderService } from './OrderService';
 
 const { PaymentMethods, PaymentMethodNames } = globalEnum;
 
 interface PaymentInfoSectionProps {
   form: any;
   updateNestedField: (parent: string, field: string, value: any) => void;
+  id: string
 }
 
 const PaymentInfoSection: React.FC<PaymentInfoSectionProps> = ({
                                                                  form,
-                                                                 updateNestedField
+                                                                 updateNestedField,
+  id
                                                                }) => {
   const paymentMethodOptions = Object.entries(PaymentMethods).map(([key, value]) => ({
     value: key,
@@ -75,10 +78,10 @@ const PaymentInfoSection: React.FC<PaymentInfoSectionProps> = ({
           onChange={(e) => updateNestedField('payment', 'description', e.target.value)}
           aria-label="توضیحات"
         />
+        <button className="billButton" onClick={() => orderService.sendPortal(id)}>
+          ارسال درگاه
+        </button>
       </div>
-      <button className="billButton">
-        ارسال درگاه
-      </button>
     </div>
   );
 };
