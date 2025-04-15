@@ -110,7 +110,7 @@ export interface OrderService {
 export interface Payment {
   id?: string;
   method: string;
-  price: number;
+  finalPrice: number;
   shouldUseWallet: boolean;
   refId?: string;
   description?: string;

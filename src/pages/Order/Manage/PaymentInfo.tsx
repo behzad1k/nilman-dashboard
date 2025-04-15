@@ -53,8 +53,8 @@ const PaymentInfoSection: React.FC<PaymentInfoSectionProps> = ({
         <input
           id="paymentAmount"
           className="editProductInput"
-          value={form?.payment?.price || ''}
-          onChange={(e) => updateNestedField('payment', 'price', e.target.value)}
+          value={form?.payment?.finalPrice || ''}
+          onChange={(e) => updateNestedField('payment', 'finalPrice', e.target.value)}
           aria-label="مبلغ"
         />
 

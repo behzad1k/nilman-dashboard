@@ -130,7 +130,7 @@ export const orderService = {
         }),
         restApi(process.env.REACT_APP_BASE_URL + '/admin/order/payment/' + res.data.id).put({
           method: form?.payment?.method,
-          price: form?.payment?.price,
+          finalPrice: form?.payment?.finalPrice,
           shouldUseWallet: form?.payment?.shouldUseWallet,
           refId: form?.payment?.refId,
           description: form?.payment?.description
