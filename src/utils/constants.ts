@@ -32,7 +32,7 @@ export const initialFormState: OrderFormState = {
   },
   payment: {
     method: 'online',
-    price: 0,
+    finalPrice: 0,
     shouldUseWallet: false,
     isPaid: false
   }
