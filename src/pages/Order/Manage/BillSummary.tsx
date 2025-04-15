@@ -21,7 +21,7 @@ const BillSummarySection: React.FC<BillSummarySectionProps> = ({
         )}
 
         <span className="billItems dashboardBill marginTop">
-          <h3 className="billItem">هزینه ارسال</h3>
+          <h3 className="billItem">ایاب ذهاب</h3>
           <div className="pricePart">
             <input
               className="editProductInput order"

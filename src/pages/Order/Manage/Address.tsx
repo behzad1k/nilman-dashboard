@@ -106,10 +106,8 @@ const AddressSection: React.FC<AddressSectionProps> = ({
         <button
           className="mapButton"
           onClick={openMapModal}
-          aria-label="انتخاب موقعیت روی نقشه"
-        >
-          انتخاب موقعیت روی نقشه
-        </button>
+          aria-label="ویرایش آدرس"
+        >ویرایش آدرس</button>
       </div>
     </div>
   );

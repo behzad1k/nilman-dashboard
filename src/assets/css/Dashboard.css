@@ -1128,6 +1128,7 @@ table{
     font-size: 14px;
     font-weight: 400;
     gap: 24px;
+    overflow: auto;
 }
 .ordersTag{
     display: flex;

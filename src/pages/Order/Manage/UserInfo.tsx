@@ -55,7 +55,7 @@ const UserInfoSection: React.FC<UserInfoSectionProps> = ({
           className="editProductInput"
           value={form?.user?.lastName || ''}
           onChange={(e) => updateNestedField('user', 'lastName', e.target.value)}
-          aria-label="نام و خانوادگی"
+          aria-label="نام خانوادگی"
         />
 
         <label className="sideBarTitle" htmlFor="nationalCode">کد ملی</label>
@@ -66,15 +66,6 @@ const UserInfoSection: React.FC<UserInfoSectionProps> = ({
           onChange={(e) => updateNestedField('user', 'nationalCode', e.target.value)}
           aria-label="کد ملی"
         />
-
-        <div className="inputRow">
-          <Switch
-            checked={form?.payment?.shouldUseWallet || false}
-            onChange={(checked) => updateNestedField('payment', 'shouldUseWallet', checked)}
-            aria-label="استفاده از کیف پول"
-          />
-          <label className="sideBarTitle">استفاده از کیف پول</label>
-        </div>
       </div>
     </div>
   );
