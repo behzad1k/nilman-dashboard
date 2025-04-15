@@ -1,4 +1,5 @@
 import React from 'react';
+import Switch from 'react-ios-switch';
 import Select from 'react-select';
 import globalEnum from '../../../enums/globalEnum';
 import { orderService } from './OrderService';
@@ -51,6 +52,15 @@ const PaymentInfoSection: React.FC<PaymentInfoSectionProps> = ({
           value={form?.user?.walletBalance || 0}
           aria-label="کیف پول"
         />
+
+        <div className="inputRow">
+          <Switch
+            checked={form?.payment?.shouldUseWallet || false}
+            onChange={(checked) => updateNestedField('payment', 'shouldUseWallet', checked)}
+            aria-label="استفاده از کیف پول"
+          />
+          <label className="sideBarTitle">استفاده از کیف پول</label>
+        </div>
 
         <label className="sideBarTitle" htmlFor="paymentAmount">مبلغ</label>
         <input

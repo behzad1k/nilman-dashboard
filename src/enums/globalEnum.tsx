@@ -9,6 +9,7 @@ namespace globalEnum {
   export enum orderStatusNames  {
     Created = 'سبد خرید',
     Paid = 'پرداخت شده',
+    AwaitingPayment = 'در انتظار پرداخت',
     Assigned = 'محول شده',
     InProgress = 'در حال انجام',
     Canceled = 'کنسل شده',
@@ -19,6 +20,7 @@ namespace globalEnum {
     Created = 'Created',
     Paid = 'Paid',
     Assigned = 'Assigned',
+    AwaitingPayment = 'AwaitingPayment',
     Canceled = 'Canceled',
     Done = 'Done',
     InProgress = 'InProgress'
