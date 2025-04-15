@@ -98,7 +98,7 @@ const Orders = () => {
   };
 
   const fetchOrders = async () => {
-    dispatch(setLoading(true));
+    !query && dispatch(setLoading(true));
 
     const params: any = {
       page: searchParams.get('page') || 1,
@@ -115,7 +115,7 @@ const Orders = () => {
       setData(res[0].data);
     })
 
-    dispatch(setLoading(false));
+    !query && dispatch(setLoading(false));
   }
 
   useEffect(() => {
