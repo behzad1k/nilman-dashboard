@@ -75,3 +75,77 @@ export interface ISliderCardInfo {
   title: string;
   url: string;
 }
+
+
+export interface User {
+  id?: string;
+  name: string;
+  lastName: string;
+  phoneNumber: string;
+  nationalCode: string;
+  isVerified: boolean;
+  walletBalance?: number;
+  addresses?: Address[];
+}
+
+export interface Address {
+  id: string | null;
+  title: string;
+  phoneNumber: string;
+  description: string;
+  vahed: string;
+  pelak: string;
+  longitude?: number;
+  latitude?: number;
+}
+
+export interface OrderService {
+  id?: string | null;
+  serviceId: number;
+  count: number;
+  colors?: number[];
+  singlePrice?: number;
+}
+
+export interface Payment {
+  id?: string;
+  method: string;
+  price: number;
+  shouldUseWallet: boolean;
+  refId?: string;
+  description?: string;
+  isPaid?: boolean;
+}
+
+export interface OrderFormState {
+  isMulti: boolean;
+  orderServices: OrderService[];
+  transportation: number;
+  finalPrice: number;
+  price: number;
+  discountAmount: number;
+  serviceId: number | null;
+  date: string;
+  time?: string;
+  shouldUseWallet: boolean;
+  isUrgent: boolean;
+  status?: string;
+  code?: string;
+  address: Address;
+  addressId?: string;
+  user?: User;
+  createdAt?: string;
+  payment: Payment;
+  finalImage?: {
+    url: string;
+    id: string;
+  };
+  doneDate?: string;
+  startDate?: string;
+}
+
+export interface ApiResponse<T> {
+  success: boolean;
+  data?: T;
+  error?: string;
+}

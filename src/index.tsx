@@ -16,7 +16,7 @@ import FeedbackFactor from './pages/FeedbackFactor';
 import FeedbackFactorManage from './pages/FeedbackFactor/Manage';
 import Login from './pages/Login';
 import Orders from './pages/Order';
-import OrderManage from './pages/Order/OrderManage';
+import OrderManage from './pages/Order/Manage';
 import Service from './pages/Service';
 import ServiceManage from './pages/Service/Manage';
 import UsersList from './pages/User';

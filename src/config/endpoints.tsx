@@ -1,6 +1,5 @@
-const format = (endpoint, admin = true) => {
-  return `${process.env.REACT_APP_BASE_URL}${admin ? '/admin': ''}/${endpoint}/`
-};
+const format = (endpoint, admin = true) => `${process.env.REACT_APP_BASE_URL}${admin ? '/admin': ''}/${endpoint}/`
+
 const endpoints = {
   login: format('login'),
   service: {

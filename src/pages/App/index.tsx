@@ -1,8 +1,8 @@
 import Cookies from 'js-cookie';
 import React, { useEffect, useState } from 'react';
-import '../../App.css';
+import '../../assets/css/App.css';
 import { useDispatch } from 'react-redux';
-import '../../Dashboard.css';
+import '../../assets/css/Dashboard.css';
 import { setLoading, statuses } from '../../services/reducers/homeSlice';
 import { services } from '../../services/reducers/serviceSlice';
 import { euroPrice } from '../../services/reducers/tickerSlice';

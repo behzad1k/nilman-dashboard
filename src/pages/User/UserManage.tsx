@@ -116,7 +116,7 @@ const UserManage = () => {
     return [...(item?.orders || []), ...(item?.jobs || [])]?.map((order, index) =>
         <tr key={order?.id}>
           <td>{++index}</td>
-          <td><a href={`/order/edit/${order?.id}`}>{order?.code}</a></td>
+          <td><a href={`/order/edit/${order?.id}`}>{order?.code || 'مشاهده'}</a></td>
           <td>{order?.date + ' - ' + order?.fromTime}</td>
           <td>{order?.status}</td>
           <td>{tools.formatPrice(order?.finalPrice)}</td>

@@ -23,5 +23,22 @@ namespace globalEnum {
     Done = 'Done',
     InProgress = 'InProgress'
   };
+
+  export enum PaymentMethods {
+    card = 'Card',
+    ap = 'Ap',
+    sep = 'Sep',
+    zarinpal = 'ZarinPal',
+    credit = 'Credit',
+  }
+
+  export enum PaymentMethodNames {
+    card = 'کارت به کارت',
+    ap = 'آسان پرداخت',
+    sep = 'سامان پرداخت',
+    zarinpal = 'زرین پال',
+    credit = 'کیف پول',
+  };
+
 }
 export default globalEnum;
