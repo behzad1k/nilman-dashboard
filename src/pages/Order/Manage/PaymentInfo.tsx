@@ -88,7 +88,7 @@ const PaymentInfoSection: React.FC<PaymentInfoSectionProps> = ({
           onChange={(e) => updateNestedField('payment', 'description', e.target.value)}
           aria-label="توضیحات"
         />
-        <button className="billButton" onClick={() => orderService.sendPortal(id)}>
+        <button className="billButton" onClick={() => orderService.sendPortal(id, form?.payment?.finalPrice, form?.payment?.method, form?.payment?.description, form?.payment?.refId, )}>
           ارسال درگاه
         </button>
       </div>

@@ -143,9 +143,14 @@ export const orderService = {
       return { success: false, error: error.message || 'خطا در ذخیره سفارش' };
     }
   },
-  sendPortal: async (id: string) => {
+  sendPortal: async (id: string, finalPrice, method, description, refId) => {
     try {
-      const res = await restApi(process.env.REACT_APP_BASE_URL + '/admin/order/sendPortal/' + id).post({});
+      const res = await restApi(process.env.REACT_APP_BASE_URL + '/admin/order/sendPortal/' + id).post({
+        finalPrice,
+        method,
+        description,
+        refId
+      });
       return {
         success: true,
         data: res.data
