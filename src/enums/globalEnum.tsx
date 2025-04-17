@@ -27,11 +27,11 @@ namespace globalEnum {
   };
 
   export enum PaymentMethods {
-    card = 'Card',
-    ap = 'Ap',
-    sep = 'Sep',
-    zarinpal = 'ZarinPal',
-    credit = 'Credit',
+    card = 'card',
+    ap = 'ap',
+    sep = 'sep',
+    zarinpal = 'zarinpal',
+    credit = 'credit',
   }
 
   export enum PaymentMethodNames {

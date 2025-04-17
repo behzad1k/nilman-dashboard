@@ -31,7 +31,8 @@ const OrderManage: React.FC = () => {
     updateFormField,
     updateNestedField,
     isColored,
-    calculatePrices
+    calculatePrices,
+    setUserBalance
   } = useOrderForm(initialFormState, serviceReducer);
 
   const isEdit = !!id;
@@ -81,6 +82,7 @@ const OrderManage: React.FC = () => {
       if (result.success) {
         setForm(result.data);
         setAddress(result.data.address);
+        setUserBalance(result.data.user.walletBalance);
       } else {
         Swal.fire({
           title: 'خطا',
@@ -121,7 +123,7 @@ const OrderManage: React.FC = () => {
 
   useEffect(() => {
     calculatePrices();
-  }, [form.orderServices, form.transportation, form.discountAmount, form.isUrgent]);
+  }, [form.orderServices, form.transportation, form.discountAmount, form.isUrgent, form.payment?.shouldUseWallet]);
 
   return (
     <div className="dashboardBody">

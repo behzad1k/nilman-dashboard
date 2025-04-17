@@ -66,7 +66,7 @@ const PaymentInfoSection: React.FC<PaymentInfoSectionProps> = ({
         <input
           id="paymentAmount"
           className="editProductInput"
-          value={form?.payment?.finalPrice || ''}
+          value={form?.payment?.finalPrice || 0}
           onChange={(e) => updateNestedField('payment', 'finalPrice', e.target.value)}
           aria-label="مبلغ"
         />
@@ -88,9 +88,11 @@ const PaymentInfoSection: React.FC<PaymentInfoSectionProps> = ({
           onChange={(e) => updateNestedField('payment', 'description', e.target.value)}
           aria-label="توضیحات"
         />
-        <button className="billButton" onClick={() => orderService.sendPortal(id, form?.payment?.finalPrice, form?.payment?.method, form?.payment?.description, form?.payment?.refId, )}>
-          ارسال درگاه
-        </button>
+        {form?.payment?.method == PaymentMethods.zarinpal &&
+          <button className="addProductButton" onClick={() => orderService.sendPortal(id, form?.payment?.finalPrice, form?.payment?.method, form?.payment?.description, form?.payment?.refId, )}>
+              ارسال درگاه
+          </button>
+        }
       </div>
     </div>
   );

@@ -514,7 +514,7 @@ table{
     padding-right: 24px;
     padding-left: 24px;
     margin-bottom: 16px;
-    max-width: 85%;
+    /*max-width: 85%;*/
 }
 .backAdd{
     content: url("/public/svg/backAdd.svg");
