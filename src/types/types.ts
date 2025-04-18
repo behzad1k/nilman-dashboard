@@ -46,6 +46,7 @@ export interface IOrder {
   id: number;
   title: string;
   price: number;
+  finalPrice: number;
   date: string;
   time: string;
   code: string;
@@ -60,15 +61,6 @@ export interface IOrder {
   fromTime: number;
   toTime: number;
   done: boolean;
-}
-export interface IUser {
-  id: number;
-  name: string;
-  lastName: string;
-  nationalCode: string;
-  phoneNumber: string;
-  role: 'USER' | 'WORKER' | 'OPERATOR' | 'SUPER_ADMIN';
-  media: { url: string}
 }
 
 export interface ISliderCardInfo {
@@ -149,3 +141,50 @@ export interface ApiResponse<T> {
   data?: T;
   error?: string;
 }
+
+
+export interface IDistrict {
+  id: string;
+  title: string;
+  code: string;
+}
+
+export interface IUser {
+  id: string;
+  name?: string;
+  lastName?: string;
+  nationalCode?: string;
+  phoneNumber?: string;
+  email?: string;
+  username?: string;
+  role?: string;
+  status?: number;
+  percent?: number;
+  isWorkerChoosable?: boolean;
+  walletBalance?: number;
+  profilePic?: {
+    url?: string;
+  };
+  services?: IService[];
+  districts?: IDistrict[];
+  addresses?: IAddress[];
+  workerOffs?: IWorkerOff[];
+  orders?: IOrder[];
+  jobs?: IOrder[];
+  cardNumber?: string;
+  hesabNumber?: string;
+  shebaNumber?: string;
+  bankName?: string;
+}
+
+export interface IWorkerOff {
+  id: string;
+  date: string;
+  fromTime: string;
+  toTime: string;
+  order?: {
+    id: string;
+    code: string;
+  };
+}
+

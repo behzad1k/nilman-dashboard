@@ -20,7 +20,7 @@ import OrderManage from './pages/Order/Manage';
 import Service from './pages/Service';
 import ServiceManage from './pages/Service/Manage';
 import UsersList from './pages/User';
-import UserManage from './pages/User/UserManage';
+import UserManage from './pages/User/Manage';
 import reportWebVitals from './reportWebVitals';
 import store from './services/store';
 

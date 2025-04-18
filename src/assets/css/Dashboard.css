@@ -520,7 +520,6 @@ table{
     content: url("/public/svg/backAdd.svg");
 }
 .main{
-    padding: 0;
     padding-bottom: 80px;
 }
 .bottomSection{
@@ -885,6 +884,10 @@ table{
 .editSvg2{
     content: url("/public/svg/edit2.svg");
 }
+.userInfoContainer.user{
+    flex-direction: row;
+    gap: 20px
+}
 .userInfoContainer{
     display: flex;
     flex-direction: column;
@@ -895,6 +898,15 @@ table{
     padding: 16px;
     /*gap: 16px;*/
     /*max-width: 85%;*/
+}
+
+.bank-info-row{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: space-between;
+    flex-direction: row-reverse;
+
 }
 .editProductInput.order{
     width: 100%;
@@ -1688,4 +1700,153 @@ table{
     .workerOffCell {
         font-size: 12px;
     }
+}
+
+
+/* Add this CSS file to your project and import it in your main CSS file */
+
+.pagination-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px 0;
+    direction: rtl;
+}
+
+.pagination-button {
+    padding: 8px 16px;
+    margin: 0 5px;
+    background-color: #f0f0f0;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.pagination-button:hover:not(:disabled) {
+    background-color: #e0e0e0;
+}
+
+.pagination-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.pagination-numbers {
+    display: flex;
+    align-items: center;
+}
+
+.pagination-number {
+    width: 36px;
+    height: 36px;
+    margin: 0 3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: #fff;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.pagination-number:hover {
+    background-color: #f0f0f0;
+}
+
+.pagination-number.active {
+    background-color: var(--light-pink);
+    color: #fff;
+    border-color: var(--light-pink);
+}
+
+.pagination-ellipsis {
+    margin: 0 5px;
+}
+
+/* Add this CSS to your project */
+
+.worker-offs-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.worker-offs-table th,
+.worker-offs-table td {
+    padding: 10px;
+    border: 1px solid #ddd;
+}
+
+.date-cell {
+    width: 120px;
+    font-weight: bold;
+    background-color: #f9f9f9;
+}
+
+.slots-cell {
+    padding: 0;
+}
+
+.slots-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 10px;
+}
+
+.worker-off-slot {
+    border: 1px solid #eee;
+    border-radius: 4px;
+    padding: 8px;
+    min-width: 150px;
+    background-color: #f9f9f9;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.slot-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.slot-time {
+    font-weight: bold;
+}
+
+.delete-button {
+    background-color: transparent;
+    border: none;
+    color: red;
+    font-size: 18px;
+    cursor: pointer;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+}
+
+.delete-button:hover {
+    background-color: rgba(255, 0, 0, 0.1);
+}
+
+.slot-order {
+    font-size: 12px;
+    color: #666;
+}
+
+.slot-order a {
+    color: var(--primary-color);
+    text-decoration: none;
+}
+
+.slot-order a:hover {
+    text-decoration: underline;
+}
+
+.no-order {
+    color: #999;
 }
