@@ -1,6 +1,7 @@
 import React from 'react';
 import Switch from 'react-ios-switch';
 import Select from 'react-select';
+import Swal from 'sweetalert2';
 import globalEnum from '../../../enums/globalEnum';
 import { orderService } from './OrderService';
 
@@ -21,6 +22,25 @@ const PaymentInfoSection: React.FC<PaymentInfoSectionProps> = ({
     value: key,
     label: PaymentMethodNames[key]
   }));
+
+  const sendPortal = async () => {
+    const result = await orderService.sendPortal(id, form?.payment?.finalPrice, form?.payment?.method, form?.payment?.description, form?.payment?.refId, )
+    if (result.success) {
+      Swal.fire({
+        title: 'موفق',
+        text: 'لینک پرداخت با موفقیت ارسال شد',
+        icon: 'success',
+        confirmButtonText: 'متوجه شدم',
+      });
+    } else {
+      Swal.fire({
+        title: 'ناموفق',
+        text: result.error || 'خطا در ثبت سفارش',
+        icon: 'error',
+        confirmButtonText: 'متوجه شدم'
+      });
+    }
+  };
 
   return (
     <div className="infoSection">
@@ -89,7 +109,7 @@ const PaymentInfoSection: React.FC<PaymentInfoSectionProps> = ({
           aria-label="توضیحات"
         />
         {form?.payment?.method == PaymentMethods.zarinpal &&
-          <button className="addProductButton" onClick={() => orderService.sendPortal(id, form?.payment?.finalPrice, form?.payment?.method, form?.payment?.description, form?.payment?.refId, )}>
+          <button className="addProductButton" onClick={sendPortal}>
               ارسال درگاه
           </button>
         }

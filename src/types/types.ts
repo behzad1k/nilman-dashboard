@@ -180,8 +180,8 @@ export interface IUser {
 export interface IWorkerOff {
   id: string;
   date: string;
-  fromTime: string;
-  toTime: string;
+  fromTime: number;
+  toTime: number;
   order?: {
     id: string;
     code: string;

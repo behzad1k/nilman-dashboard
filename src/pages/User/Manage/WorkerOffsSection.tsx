@@ -94,9 +94,7 @@ const WorkerOffsSection: React.FC<WorkerOffsSectionProps> = ({ workerOffs, userI
           </thead>
           <tbody>
           {currentDays.map(([date, slots]) => {
-            const sortedSlots = [...slots].sort((a, b) =>
-              a?.fromTime?.toString()?.localeCompare(b?.fromTime?.toString())
-            );
+            const sortedSlots = [...slots].sort((a, b) => a?.toTime - b.toTime).sort((a, b) => a?.fromTime - b.fromTime);
 
             return (
               <tr key={date}>
