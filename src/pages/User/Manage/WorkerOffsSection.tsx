@@ -109,7 +109,10 @@ const WorkerOffsSection: React.FC<WorkerOffsSectionProps> = ({ workerOffs, userI
                             </span>
                           <button
                             className="delete-button"
-                            onClick={() => deleteWorkerOff(slot)}
+                            onClick={async (e) => {
+                              e.preventDefault();
+                              await deleteWorkerOff(slot);
+                            }}
                             title="حذف"
                           >
                             ×
