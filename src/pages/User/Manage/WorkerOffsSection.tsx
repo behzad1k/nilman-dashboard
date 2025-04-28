@@ -19,7 +19,7 @@ interface WorkerOffsSectionProps {
 const WorkerOffsSection: React.FC<WorkerOffsSectionProps> = ({ workerOffs, userId, onDelete }) => {
   const dispatch = useDispatch();
   const [currentPage, setCurrentPage] = useState(1);
-  const daysPerPage = 5;
+  const daysPerPage = 10;
 
   const sortedDays = Object.entries(workerOffs)
   .sort(([key1, _], [key2, __]) =>
@@ -109,6 +109,7 @@ const WorkerOffsSection: React.FC<WorkerOffsSectionProps> = ({ workerOffs, userI
                             </span>
                           <button
                             className="delete-button"
+                            type="button"
                             onClick={async (e) => {
                               e.preventDefault();
                               await deleteWorkerOff(slot);
