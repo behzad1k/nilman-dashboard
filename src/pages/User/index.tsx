@@ -14,33 +14,17 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import Swal from "sweetalert2";
 import { useAppSelector } from '../../services/store';
 import tools from '../../utils/tools';
+import usePagination from "../../hooks/usePagination";
 
 const UsersList = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate()
   const [searchParams, setSearchParams] = useSearchParams();
-  const [data, setData] = useState([]);
+  const [data, setData] = useState<any>([]);
   const [query, setQuery] = useState('');
-  const [tab, setTab] = useState('all');
-  const [itemOffset, setItemOffset] = useState(0);
+  const [tab, setTab] = useState(searchParams.get('tab') || 'all');
   const serviceReducer = useAppSelector(state => state.serviceReducer)
-  const itemsPerPage = 10;
-  const endOffset = (itemOffset || 0) + itemsPerPage;
-  const filteredData = data?.filter((e: any) => {
-    switch (tab){
-      case('user'):
-        return e.role == globalEnum.roles.USER;
-      case('admin'):
-        return e.role == globalEnum.roles.SUPER_ADMIN;
-      case('worker'):
-        return e.role == globalEnum.roles.WORKER;
-      case('operator'):
-        return e.role == globalEnum.roles.OPERATOR;
-      default: return true;
-    }
-  })?.filter(e => e.name?.toLowerCase()?.includes(query.toLowerCase()) || e.phoneNumber?.toLowerCase()?.includes(query.toLowerCase()) || e.lastName?.toLowerCase()?.includes(query.toLowerCase()));
-  let currentItems = filteredData?.slice(itemOffset, endOffset);
-  const pageCount = Math.ceil(filteredData.length / itemsPerPage);
+  const { pageCount, endOffset, itemOffset, itemsPerPage, setPageCount, setItemOffset, setItemsPerPage } = usePagination(data)
 
   const tabTitles = {
     all: 'همه',
@@ -106,7 +90,7 @@ const UsersList = () => {
   const list = () => {
     const rows = [];
     
-    currentItems?.map((user: any, index) => {
+    data?.orders?.map((user: any, index) => {
       const userServices: any = {}
       user.services?.map(e => {
         const ancs = tools.findAncestors(serviceReducer.services, e.id)?.reverse()
@@ -134,32 +118,42 @@ const UsersList = () => {
   };
   
   const fetchData = async () => {
-    dispatch(setLoading(true));
-    
-    const res = await restApi(process.env.REACT_APP_BASE_URL + '/admin/user', true).get();
+    !query && dispatch(setLoading(true));
 
-    if(res.code == 200){
-      setData(res.data);
+    const params: any = {
+      page: searchParams.get('page') || 1,
+      perPage: itemsPerPage,
+      query: query
     }
-    
-    dispatch(setLoading(false));
+    if (tab != 'all'){
+      params.status = tab
+    }
+    await Promise.all([
+      await restApi(endpoints.user.index, true).get(params),
+    ]).then((res) => {
+      setData(res[0].data);
+    })
+
+    !query && dispatch(setLoading(false));
   };
   
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [searchParams.get('page'), itemsPerPage, query, tab]);
+
+  // useEffect(() => {
+  //   setSearchParams({ ['page']: searchParams.get('page'), ['tab']: tab })
+  // }, [tab]);
 
   useEffect(() => {
-    let curPage = Number(searchParams.get('page'));
-    if (curPage) {
-      if (curPage > pageCount) {
-        setSearchParams({ ['page']: '1' });
-        curPage = 1;
-      }
-      setItemOffset(((curPage - 1) * itemsPerPage) % data.length);
+    if (data.count) {
+      const newPage = Number(searchParams.get('page')) <= Math.ceil(data.count / itemsPerPage) ? searchParams.get('page') || '1' : '1';
+      setSearchParams({
+        ['page']: newPage,
+        ['tab']: tab
+      })
     }
-  }, [data, tab]);
-
+  }, [data]);
   return(
     
     <>
@@ -171,19 +165,7 @@ const UsersList = () => {
           {Object.entries(tabTitles).map(([key, value]) =>
               <span className={`ordersTag clickable ${key == tab ? 'activeTab' : ''}`} onClick={() => setTab(key)}>
             {value}
-                <span className={`numberTag ${key == tab ? 'activeTab' : ''}`}>{data?.filter((e: any) => {
-                  switch (key){
-                    case('user'):
-                      return e.role == globalEnum.roles.USER;
-                    case('admin'):
-                      return e.role == globalEnum.roles.SUPER_ADMIN;
-                    case('worker'):
-                      return e.role == globalEnum.roles.WORKER;
-                    case('operator'):
-                      return e.role == globalEnum.roles.OPERATOR;
-                    default: return true;
-                  }
-                }).length}</span>
+                <span className={`numberTag ${key == tab ? 'activeTab' : ''}`}>{}</span>
           </span>
           )}
         </div>
