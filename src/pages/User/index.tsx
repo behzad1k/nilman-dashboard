@@ -28,10 +28,10 @@ const UsersList = () => {
 
   const tabTitles = {
     all: 'همه',
-    user: 'کاربران عادی',
-    worker: 'زیباکار ها',
-    operator: 'اپراتور ها',
-    admin: 'ادمین ها',
+    USER: 'کاربران عادی',
+    WORKER: 'زیباکار ها',
+    OPERATOR: 'اپراتور ها',
+    SUPER_ADMIN: 'ادمین ها',
   }
 
   const deleteItem = async (id: number) => {
@@ -90,7 +90,7 @@ const UsersList = () => {
   const list = () => {
     const rows = [];
     
-    data?.orders?.map((user: any, index) => {
+    data?.users?.map((user: any, index) => {
       const userServices: any = {}
       user.services?.map(e => {
         const ancs = tools.findAncestors(serviceReducer.services, e.id)?.reverse()
@@ -123,10 +123,10 @@ const UsersList = () => {
     const params: any = {
       page: searchParams.get('page') || 1,
       perPage: itemsPerPage,
-      query: query
+      query: query,
     }
     if (tab != 'all'){
-      params.status = tab
+      params.role = tab
     }
     await Promise.all([
       await restApi(endpoints.user.index, true).get(params),
@@ -163,9 +163,12 @@ const UsersList = () => {
         <h1 className="dashBoardTitle">لیست کاربران</h1>
         <div className="dashTabs">
           {Object.entries(tabTitles).map(([key, value]) =>
-              <span className={`ordersTag clickable ${key == tab ? 'activeTab' : ''}`} onClick={() => setTab(key)}>
+            <span className={`ordersTag clickable ${key == tab ? 'activeTab' : ''}`} onClick={() => {
+              setTab(key);
+              setSearchParams({ ['page']: '1', ['tab']: tab })
+            }}>
             {value}
-                <span className={`numberTag ${key == tab ? 'activeTab' : ''}`}>{}</span>
+              {data?.rolesCount && <span className={`numberTag ${key == tab ? 'activeTab' : ''}`}>{data?.rolesCount[key]?.count}</span>}
           </span>
           )}
         </div>
@@ -196,10 +199,11 @@ const UsersList = () => {
           breakLabel="..."
           nextLabel="بعدی >"
           onPageChange={(event) => {
-            setSearchParams({['page']: (Number(event.selected) + 1).toString()})
+            setSearchParams({['page']: (Number(event.selected) + 1).toString(), ['tab']: tab})
             setItemOffset((event.selected * itemsPerPage) % data.length);
           }}
-          initialPage={searchParams.get('page') ? Number(searchParams.get('page')) - 1 : 0}
+          forcePage={Number(searchParams.get('page')) - 1}
+          initialPage={searchParams.get('page') != null ? Number(searchParams.get('page')) - 1 : 0}
           pageRangeDisplayed={5}
           pageCount={pageCount}
           previousLabel="< قبلی"
