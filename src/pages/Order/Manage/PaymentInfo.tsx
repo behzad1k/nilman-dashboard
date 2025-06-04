@@ -1,8 +1,10 @@
 import React from 'react';
 import Switch from 'react-ios-switch';
+import { useDispatch } from 'react-redux';
 import Select from 'react-select';
 import Swal from 'sweetalert2';
 import globalEnum from '../../../enums/globalEnum';
+import { setLoading } from '../../../services/reducers/homeSlice';
 import { orderService } from './OrderService';
 
 const { PaymentMethods, PaymentMethodNames } = globalEnum;
@@ -22,9 +24,15 @@ const PaymentInfoSection: React.FC<PaymentInfoSectionProps> = ({
     value: key,
     label: PaymentMethodNames[key]
   }));
+  const dispatch = useDispatch();
 
   const sendPortal = async () => {
+    dispatch(setLoading(true));
+
     const result = await orderService.sendPortal(id, form?.payment?.finalPrice, form?.payment?.method, form?.payment?.description, form?.payment?.refId, )
+
+    dispatch(setLoading(false));
+
     if (result.success) {
       Swal.fire({
         title: 'موفق',

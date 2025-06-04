@@ -119,7 +119,7 @@ const UserManage: React.FC = () => {
       if (userRes && paramId) {
         setUser(userRes.data);
         setAddresses(userRes.data?.addresses || []);
-        setSelectedWorkerServices(userRes.data?.services?.map((s: IService) => s.id) || []);
+        setSelectedWorkerServices(userRes.data?.services.filter(e => e.openDrawer)?.map((s: IService) => s.id) || []);
         setSelectedDistricts(userRes.data?.districts?.map((d: IDistrict) => d.id) || []);
 
         if (userRes.data?.profilePic?.url) {

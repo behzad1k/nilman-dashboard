@@ -21,6 +21,8 @@ export interface IService {
   parentId?: number;
   attributes?: IService[];
   hasColor: boolean;
+  showInList: boolean;
+  openDrawer: boolean;
   color?: string;
   media: any
 }
