@@ -42,7 +42,7 @@ const UserInfoSection: React.FC<UserInfoSectionProps> = ({
                     overflow: 'auto'
                   })
                 }}
-                options={tools.selectFormatter(services.filter(e => e.openDrawer), 'id', 'title', 'انتخاب کنید')}
+                options={tools.selectFormatter(services, 'id', 'title', 'انتخاب کنید')}
                 defaultValue={selectedWorkerServices?.map(e => ({
                   value: e,
                   label: services.find(j => j.id == Number(e))?.title
