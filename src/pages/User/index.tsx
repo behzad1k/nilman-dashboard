@@ -34,6 +34,19 @@ const UsersList = () => {
     SUPER_ADMIN: 'ادمین ها',
   }
 
+  const downloadExcel = async () => {
+    dispatch(setLoading(true));
+
+    const res = await restApi(endpoints.user.excel).post({
+      type: tab
+    });
+
+    window.open(res.data?.link, '_blank');
+
+    dispatch(setLoading(false));
+
+  }
+
   const deleteItem = async (id: number) => {
     if(confirm('آیا مطمئن هستید؟')) {
       dispatch(setLoading(true));
@@ -175,6 +188,10 @@ const UsersList = () => {
         <div className="searchContainer">
           <span className="dashboardHeader clickable" onClick={() => navigate('/user/add')}>
             <p>افزودن کاربر جدید</p>
+            <i className="addPlus"></i>
+          </span>
+          <span className="dashboardHeader clickable" onClick={() => downloadExcel()}>
+            <p>خروجی اکسل</p>
             <i className="addPlus"></i>
           </span>
           <div className="dashboardseaechBox">

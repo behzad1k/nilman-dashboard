@@ -69,27 +69,26 @@ export const orderService = {
 
       // If creating a new order, handle user and address creation/update
       if (!id) {
-        // if (!form.user?.isVerified) {
-        //   const verifyNationalCode = await restApi(process.env.REACT_APP_BASE_URL + '/admin/user/verify').post({
-        //     phoneNumber: form.user.phoneNumber,
-        //     nationalCode: form.user.nationalCode
-        //   });
-        //
-        //   if (verifyNationalCode.code === 1005) {
-        //     const shouldContinue = window.confirm('کد ملی با شماره تلفن تطابق ندارد آیا به هرحال سفارش ثبت شود؟');
-        //     if (!shouldContinue) {
-        //       return { success: false, error: 'عملیات لغو شد' };
-        //     }
-        //   }
-        // }
+        if (!form.user?.isVerified) {
+          const verifyNationalCode = await restApi(process.env.REACT_APP_BASE_URL + '/admin/user/verify').post({
+            phoneNumber: form.user.phoneNumber,
+            nationalCode: form.user.nationalCode
+          });
+
+          if (verifyNationalCode.code === 1005) {
+            const shouldContinue = window.confirm('کد ملی با شماره تلفن تطابق ندارد آیا به هرحال سفارش ثبت شود؟');
+            if (!shouldContinue) {
+              return { success: false, error: 'عملیات لغو شد' };
+            }
+          }
+        }
 
         userRes = await restApi(process.env.REACT_APP_BASE_URL + '/admin/user/basic/' + (form?.user?.id || '')).post({
           name: form.user.name,
           lastName: form.user.lastName,
           nationalCode: form.user.nationalCode,
           phoneNumber: form.user.phoneNumber,
-          // isVerified: form.user.isVerified
-          isVerified: true
+          isVerified: form.user.isVerified
         });
 
         addressRes = await restApi(process.env.REACT_APP_BASE_URL + '/admin/address/basic/' + (form?.address?.id || '')).post({

@@ -36,6 +36,7 @@ const endpoints = {
     basic: format('user/basic'),
     medias: format('user/medias'),
     active: format('user/status'),
+    excel: format('user/excel'),
     workerOff: format('user/workerOff'),
   },
   address:{
