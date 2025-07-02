@@ -37,7 +37,8 @@ export const useOrderForm = (initialState: OrderFormState, serviceReducer: any) 
     const newPrice = form.orderServices?.reduce((acc, curr) => {
       const service = serviceReducer.allServices?.find(e => e.id === curr.serviceId);
       if (!service) return acc;
-      const price = service.price * Number(curr.count) * (form?.isUrgent ? 1.5 : 1);
+
+      const price = (curr.singlePrice || service.price) * Number(curr.count) * (form?.isUrgent ? 1.5 : 1);
         return acc + Number(price);
     }, 0) || 0;
 
