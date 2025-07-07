@@ -33,12 +33,15 @@ export const useOrderForm = (initialState: OrderFormState, serviceReducer: any) 
 
   const calculatePrices = useCallback(() => {
     if (!serviceReducer?.allServices?.length) return;
-
     const newPrice = form.orderServices?.reduce((acc, curr) => {
       const service = serviceReducer.allServices?.find(e => e.id === curr.serviceId);
       if (!service) return acc;
-
-      const price = (curr.singlePrice || service.price) * Number(curr.count) * (form?.isUrgent ? 1.5 : 1);
+      let price = 0;
+      if (curr.singlePrice){
+        price = curr.singlePrice * Number(curr.count);
+      } else {
+        price = service.price * (form.isUrgent ? 1.5 : 1) * Number(curr.count);
+      }
         return acc + Number(price);
     }, 0) || 0;
 
