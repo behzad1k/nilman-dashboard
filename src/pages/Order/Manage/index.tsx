@@ -32,7 +32,8 @@ const OrderManage: React.FC = () => {
     updateNestedField,
     isColored,
     calculatePrices,
-    setUserBalance
+    setUserBalance,
+    urgentAllPrices
   } = useOrderForm(initialFormState, serviceReducer);
 
   const isEdit = !!id;
@@ -159,6 +160,7 @@ const OrderManage: React.FC = () => {
           <OrderInfoSection
             form={form}
             updateFormField={updateFormField}
+            urgentAllPrices={urgentAllPrices}
             updateNestedField={updateNestedField}
           />
           <BillSummarySection

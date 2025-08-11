@@ -15,7 +15,7 @@ const ServicesSection: React.FC<ServicesSectionProps> = ({
                                                            setForm,
                                                            serviceReducer,
                                                            isColored,
-  colors
+                                                           colors
                                                          }) => {
   const handleServiceChange = (selected: any) => {
     setForm((prev: any) => ({

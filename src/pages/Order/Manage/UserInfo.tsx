@@ -10,7 +10,7 @@ interface UserInfoSectionProps {
 const UserInfoSection: React.FC<UserInfoSectionProps> = ({
                                                            form,
                                                            updateNestedField,
-                                                           fetchUser
+                                                           fetchUser,
                                                          }) => {
   const handlePhoneNumberChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const phoneNumber = e.target.value;

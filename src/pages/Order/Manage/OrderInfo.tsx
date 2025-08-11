@@ -14,12 +14,14 @@ interface OrderInfoSectionProps {
   form: any;
   updateFormField: (field: string, value: any) => void;
   updateNestedField: (parent: string, field: string, value: any) => void;
+  urgentAllPrices: (isUrgent: boolean) => void;
 }
 
 const OrderInfoSection: React.FC<OrderInfoSectionProps> = ({
                                                              form,
                                                              updateFormField,
-                                                             updateNestedField
+                                                             updateNestedField,
+  urgentAllPrices
                                                            }) => {
   const statusOptions = Object.entries(orderStatus).map(([key, value]) => ({
     value: key,
@@ -77,7 +79,10 @@ const OrderInfoSection: React.FC<OrderInfoSectionProps> = ({
         <div className="inputRow">
           <Switch
             checked={form.isUrgent || false}
-            onChange={(checked) => updateFormField('isUrgent', checked)}
+            onChange={(checked) => {
+              updateFormField('isUrgent', checked);
+              urgentAllPrices(checked)
+            }}
             aria-label="سفارش فوری"
           />
           <label className="sideBarTitle">سفارش فوری</label>

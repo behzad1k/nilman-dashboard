@@ -31,6 +31,19 @@ export const useOrderForm = (initialState: OrderFormState, serviceReducer: any) 
     );
   }, [form?.orderServices, serviceReducer?.allServices]);
 
+  const urgentAllPrices = (isUrgent = true) => {
+    const newOrderServices = []
+    const multiplier = isUrgent ? 1.5 : .666667
+    for (const orderService of form.orderServices) {
+      const newOrderService = { ...orderService }
+      const serviceObj = serviceReducer.allServices?.find(e => e.id == orderService.serviceId)
+      newOrderService.singlePrice = serviceObj.price * (isUrgent ? 1.5 : 1)
+      newOrderService.price = newOrderService.singlePrice * orderService.count
+      newOrderServices.push(newOrderService);
+    }
+    setForm(prev => ({ ...prev, orderServices: newOrderServices }));
+  }
+  console.log(form.orderServices);
   const calculatePrices = useCallback(() => {
     if (!serviceReducer?.allServices?.length) return;
     const newPrice = form.orderServices?.reduce((acc, curr) => {
@@ -96,6 +109,7 @@ export const useOrderForm = (initialState: OrderFormState, serviceReducer: any) 
     updateNestedField,
     isColored,
     calculatePrices,
-    setUserBalance
+    setUserBalance,
+    urgentAllPrices
   };
 };

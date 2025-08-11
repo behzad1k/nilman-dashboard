@@ -99,6 +99,7 @@ export interface OrderService {
   count: number;
   colors?: number[];
   singlePrice?: number;
+  price?: number;
 }
 
 export interface Payment {
