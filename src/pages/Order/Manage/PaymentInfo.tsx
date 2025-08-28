@@ -116,7 +116,7 @@ const PaymentInfoSection: React.FC<PaymentInfoSectionProps> = ({
           onChange={(e) => updateNestedField('payment', 'description', e.target.value)}
           aria-label="توضیحات"
         />
-        {form?.payment?.method == PaymentMethods.zarinpal &&
+        {form?.payment?.method == PaymentMethods.zarinpal || form?.payment?.method == PaymentMethods.sep &&
           <button className="addProductButton" onClick={sendPortal}>
               ارسال درگاه
           </button>
