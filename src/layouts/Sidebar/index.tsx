@@ -32,13 +32,17 @@ export const Sidebar = () => {
         </div>
       </span>
         <SidebarRow title="داشبورد" url="/"/>
-        <SidebarRow title="سفارشات" url="/order/"/>
-        <SidebarRow title="خدمات" url="/Service"/>
-        <SidebarRow title="کاربران" url="/User"/>
-        <SidebarRow title="رنگ ها" url="/Color"/>
-        <SidebarRow title="حسابداری" url="/Accounting"/>
-        <SidebarRow title="موارد بازخوردها" url="/FeedbackFactor"/>
-        <SidebarRow title="تخفیف" url="/discount"/>
+        {userReducer?.profile?.role == 'SUPER_ADMIN' &&
+            <>
+                <SidebarRow title="سفارشات" url="/order/"/>
+                <SidebarRow title="کاربران" url="/User"/>
+                <SidebarRow title="خدمات" url="/Service"/>
+                <SidebarRow title="رنگ ها" url="/Color"/>
+                <SidebarRow title="حسابداری" url="/Accounting"/>
+                <SidebarRow title="موارد بازخوردها" url="/FeedbackFactor"/>
+                <SidebarRow title="تخفیف" url="/discount"/>
+            </>
+        }
         {/* <SidebarRow title="بازخوردها" url="/FeedbackFactor"/> */}
         {/* <SidebarRow title="مشخصات فنی" url="/Dashboard/Attribute" children={[ */}
         {/*   { */}
