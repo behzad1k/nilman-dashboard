@@ -31,11 +31,12 @@ export const Sidebar = () => {
           <p className="adminTitle">ادمین</p>
         </div>
       </span>
-        <SidebarRow title="داشبورد" url="/"/>
+
+        <SidebarRow title="سفارشات" url="/order/"/>
+        <SidebarRow title="کاربران" url="/User"/>
         {userReducer?.profile?.role == 'SUPER_ADMIN' &&
             <>
-                <SidebarRow title="سفارشات" url="/order/"/>
-                <SidebarRow title="کاربران" url="/User"/>
+                <SidebarRow title="داشبورد" url="/"/>
                 <SidebarRow title="خدمات" url="/Service"/>
                 <SidebarRow title="رنگ ها" url="/Color"/>
                 <SidebarRow title="حسابداری" url="/Accounting"/>
