@@ -23,9 +23,9 @@ function App() {
       const res = await restApi(process.env.REACT_APP_BASE_URL + '/user', true).get();
 
       if (res.code == 200){
-        if (res.data.role !== "SUPER_ADMIN" && window.location.href.includes('dashboard')){
-          window.location.href = '/' ;
-        }
+        // if (res.data.role !== "SUPER_ADMIN" && window.location.href.includes('dashboard')){
+        //   window.location.href = '/' ;
+        // }
       }else if(res.code == 401){
         Cookies.remove('adminToken')
       }
