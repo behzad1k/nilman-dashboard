@@ -32,6 +32,7 @@ root.render(
     <App/>
     <BrowserRouter basename="/">
       <Routes>
+        <Route path="" element={<R />}/>
         <Route path="/dashboard" element={<Dashboard />}/>
         <Route path="login" element={<Login />} />
         <Route path="order">
