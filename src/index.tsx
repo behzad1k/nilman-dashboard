@@ -2,6 +2,7 @@ import React from 'react';
 import { createRoot } from 'react-dom/client';
 import { Provider } from 'react-redux';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import Root from './pages';
 import Accounting from './pages/Accounting';
 import AccountingManage from './pages/Accounting/Manage';
 import App from './pages/App';
@@ -32,7 +33,7 @@ root.render(
     <App/>
     <BrowserRouter basename="/">
       <Routes>
-        <Route path="" element={<R />}/>
+        <Route path="" element={<Root />}/>
         <Route path="/dashboard" element={<Dashboard />}/>
         <Route path="login" element={<Login />} />
         <Route path="order">
